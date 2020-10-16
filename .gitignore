@@ -1,4 +1,5 @@
 /lib/forms/Login/LoginBloc.dart
+/lib/module/
 
 # Miscellaneous
 *.class
