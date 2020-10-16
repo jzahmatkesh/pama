@@ -1,0 +1,58 @@
+import 'package:flutter/material.dart';
+
+class FmCompanyUsers extends StatelessWidget {
+  const FmCompanyUsers({Key key, @required this.company, @required this.token, @required this.companybloc}) : super(key: key);
+
+  final Company company;
+  final String token;
+  final CompanyBloc companybloc;
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Container(
+        width: screenWidth(context) * 0.8,
+        padding: EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Padding(padding: EdgeInsets.all(5.0)),
+            Card(
+              color: appbarColor(context),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(28.0),
+                child: Row(
+                  children: [
+                    MyIconButton(type: ButtonType.add, onPressed: (){}),
+                    Expanded(child: Text('فهرست کاربران ${company.name}', style: headerStyle(), textAlign: TextAlign.center,)),
+                  ],
+                ),
+              )
+            ),
+            Card(
+              color: appbarColor(context),
+              child: Container(
+                padding: EdgeInsets.all(12.0),
+                child: Row(
+                  children: [
+                    Expanded(child: Text('شماره همراه', style: gridFieldStyle(), textAlign: TextAlign.center,)),
+                    Expanded(child: Text('نام و نام خانوادگی', style: gridFieldStyle(), textAlign: TextAlign.center,)),
+                    Expanded(child: Text('شماره همراه', style: gridFieldStyle(), textAlign: TextAlign.center,)),
+                    Expanded(child: Text('آخرین ورود', style: gridFieldStyle(), textAlign: TextAlign.center,)),
+                    Expanded(child: Text('تغییر کلمه عبور', style: gridFieldStyle(), textAlign: TextAlign.center,)),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: StreamBuilder(
+                builder: 
+              )
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
