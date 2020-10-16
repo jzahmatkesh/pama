@@ -18,15 +18,15 @@ class FmPeople extends StatelessWidget {
     PeopleBloc _peopbloc = PeopleBloc();
 
     if (nationalid.isNotEmpty)
-      _peopbloc.checkNationalID(context, {'nationalid': nationalid, 'family': '', 'mobile': ''});
+      _peopbloc.checkNationalID(context, {'nationalid': nationalid, 'family': '', 'mobile': ''}, this.justcheck);
 
-    _peopbloc.peopleStream$.listen((data){
-      if (data.status == Status.loaded && this.justcheck && data.rows.length == 1){
-        Navigator.of(context).pop(_peopbloc.peopleInfo$[0]);
-        if ((data.msg ?? '').isNotEmpty)
-          myAlert(context: context, title: 'موفقیت آمیز', message: data.msg, color: Colors.lightGreen);
-      }
-    });
+    // _peopbloc.peopleStream$.listen((data){
+    //   if (data.status == Status.loaded && this.justcheck && data.rows.length == 1){
+    //     Navigator.of(context).pop(_peopbloc.peopleInfo$[0]);
+    //     if ((data.msg ?? '').isNotEmpty)
+    //       myAlert(context: context, title: 'موفقیت آمیز', message: data.msg, color: Colors.lightGreen);
+    //   }
+    // });
 
     Map<String, dynamic> _data = {"nationalid": "", "family": "", "mobile": ""};
 
@@ -38,7 +38,7 @@ class FmPeople extends StatelessWidget {
           stream: _peopbloc.peopleStream$,
           builder: (BuildContext context, AsyncSnapshot<PeopleModel> snap){
             if (snap.hasData)
-              if (snap.data.status == Status.initial || snap.data.status == Status.error){
+              if (snap.data.status == Status.initial || snap.data.status == Status.loading || snap.data.status == Status.error){
                 return Container(
                   height: 325.0,
                   width: 285.0,
@@ -59,25 +59,21 @@ class FmPeople extends StatelessWidget {
                                   hovercolor: Colors.lightGreen, 
                                   title: 'بررسی', 
                                   icon: Icons.cloud_queue, 
-                                  onPressed: (){
-                                    _peopbloc.checkNationalID(context, _data);
-                                  }
+                                  onPressed: () => _peopbloc.checkNationalID(context, _data, this.justcheck)
                                 ),
                             ),
                             Expanded(
                               child: MyOutlineButton(hovercolor: Colors.red[400], title: 'انصراف', icon: Icons.redo, onPressed: (){Navigator.of(context).pop('cancel');},),
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),
                 );
               }
               else if (snap.data.status == Status.loaded)
-                if (snap.data.rows.length == 0)
-                  return PeopleInfo(people: People(id: 0, nationalid: _data['nationalid'], family: _data['family'], mobile: _data['mobile']), peoplebloc: _peopbloc,);
-                else if (snap.data.rows.length == 1)
+                if (snap.data.rows.length == 1)
                   return PeopleInfo(people: snap.data.rows[0], peoplebloc: _peopbloc,);
                 else
                   return PeopleList(rows: snap.data.rows, peoplebloc: _peopbloc);
@@ -213,7 +209,7 @@ class PeopleInfo extends StatelessWidget {
                           onChange: peoplebloc.setEducation,
                         )
                       ),
-                      Expanded(child: GridTextField(hint: 'رشته تحصیلی', width: double.infinity, focus: _freshte, nextfocus: _fenglish, onChange: (val){people.reshte = val;}, initialValue: people.reshte,)),
+                      Expanded(child: GridTextField(hint: 'رشته تحصیلی', width: double.infinity, focus: _freshte, nextfocus: _fenglish, onChange: (val){people.reshte = val;}, initialValue: people.reshte, notempty: true,)),
                     ],
                   ),
                   Row(

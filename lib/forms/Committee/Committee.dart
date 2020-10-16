@@ -220,7 +220,7 @@ class PnCommitteeDetail extends StatelessWidget {
         SizedBox(height: 10.0,),
         GridCaption(
           obj: [
-            MyIconButton(type: ButtonType.add, onPressed: (){context.read<ThemeManager>().setCompany(company.id); showFormAsDialog(context: context, form: EditDetail(commiteeBloc: committeeBloc, dtl: new CommitteeDetail(cmpid: com.cmpid, cmtid: com.id, id: 0)));}),
+            MyIconButton(type: ButtonType.add, onPressed: (){context.read<ThemeManager>().setCompany(company.id); showFormAsDialog(context: context, form: EditDetail(commiteeBloc: committeeBloc, com: com, dtl: new CommitteeDetail(cmpid: com.cmpid, cmtid: com.id, id: 0)));}),
             'موضوع','تاریخ برگذاری','زمان برگذاری','کارشناس','توضیحات'
           ],
           endbuttons: 4,
@@ -273,7 +273,10 @@ class DetailAbsent extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CommitteeDetailRow(committee: this.committee, dtl: this.dtl, committeeBloc: this.committeeBloc),
+          Card(
+            color: accentcolor(context).withOpacity(0.35), 
+            child: CommitteeDetailRow(committee: this.committee, dtl: this.dtl, committeeBloc: this.committeeBloc)
+          ),
           SizedBox(height: 15.0),
           Expanded(
             child: StreamBuilder(
@@ -284,7 +287,7 @@ class DetailAbsent extends StatelessWidget {
                     return ErrorInGrid(snapshot.data.msg);
                   else if (snapshot.data.status == Status.loaded)
                     return Wrap(
-                      children: snapshot.data.rows.map((e) => UserTile(id: e.peopid, title: e.peopfamily, subtitle: e.detailid>0 ? '${e.semat} - غایب' : '${e.semat}', imgtype: 'people', selected: e.detailid>0, color: Colors.red, onTap: (){
+                      children: snapshot.data.rows.map((e) => UserTile(id: e.peopid, title: e.peopfamily, subtitle: e.detailid>0 ? '${e.semat} - غایب' : '${e.semat} - حاضر', imgtype: 'people', selected: true, color: e.detailid > 0 ? Colors.red : Colors.green, onTap: (){
                         if (e.detailid > 0)
                           committeeBloc.delDetailAbsent(context, e);
                         else  
@@ -311,7 +314,7 @@ class CommitteeDetailRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onDoubleTap: (){context.read<ThemeManager>().setCompany(dtl.cmpid); showFormAsDialog(context: context, form: EditDetail(commiteeBloc: committeeBloc, dtl: dtl));},
+      onDoubleTap: (){context.read<ThemeManager>().setCompany(dtl.cmpid); showFormAsDialog(context: context, form: EditDetail(commiteeBloc: committeeBloc, com: committee, dtl: dtl));},
       child: Row(
         children: [
           SizedBox(width: 10.0,),
@@ -337,39 +340,54 @@ class CommitteeDetailRow extends StatelessWidget {
 }
 
 class EditDetail extends StatelessWidget {
-  const EditDetail({Key key, @required this.commiteeBloc, @required this.dtl}) : super(key: key);
+  const EditDetail({Key key, @required this.commiteeBloc, @required this.com, @required this.dtl}) : super(key: key);
 
   final CommitteeBloc commiteeBloc;
   final CommitteeDetail dtl;
+  final Committee com;
 
   @override
   Widget build(BuildContext context) {
+    final _formkey = GlobalKey<FormState>();
+
     TextEditingController _eddate = TextEditingController(text: dtl.date);
     return Directionality(
       textDirection: TextDirection.rtl, 
       child: Container(
         width: screenWidth(context) * 0.6,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            FormHeader(title: 'ویرایش اطلاعات فهرست جلسات/کمیسیون', btnRight: MyIconButton(type: ButtonType.save, onPressed: (){dtl.date=_eddate.text; commiteeBloc.saveDetail(context, dtl);})),
-            SizedBox(height: 10.0,),
-            Row(
-              children: [
-                Expanded(child: GridTextField(hint: 'موضوع', initialValue: dtl.title, onChange: (val) => dtl.title=val, autofocus: true,)),
-                Expanded(child: ForeignKeyField(hint: 'کارشناس', initialValue: {'id': dtl.empid, 'name': dtl.empfamily}, onChange: (val){if (val != null){dtl.empid = val['id']; dtl.empfamily = val['name'];}}, f2key: 'Employee')),
-              ]
-            ),
-            SizedBox(height: 10.0,),
-            Row(
-              children: [
-                Expanded(child: GridTextField(hint: 'تاریخ برگذاری', controller: _eddate, datepicker: true)),
-                Expanded(child: GridTextField(hint: 'زمان برگذاری', initialValue: dtl.time, onChange: (val) => dtl.time=val)),
-              ],
-            ),
-            SizedBox(height: 10.0,),
-            GridTextField(hint: 'توضیحات', initialValue: dtl.note, onChange: (val) => dtl.note=val),
-          ],
+        child: Form(
+          key: _formkey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FormHeader(
+                title: 'ویرایش اطلاعات فهرست ${com.kindName()} ${com.name}', 
+                btnRight: MyIconButton(
+                  type: ButtonType.save, 
+                  onPressed: (){
+                    if (_formkey.currentState.validate())
+                      dtl.date=_eddate.text; commiteeBloc.saveDetail(context, dtl);
+                  }
+                )
+              ),
+              SizedBox(height: 10.0,),
+              Row(
+                children: [
+                  Expanded(child: GridTextField(hint: 'موضوع', initialValue: dtl.title, onChange: (val) => dtl.title=val, autofocus: true, notempty: true,)),
+                  Expanded(child: ForeignKeyField(hint: 'کارشناس', initialValue: {'id': dtl.empid, 'name': dtl.empfamily}, onChange: (val){if (val != null){dtl.empid = val['id']; dtl.empfamily = val['name'];}}, f2key: 'Employee')),
+                ]
+              ),
+              SizedBox(height: 10.0,),
+              Row(
+                children: [
+                  Expanded(child: GridTextField(hint: 'تاریخ برگذاری', controller: _eddate, datepicker: true, notempty: true,)),
+                  Expanded(child: GridTextField(hint: 'زمان برگذاری', initialValue: dtl.time, onChange: (val) => dtl.time=val, timeonly: true, notempty: true,)),
+                ],
+              ),
+              SizedBox(height: 10.0,),
+              GridTextField(hint: 'توضیحات', initialValue: dtl.note, onChange: (val) => dtl.note=val, notempty: true),
+            ],
+          ),
         ),
       )
     );

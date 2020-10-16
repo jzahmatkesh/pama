@@ -236,7 +236,7 @@ class CommitteeBloc{
   }
 
   delDetail(BuildContext context, CommitteeDetail dtl){
-    confirmMessage(context, 'حذف ', 'آیا مایل به حذف ${dtl.empfamily} می باشید؟', yesclick: () async{
+    confirmMessage(context, 'حذف ', 'آیا مایل به حذف ${dtl.title} می باشید؟', yesclick: () async{
       try{
         await _repository.deleteDetail(readToken(context), dtl);
         _committeeDetailbloc.value.rows.removeWhere((element) => element.id == dtl.id);

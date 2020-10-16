@@ -1209,13 +1209,13 @@ class Committee{
 			if (this.kind == 9)
         return "کمیسیون رسیدگی به شکایات";
 			if (this.kind == 10)
-        return "=کمیسیون حل اختلاف";
+        return "کمیسیون حل اختلاف";
 			if (this.kind == 11)
-        return "=کمیسیون فنی";
+        return "کمیسیون فنی";
 			if (this.kind == 12)
-        return "=کمیسیون بازرسی واحد های صنفی";
+        return "کمیسیون بازرسی واحد های صنفی";
 			if (this.kind == 13)
-        return "=کمیسیون آموزش";
+        return "کمیسیون آموزش";
       return "";
   }
 }
@@ -1308,10 +1308,10 @@ class CommitteeDetail{
      json['cmtid'] = this.cmtid;
      json['id'] = this.id;
      json['title'] = this.title;
-     json['date'] = this.date;
-     json['time'] = this.time;
+     json['date'] = this.date ?? "";
+     json['time'] = this.time ?? "";
      json['empid'] = this.empid;
-     json['note'] = this.note;
+     json['note'] = this.note ?? "";
      json['token'] = this.token;
 
      return json;
