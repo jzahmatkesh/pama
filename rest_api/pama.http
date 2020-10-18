@@ -14,3 +14,18 @@ Content-Type: application/json
 {
     "token": "8F3FAEE6-891D-46A8-8BAE-EA6DE1CD847C"
 }
+
+
+###
+PUT http://127.0.0.1:8080/PamaApi/api/Property/Mobile
+Content-Type: application/json
+
+{
+    "token": "E1F8ABC5-0F0A-448F-86D2-A44EA4D8A2E5",
+    "cmpid": "1", 
+    "id": "0", 
+    "name": "09305105691", 
+    "active": "1",
+    "kind": "0"
+}
+

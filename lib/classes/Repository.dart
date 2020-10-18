@@ -776,3 +776,131 @@ class CommitteeRepository{
     throw Exception(_data['msg']);
   }
 }
+
+class PropertyRepository{
+
+  Future<int> setActive(Property prop) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Property/Active', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode({'token': prop.token, 'id': prop.id})
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['active'];
+    throw Exception(_data['msg']);
+  }
+
+  Future<List<Property>> loadMobile(String token, int cmpid) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Property/Mobile', body: jsonEncode({"token": token, "cmpid": cmpid}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Property>((data) => Property.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> saveMobile(Property prop) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Property/Mobile', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(prop.toMobileJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+ 
+  Future<bool> delMobile(String token, Property prop) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Property/Mobile', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': token,
+       'id': prop.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+  Future<List<Property>> loadCar(String token, int cmpid) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Property/Car', body: jsonEncode({"token": token, "cmpid": cmpid}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Property>((data) => Property.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> saveCar(Property prop) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Property/Car', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(prop.toCarJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+ 
+  Future<bool> delCar(String token, Property prop) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Property/Car', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': token,
+       'id': prop.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+  Future<List<Property>> loadPropGHM(String token, int cmpid) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Property/PropGHM', body: jsonEncode({"token": token, "cmpid": cmpid}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Property>((data) => Property.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> savePropGHM(Property prop) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Property/PropGHM', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(prop.toPropGHMJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+ 
+  Future<bool> delPropGHM(String token, Property prop) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Property/PropGHM', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': token,
+       'id': prop.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+  Future<List<Property>> loadBankHesab(String token, int cmpid) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Property/BankHesab', body: jsonEncode({"token": token, "cmpid": cmpid}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Property>((data) => Property.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> saveBankHesab(Property prop) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Property/BankHesab', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(prop.toBankHesabJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+ 
+  Future<bool> delBankHesab(String token, Property prop) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Property/BankHesab', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': token,
+       'id': prop.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+}

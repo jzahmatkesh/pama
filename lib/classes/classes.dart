@@ -163,7 +163,7 @@ class Company{
 	int cntcom;
 	int cntattach;
 	int cntletter;
-	int cntasset;
+	int cntproperty;
 	int cntbzr;
 	int cnttcoding;
   String andate1;
@@ -179,7 +179,7 @@ class Company{
   String token;
 
   Company({this.id, this.active=1, this.name, this.sabt=0, this.sabtsazman=0, this.bdate, this.edate, this.sabtdate, this.lastnwid="", this.lastnwdate, this.ecoid=0, this.bimeid=0, this.bimeshobe, this.nationalid=0, this.tax, this.taxid=0, this.email, this.tel, this.fax, this.post, this.note, this.address, this.price=0, this.expire=0, this.insearchquery = true, this.showinfo = false,
-    this.cntuser,this.cntemp,this.cntdrt,this.cntaddinfo,this.cntcom,this.cntattach,this.cntletter,this.cntasset,this.cntbzr,this.cnttcoding, this.token});
+    this.cntuser,this.cntemp,this.cntdrt,this.cntaddinfo,this.cntcom,this.cntattach,this.cntletter,this.cntproperty,this.cntbzr,this.cnttcoding, this.token});
 
   Company.fromJson(Map<String, dynamic> data)
     : id = data['id'],
@@ -215,7 +215,7 @@ class Company{
 	    cntcom = data['cntcom'] ?? 0,
 	    cntattach = data['cntattach'] ?? 0,
 	    cntletter = data['cntletter'] ?? 0,
-      cntasset = data['cntasset'] ?? 0,
+      cntproperty = data['cntproperty'] ?? 0,
       cntbzr = data['cntbzr'] ?? 0,
       cnttcoding = data['cnttcoding'] ?? 0,
       andate1 = data['andate1'],
@@ -1424,4 +1424,166 @@ class CommitteeDetailMosavabat{
   }
 }
 
+class Property{
+	int cmpid;
+	int id;
+	int kind;
+	String name;
+	int active;
+	String buydate;
+	String owner;
+	int peopid;
+  String peopfamily;
+	String color;
+	String status;
+	String pelak;
+	int malekiat;
+	String usage;
+	String contractdate;
+	double price;
+	double cprice;
+	int metraj;
+	int age;
+	String karbari;
+	int tenant;
+	String pelakSabti;
+	String address;
+	int accounttype;
+	int bankid;
+  String bankName;
+	String bcondition;
+	String hesano;
+	String shaba;
+	String cardno;
+	int internetbank;
+	int tafsiliid;
+	String token;
 
+  Property({this.cmpid,this.id,this.kind,this.name,this.active,this.buydate,this.owner,this.peopid, this.peopfamily,this.color,this.status,this.pelak,this.malekiat,this.usage,this.contractdate,this.price,this.cprice,this.metraj,this.age,this.karbari,this.tenant,this.pelakSabti,this.address,this.accounttype,this.bankid,this.bankName,this.bcondition,this.hesano,this.shaba,this.cardno,this.internetbank,this.tafsiliid,this.token});
+
+  Property.fromJson(Map<String, dynamic> json)
+    :cmpid = json['cmpid'],
+    id = json['id'],
+    kind = json['kind'],
+    name = json['name'],
+    active = json['active'],
+    buydate = json['buydate'],
+    owner = json['owner'],
+    peopid = json['peopid'],
+    peopfamily = json['peopfamily'],
+    color = json['color'],
+    status = json['status'],
+    pelak = json['pelak'],
+    malekiat = json['malekiat'],
+    usage = json['usage'],
+    contractdate = json['contractdate'],
+    price = json['price'],
+    cprice = json['cprice'],
+    metraj = json['metraj'],
+    age = json['age'],
+    karbari = json['karbari'],
+    tenant = json['tenant'],
+    pelakSabti = json['pelakSabti'],
+    address = json['address'],
+    accounttype = json['accounttype'],
+    bankid = json['bankid'],
+    bankName = json['bankname'],
+    bcondition = json['bcondition'],
+    hesano = json['hesano'],
+    shaba = json['shaba'],
+    cardno = json['cardno'],
+    internetbank = json['internetbank'],
+    tafsiliid = json['tafsiliid'],
+    token = json['token'];
+
+  Map<String, dynamic> toMobileJson(){
+    Map<String, dynamic> json = new Map<String, dynamic>();
+    json['cmpid'] = cmpid;
+    json['id'] = id;
+    json['name'] = name;
+    json['active'] = active;
+    json['buydate'] = buydate;
+    json['owner'] = owner;
+    json['peopid'] = peopid;
+    json['token'] = token;
+    return json;
+  }
+
+  Map<String, dynamic> toCarJson(){
+    Map<String, dynamic> json = new Map<String, dynamic>();
+    json['cmpid'] = cmpid;
+    json['id'] = id;
+    json['name'] = name;
+    json['buydate'] = buydate;
+    json['color'] = color;
+    json['status'] = status;
+    json['pelak'] = pelak;
+    json['peopid'] = peopid;
+    json['token'] = token;
+    return json;
+  }
+
+  Map<String, dynamic> toPropGHMJson(){
+    Map<String, dynamic> json = new Map<String, dynamic>();
+    json['cmpid'] = cmpid;
+    json['id'] = id;
+    json['name'] = name;
+    json['malekiat'] = malekiat;
+    json['usage'] = usage;
+    json['contractdate'] = contractdate;
+    json['price'] = price;
+    json['metraj'] = metraj;
+    json['age'] = age;
+    json['cprice'] = cprice;
+    json['karbari'] = karbari;
+    json['tenant'] = tenant;
+    json['pelak'] = pelak;
+    json['address'] = address;
+    json['token'] = token;
+    return json;
+  }
+  
+  Map<String, dynamic> toBankHesabJson(){
+    Map<String, dynamic> json = new Map<String, dynamic>();
+    json['cmpid'] = cmpid;
+    json['id'] = id;
+    json['accounttype'] = accounttype;
+    json['bankid'] = bankid;
+    json['buydate'] = buydate;
+    json['owner'] = owner;
+    json['bcondition'] = bcondition;
+    json['hesano'] = hesano;
+    json['shaba'] = shaba;
+    json['cardno'] = cardno;
+    json['tafsiliid'] = tafsiliid;
+    json['internetbank'] = internetbank;
+    json['token'] = token;
+    return json;
+  }
+
+  String malekiatName(){
+    return this.malekiat==1 
+      ? 'تملیک' 
+      : this.malekiat==2
+			  ? 'استیجاری'
+        : '';
+  }
+  String tenantName(){
+    return this.tenant==1 
+      ? 'اتحادیه' 
+      : this.tenant==2
+			  ? 'اتاق'
+        : this.tenant==3
+	  		  ? 'مستاجر'
+          : '';
+  }
+  String accountTypeName(){
+    return this.accounttype==1 
+      ? 'جاری' 
+      : this.accounttype==2
+			  ? 'سپرده'
+        : this.accounttype==3
+	  		  ? 'قرض الحسنه'
+          : '';
+  }
+} 

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pama/forms/Property/Property.dart';
 import 'package:pama/forms/Raste/RasteBloc.dart';
 
 import '../../classes/classes.dart';
@@ -146,7 +147,7 @@ class GridCompanyList extends StatelessWidget {
                                   ),
                                   DesktopIcon(title: 'فایلهای ضمیمه', subtitle: 'فایلهای ضمیمه شده ${_company.cntattach} فایل', icon: Icon(Icons.attach_file), onPressed: (){}),
                                   _company.id > 1 ? DesktopIcon(title: 'آیین نامه', subtitle: 'آیین نامه تحادیه', icon: Icon(CupertinoIcons.rectangle_on_rectangle_angled), onPressed: () => showFormAsDialog(context: context, form: CompanybyLaw(companyBloc: companyBloc, cmp: _company))): Container(width: 0),
-                                  DesktopIcon(title: 'اموال منقول/غیر منقول', subtitle: 'اموال ${_company.cntasset} رکورد', icon: Icon(Icons.web_asset), onPressed: (){}),
+                                  DesktopIcon(title: 'اموال منقول/غیر منقول', subtitle: 'اموال ${_company.cntproperty} رکورد', icon: Icon(Icons.web_asset), onPressed: () => showFormAsDialog(context: context, form: FmProperty(cmp: _company))),
                                   DesktopIcon(title: 'طرح های بازرسی و نظارت',  subtitle: 'طرح های بازرسی ${_company.cntbzr} رکورد', icon: Icon(Icons.security), onPressed: (){}),
                                   DesktopIcon(title: 'تنظیم کدینگ درآمد',  subtitle: 'کدینگ درآمد ${_company.cnttcoding} رکورد', icon: Icon(Icons.monetization_on), onPressed: (){}),
 
