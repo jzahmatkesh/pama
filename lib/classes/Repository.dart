@@ -31,6 +31,12 @@ class CompanyRepository{
     throw Exception(_data['msg']);
   }
 
+  Future<bool> saveCompanyByLaw(Company cmp) async{
+    Map<String, dynamic> _data = await putToServer(api: 'Company/bylaw', body: jsonEncode(cmp.toJson()));
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
 
   Future<List<CompanyUser>> loadCompanyUsers(String token, int cmpid) async{
     Map<String, dynamic> _data = await postToServer(api: 'Company/users', body: jsonEncode({"cmpid": cmpid,"token": token}));

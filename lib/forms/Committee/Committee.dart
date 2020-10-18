@@ -220,7 +220,7 @@ class PnCommitteeDetail extends StatelessWidget {
         SizedBox(height: 10.0,),
         GridCaption(
           obj: [
-            MyIconButton(type: ButtonType.add, onPressed: (){context.read<ThemeManager>().setCompany(company.id); showFormAsDialog(context: context, form: EditDetail(commiteeBloc: committeeBloc, com: com, dtl: new CommitteeDetail(cmpid: com.cmpid, cmtid: com.id, id: 0)));}),
+            MyIconButton(type: ButtonType.add, onPressed: (){context.read<ThemeManager>().setCompany(company.id); showFormAsDialog(context: context, form: EditDetail(commiteeBloc: committeeBloc, com: com, dtl: new CommitteeDetail(cmpid: com.cmpid, cmtid: com.id, id: 0, empid: com.empid, empfamily: com.empfamily)));}),
             'موضوع','تاریخ برگذاری','زمان برگذاری','کارشناس','توضیحات'
           ],
           endbuttons: 4,
@@ -365,8 +365,10 @@ class EditDetail extends StatelessWidget {
                 btnRight: MyIconButton(
                   type: ButtonType.save, 
                   onPressed: (){
-                    if (_formkey.currentState.validate())
-                      dtl.date=_eddate.text; commiteeBloc.saveDetail(context, dtl);
+                    if (_formkey.currentState.validate()){
+                      dtl.date=_eddate.text; 
+                      commiteeBloc.saveDetail(context, dtl);
+                    }
                   }
                 )
               ),

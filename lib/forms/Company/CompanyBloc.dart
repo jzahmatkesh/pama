@@ -545,4 +545,33 @@ class CompanyBloc{
       Navigator.pop(context);
     });
   }
+
+  saveCompanybylaw(BuildContext context, Company company) async{
+    try{
+      showWaiting(context);
+      company.token = readToken(context);
+      await _repository.saveCompanyByLaw(company);
+      _companybloc.value.rows.forEach((element) {
+        if (element.id == company.id){
+          element.andate1 = company.andate1;
+          element.andate2 = company.andate2;
+          element.andate3 = company.andate3;
+          element.andate4 = company.andate4;
+          element.made1 = company.made1;
+          element.made2 = company.made2;
+          element.made4 = company.made4;
+          element.made5 = company.made5;
+          element.made6 = company.made6;
+          element.made7 = company.made7;
+        }
+      });
+      _companybloc.add(_companybloc.value);
+      hideWaiting(context);
+      Navigator.of(context).pop();
+      myAlert(context: context, title: 'ذخیره', message: "ذخیره اطلاعات آیین نامه با موفقیت انجام گردید", color: Colors.lightGreen);
+    }catch(e){
+      hideWaiting(context);
+      analyzeError(context, e.toString());
+    }
+  }
 }

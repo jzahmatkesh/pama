@@ -1,6 +1,7 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
+// import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -156,13 +157,23 @@ class SideBar extends StatelessWidget {
               )
             ],  
           ),
-          Spacer(),
+          SizedBox(height: 50),
           Card(color: backgroundColor(context).withOpacity(0.5), child: Container(width: double.infinity, padding: EdgeInsets.all(8.0),child: Text('${this.user.cmpname}', style: titleStyle(), textAlign: TextAlign.center,))),
           Card(color: backgroundColor(context).withOpacity(0.5), child: Container(width: double.infinity, padding: EdgeInsets.all(8.0),child: Text('${this.user.name} ${this.user.family} خوش آمدید', style: gridFieldStyle(), textAlign: TextAlign.center,))),
           Card(color: backgroundColor(context).withOpacity(0.5), child: Container(width: double.infinity, padding: EdgeInsets.all(8.0),child: Text('${this.user.ip}', style: gridFieldStyle(), textAlign: TextAlign.center,))),
           Spacer(flex: 2,),
-          Tooltip(message: 'پشتیبانی آنلاین', child: IconButton(iconSize: 175, icon: Lottie.asset('images/support.json', height: 100), onPressed: ()=> myAlert(context: context, title: 'بزودی', message: 'پشتیبانی آنلاین در دست طراحی می باشد', color: Colors.blueGrey))),
-          // SizedBox(height: 35.0,),
+          // Tooltip(message: 'پشتیبانی آنلاین', child: IconButton(iconSize: 175, icon: Lottie.asset('images/support.json', height: 100), onPressed: ()=> myAlert(context: context, title: 'بزودی', message: 'پشتیبانی آنلاین در دست طراحی می باشد', color: Colors.blueGrey))),
+          Tooltip(
+            message: 'پشتیبانی آنلاین', 
+            child: IconButton(
+              iconSize: 75, 
+              icon: Image.asset('images/support2.png'),
+              onPressed: (){
+                myAlert(context: context, title: 'بزودی', message: 'پشتیبانی آنلاین در دست طراحی می باشد', color: Colors.blueGrey);
+              }
+            )
+          ),
+          SizedBox(height: 35.0,),
         ],
       ),
     );

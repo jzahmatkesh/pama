@@ -166,9 +166,20 @@ class Company{
 	int cntasset;
 	int cntbzr;
 	int cnttcoding;
+  String andate1;
+  String andate2;
+  String andate3;
+  String andate4;
+  String made1;
+  String made2;
+  String made4;
+  String made5;
+  String made6;
+  String made7;
+  String token;
 
   Company({this.id, this.active=1, this.name, this.sabt=0, this.sabtsazman=0, this.bdate, this.edate, this.sabtdate, this.lastnwid="", this.lastnwdate, this.ecoid=0, this.bimeid=0, this.bimeshobe, this.nationalid=0, this.tax, this.taxid=0, this.email, this.tel, this.fax, this.post, this.note, this.address, this.price=0, this.expire=0, this.insearchquery = true, this.showinfo = false,
-    this.cntuser,this.cntemp,this.cntdrt,this.cntaddinfo,this.cntcom,this.cntattach,this.cntletter,this.cntasset,this.cntbzr,this.cnttcoding});
+    this.cntuser,this.cntemp,this.cntdrt,this.cntaddinfo,this.cntcom,this.cntattach,this.cntletter,this.cntasset,this.cntbzr,this.cnttcoding, this.token});
 
   Company.fromJson(Map<String, dynamic> data)
     : id = data['id'],
@@ -206,7 +217,17 @@ class Company{
 	    cntletter = data['cntletter'] ?? 0,
       cntasset = data['cntasset'] ?? 0,
       cntbzr = data['cntbzr'] ?? 0,
-      cnttcoding = data['cnttcoding'] ?? 0;
+      cnttcoding = data['cnttcoding'] ?? 0,
+      andate1 = data['andate1'],
+      andate2 = data['andate2'],
+      andate3 = data['andate3'],
+      andate4 = data['andate4'],
+      made1 = data['made1'],
+      made2 = data['made2'],
+      made4 = data['made4'],
+      made5 = data['made5'],
+      made6 = data['made6'],
+      made7 = data['made7'];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -234,6 +255,17 @@ class Company{
     data['note'] = this.note;
     data['post'] = this.post;
     data['address'] = this.address;
+    data['andate1'] = this.andate1;
+    data['andate2'] = this.andate2;
+    data['andate3'] = this.andate3;
+    data['andate4'] = this.andate4;
+    data['made1'] = this.made1;
+    data['made2'] = this.made2;
+    data['made4'] = this.made4;
+    data['made5'] = this.made5;
+    data['made6'] = this.made6;
+    data['made7'] = this.made7;
+    data['token'] = this.token;
     return data;
   }
 }

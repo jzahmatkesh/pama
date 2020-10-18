@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pama/forms/Raste/RasteBloc.dart';
 
 import '../../classes/classes.dart';
 import '../../module/Widgets.dart';
@@ -38,6 +39,53 @@ class FmCompany extends StatelessWidget {
           Expanded(
             child: GridCompanyList(companyBloc: _companyBloc, user: user),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class CompanyRow extends StatelessWidget {
+  const CompanyRow({
+    Key key,
+    @required this.companyBloc,
+    @required this.user,
+    @required this.company,
+    @required this.dashboardicon
+  }) : super(key: key);
+
+  final CompanyBloc companyBloc;
+  final Company company;
+  final User user;
+  final bool dashboardicon;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onDoubleTap: ()=>showFormAsDialog(context: context, form: EditCompany(user: this.user, company: this.company, companybloc: this.companyBloc)),
+      child: Row(
+        children: [
+          this.company.id==1
+            ? CircleAvatar(
+              radius: 22,
+              backgroundColor: accentcolor(context),
+              child: CompanyPic(id: this.company.id),
+            )
+            : CompanyPic(id: this.company.id),
+          Switch(value: this.company.active==1, onChanged: (val){
+            companyBloc.setActive(context, this.company.id);
+          }),
+          SizedBox(width: 5,),
+          this.company.id == 1 ? Icon(CupertinoIcons.timelapse, color: Colors.yellow,) : Container(),
+          Expanded(flex: 2, child: Text("${this.company.name}")),
+          SizedBox(width: 5,),
+          Expanded(child: Text(this.company.nationalid.toString())),
+          SizedBox(width: 5,),
+          Expanded(child: Text(this.company.tel)),
+          SizedBox(width: 5,),
+          Expanded(flex: 3, child: Text('${this.company.address}')),
+          SizedBox(width: 5,),
+          dashboardicon ? IconButton(tooltip: 'داشبرد', icon: Icon(Icons.dashboard_outlined), onPressed: ()=>companyBloc.showcompanyInfo(this.company.id)) : Container()
         ],
       ),
     );
@@ -97,7 +145,7 @@ class GridCompanyList extends StatelessWidget {
                                     }
                                   ),
                                   DesktopIcon(title: 'فایلهای ضمیمه', subtitle: 'فایلهای ضمیمه شده ${_company.cntattach} فایل', icon: Icon(Icons.attach_file), onPressed: (){}),
-                                  DesktopIcon(title: 'آیین نامه ها', subtitle: 'آیین نامه ها ${_company.cntletter} رکورد', icon: Icon(Icons.integration_instructions), onPressed: (){}),
+                                  _company.id > 1 ? DesktopIcon(title: 'آیین نامه', subtitle: 'آیین نامه تحادیه', icon: Icon(CupertinoIcons.rectangle_on_rectangle_angled), onPressed: () => showFormAsDialog(context: context, form: CompanybyLaw(companyBloc: companyBloc, cmp: _company))): Container(width: 0),
                                   DesktopIcon(title: 'اموال منقول/غیر منقول', subtitle: 'اموال ${_company.cntasset} رکورد', icon: Icon(Icons.web_asset), onPressed: (){}),
                                   DesktopIcon(title: 'طرح های بازرسی و نظارت',  subtitle: 'طرح های بازرسی ${_company.cntbzr} رکورد', icon: Icon(Icons.security), onPressed: (){}),
                                   DesktopIcon(title: 'تنظیم کدینگ درآمد',  subtitle: 'کدینگ درآمد ${_company.cnttcoding} رکورد', icon: Icon(Icons.monetization_on), onPressed: (){}),
@@ -116,53 +164,6 @@ class GridCompanyList extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class CompanyRow extends StatelessWidget {
-  const CompanyRow({
-    Key key,
-    @required this.companyBloc,
-    @required this.user,
-    @required this.company,
-    @required this.dashboardicon
-  }) : super(key: key);
-
-  final CompanyBloc companyBloc;
-  final Company company;
-  final User user;
-  final bool dashboardicon;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onDoubleTap: ()=>showFormAsDialog(context: context, form: EditCompany(user: this.user, company: this.company, companybloc: this.companyBloc)),
-      child: Row(
-        children: [
-          this.company.id==1
-            ? CircleAvatar(
-              radius: 22,
-              backgroundColor: accentcolor(context),
-              child: CompanyPic(id: this.company.id),
-            )
-            : CompanyPic(id: this.company.id),
-          Switch(value: this.company.active==1, onChanged: (val){
-            companyBloc.setActive(context, this.company.id);
-          }),
-          SizedBox(width: 5,),
-          this.company.id == 1 ? Icon(CupertinoIcons.timelapse, color: Colors.yellow,) : Container(),
-          Expanded(flex: 2, child: Text("${this.company.name}")),
-          SizedBox(width: 5,),
-          Expanded(child: Text(this.company.nationalid.toString())),
-          SizedBox(width: 5,),
-          Expanded(child: Text(this.company.tel)),
-          SizedBox(width: 5,),
-          Expanded(flex: 3, child: Text('${this.company.address}')),
-          SizedBox(width: 5,),
-          dashboardicon ? IconButton(tooltip: 'داشبرد', icon: Icon(Icons.dashboard_outlined), onPressed: ()=>companyBloc.showcompanyInfo(this.company.id)) : Container()
-        ],
-      ),
     );
   }
 }
@@ -484,7 +485,101 @@ class UserPassword extends StatelessWidget {
   }
 }
 
+class CompanybyLaw extends StatelessWidget {
+  const CompanybyLaw({Key key, @required this.companyBloc, @required this.cmp}) : super(key: key);
 
+  final CompanyBloc companyBloc;
+  final Company cmp;
+
+  @override
+  Widget build(BuildContext context) {
+    TextEditingController _date1 = TextEditingController(text: cmp.andate1);
+    TextEditingController _date2 = TextEditingController(text: cmp.andate2);
+    TextEditingController _date3 = TextEditingController(text: cmp.andate3);
+    TextEditingController _date4 = TextEditingController(text: cmp.andate4);
+    RasteBloc _raste = RasteBloc()..loadData(context);
+
+    final _formkey = GlobalKey<FormState>();
+    return Directionality(
+      textDirection: TextDirection.rtl, 
+      child: Container(
+        width: screenWidth(context) * 0.75,
+        height: screenWidth(context) * 0.85,
+        child: Form(
+          key: _formkey,
+          child: ListView(
+            children: [
+              FormHeader(
+                title: 'آیین نامه اتحادیه ${cmp.name}', 
+                btnRight: MyIconButton(
+                  type: ButtonType.save, 
+                  onPressed: (){
+                    if (_formkey.currentState.validate()){
+                      cmp.andate1 = _date1.text;
+                      cmp.andate2 = _date2.text;
+                      cmp.andate3 = _date3.text;
+                      cmp.andate4 = _date4.text;
+                      companyBloc.saveCompanybylaw(context, cmp);
+                    }
+                  }
+                )
+              ),
+              SizedBox(height: 10,),
+              Card(
+                child: Row(
+                  children: [
+                    Expanded(child: GridTextField(hint: 'تاریخ ارسال به اتاق', datepicker: true, controller: _date1, notempty: true, autofocus: true)),
+                    Expanded(child: GridTextField(hint: 'تاریخ تصویب کمیسیون', datepicker: true, controller: _date2, notempty: true)),
+                    Expanded(child: GridTextField(hint: 'تاریخ تصویب اجلاس', datepicker: true, controller: _date3, notempty: true)),
+                    Expanded(child: GridTextField(hint: 'تاریخ تصویب کمیسیون نظارت', datepicker: true, controller: _date4, notempty: true)),
+                  ],
+                ),
+              ),
+              GridTextField(hint: 'ماده ۱ - تعریف اتحادیه', initialValue: cmp.made1, onChange: (val) => cmp.made1=val, notempty: true),
+              GridTextField(hint: 'ماده ۲ - تعریف فرد صنفی', initialValue: cmp.made2, onChange: (val) => cmp.made2=val, notempty: true),
+              GridCaption(obj: ['فعال', 'کد آیسیک', 'عنوان']),
+              Container(
+                height: 300,
+                child: StreamBuilder(
+                  stream: _raste.rasteblocStream$,
+                  builder: (BuildContext context, AsyncSnapshot<RasteModel> snap){
+                    if (snap.hasData)
+                      if (snap.data.status == Status.error)
+                        return ErrorInGrid(snap.data.msg);
+                      else if (snap.data.status == Status.loaded)
+                        return ListView.builder(
+                          itemCount: snap.data.rows.length,
+                          itemBuilder: (context, idx){
+                            Raste _rs = snap.data.rows[idx];
+                            if (_rs.cmpid == cmp.id)
+                              return MyRow(
+                                children: [
+                                  Switch(value: _rs.active, onChanged: (_){}),
+                                  _rs.isic,
+                                  _rs.name
+                                ],
+                                padding: false,
+                              );
+                            else
+                              return Container();
+                          }
+                        );
+                    return Center(child: CupertinoActivityIndicator());
+                  },
+                ),
+              ),
+              SizedBox(height: 10,),
+              GridTextField(hint: 'ماده ۴ - حداقل مساحت', initialValue: cmp.made4, onChange: (val) => cmp.made4=val, notempty: true),
+              GridTextField(hint: 'ماده ۵ - نوع کالا و خدمات', initialValue: cmp.made5, onChange: (val) => cmp.made5=val, notempty: true),
+              GridTextField(hint: 'ماده ۶ - لوازم و اسباب کار', initialValue: cmp.made6, onChange: (val) => cmp.made6=val, notempty: true),
+              GridTextField(hint: 'ماده ۷ - تجهیزات ایمنی - انتظامی و تاسیسات بهداشتی', initialValue: cmp.made7, onChange: (val) => cmp.made7=val, notempty: true),
+            ],
+          ),
+        ),
+      )
+    );
+  }
+}
 
 
 

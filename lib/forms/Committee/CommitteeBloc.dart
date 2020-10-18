@@ -214,6 +214,9 @@ class CommitteeBloc{
   }
 
   saveDetail(BuildContext context, CommitteeDetail dtl) async{
+    if (dtl.empid == 0)
+      myAlert(context: context, title: 'مقادیر اجباری', message: 'کارشناس انتخاب نشده است');
+    else
     try{
       showWaiting(context);
       dtl.token = readToken(context);
@@ -241,7 +244,7 @@ class CommitteeBloc{
         await _repository.deleteDetail(readToken(context), dtl);
         _committeeDetailbloc.value.rows.removeWhere((element) => element.id == dtl.id);
         _committeeDetailbloc.add(_committeeDetailbloc.value);
-        myAlert(context: context, title: 'حذف', message: 'حذف ${dtl.empfamily} با موفقیت انجام گردید', color: Colors.green);
+        myAlert(context: context, title: 'حذف', message: 'حذف ${dtl.title} با موفقیت انجام گردید', color: Colors.green);
       }catch(e){
         analyzeError(context, '$e');
       }
