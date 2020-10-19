@@ -18,8 +18,24 @@ class PropertyBloc{
   BehaviorSubject<int> _menuBloc = BehaviorSubject<int>.seeded(1);
   Stream<int> get menuStream$ => _menuBloc.stream;
 
+  BehaviorSubject<int> _accountBloc = BehaviorSubject<int>.seeded(1);
+  Stream<int> get accountTypeStream$ => _accountBloc.stream;
+  BehaviorSubject<int> _malekiatBloc = BehaviorSubject<int>.seeded(1);
+  Stream<int> get malekiaTypeStream$ => _malekiatBloc.stream;
+  BehaviorSubject<int> _tenantBloc = BehaviorSubject<int>.seeded(1);
+  Stream<int> get tenantTypeStream$ => _tenantBloc.stream;
+
   BehaviorSubject<PropertyModel> _propertyBloc = BehaviorSubject<PropertyModel>.seeded(PropertyModel(status: Status.loading));
   Stream<PropertyModel> get propertyStream$ => _propertyBloc.stream;
+
+  setMultItem(int val, {bool tenant=false, bool account=false, bool malekiat=false}){
+    if (tenant)
+      _tenantBloc.add(val);
+    if (malekiat)
+      _malekiatBloc.add(val);
+    if (account)
+      _accountBloc.add(val);
+  }
 
   loadMobile(BuildContext context, int cmpid) async{
     try{
@@ -74,6 +90,20 @@ class PropertyBloc{
       _propertyBloc.value.rows.forEach((element) {
         if (element.id == id)
           element.active = _act;
+      });
+      _propertyBloc.add(_propertyBloc.value);
+    }
+    catch(e){
+      analyzeError(context, '$e');
+    }
+  }
+  
+  setInternetBank(BuildContext context, int id) async{
+    try{
+      int _int = await _repository.setInternetBank(Property(token: readToken(context), id: id));
+      _propertyBloc.value.rows.forEach((element) {
+        if (element.id == id)
+          element.internetbank = _int;
       });
       _propertyBloc.add(_propertyBloc.value);
     }
@@ -206,7 +236,7 @@ class PropertyBloc{
     }   
   }
   delBankHesab(BuildContext context, Property prop){
-    confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف ${prop.name} می باشید؟', yesclick: () async {
+    confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف ${prop.accountTypeName()} ${prop.hesabno} ${prop.bankName} می باشید؟', yesclick: () async {
       try{
         prop.token = readToken(context);
         await _repository.delBankHesab(readToken(context), prop);

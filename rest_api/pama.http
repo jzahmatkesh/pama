@@ -17,15 +17,10 @@ Content-Type: application/json
 
 
 ###
-PUT http://127.0.0.1:8080/PamaApi/api/Property/Mobile
+POST http://127.0.0.1:8080/PamaApi/api/F2Key/Bank
 Content-Type: application/json
 
 {
-    "token": "E1F8ABC5-0F0A-448F-86D2-A44EA4D8A2E5",
-    "cmpid": "1", 
-    "id": "0", 
-    "name": "09305105691", 
-    "active": "1",
-    "kind": "0"
+    "token": "289D8725-561A-4A09-AC29-C5FFAEFE2AD7"
 }
 

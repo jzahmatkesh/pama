@@ -788,6 +788,15 @@ class PropertyRepository{
     throw Exception(_data['msg']);
   }
 
+  Future<int> setInternetBank(Property prop) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Property/InternetBank', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode({'token': prop.token, 'id': prop.id})
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['internetbank'];
+    throw Exception(_data['msg']);
+  }
+
   Future<List<Property>> loadMobile(String token, int cmpid) async{
     Map<String, dynamic> _data = await postToServer(api: 'Property/Mobile', body: jsonEncode({"token": token, "cmpid": cmpid}));
     if (_data['msg'] == "Success")

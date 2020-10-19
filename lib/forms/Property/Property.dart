@@ -171,7 +171,7 @@ class PnCar extends StatelessWidget {
                             },
                             child: Row(
                               children: [
-                                SizedBox(width: 10.0),
+                                SizedBox(width: 85.0),
                                 Expanded(child: Text('${snap.data.rows[idx].name}')),
                                 Expanded(child: Text('${snap.data.rows[idx].buydate}')),
                                 Expanded(child: Text('${snap.data.rows[idx].color}')),
@@ -207,7 +207,16 @@ class PnPropGHM extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Column(
         children: [
-          GridCaption(obj: [MyIconButton(type: ButtonType.add, onPressed: (){},),'عنوان', 'نوع مالکیت', 'متراژ', 'سن بنا', 'پلاک ثبتی', 'بهره بردار'], endbuttons: 2),
+          GridCaption(
+            obj: [
+              MyIconButton(
+                type: ButtonType.add, 
+                onPressed: ()=>showFormAsDialog(context: context, form: NewPropGHM(bloc: bloc, prop: Property(cmpid: cmpid, id: 0, malekiat: 1, tenant: 1, price: 0, metraj: 0, cprice: 0, age: 0)))
+              ),
+              'عنوان', 'نوع مالکیت', 'متراژ', 'سن بنا', 'پلاک ثبتی', 'بهره بردار'
+            ], 
+            endbuttons: 2
+          ),
           Expanded(
             child: StreamBuilder(
               stream: bloc.propertyStream$,
@@ -221,16 +230,20 @@ class PnPropGHM extends StatelessWidget {
                       itemBuilder: (context, idx){
                         return Card(
                           color: idx.isOdd ? appbarColor(context) : Colors.transparent,
-                          child: Row(
-                            children: [
-                              Expanded(child: Text('')),
-                              Expanded(child: Text('')),
-                              Expanded(child: Text('')),
-                              Expanded(child: Text('')),
-                              Expanded(child: Text('')),
-                              Expanded(child: Text('')),
-                              MyIconButton(type: ButtonType.del, onPressed: (){})
-                            ],
+                          child: GestureDetector(
+                            onDoubleTap: ()=>showFormAsDialog(context: context, form: NewPropGHM(bloc: bloc, prop: snap.data.rows[idx])),
+                            child: Row(
+                              children: [
+                                SizedBox(width: 85),
+                                Expanded(child: Text('${snap.data.rows[idx].name}')),
+                                Expanded(child: Text('${snap.data.rows[idx].malekiatName()}')),
+                                Expanded(child: Text('${snap.data.rows[idx].metraj}')),
+                                Expanded(child: Text('${snap.data.rows[idx].age}')),
+                                Expanded(child: Text('${snap.data.rows[idx].pelak}')),
+                                Expanded(child: Text('${snap.data.rows[idx].tenantName()}')),
+                                MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delPropGHM(context, snap.data.rows[idx]))
+                              ],
+                            ),
                           ),
                         );
                       }
@@ -257,7 +270,16 @@ class PnBankHesab extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Column(
         children: [
-          GridCaption(obj: [MyIconButton(type: ButtonType.add, onPressed: (){},),'عنوان', 'نوع حساب', 'صاحب حساب', 'شماره حساب', 'تاریخ افتتاح'], endbuttons: 2),
+          GridCaption(
+            obj: [
+              MyIconButton(
+                type: ButtonType.add, 
+                onPressed: () => showFormAsDialog(context: context, form: NewBankHesab(bloc: bloc, prop: Property(cmpid: cmpid, id: 0, accounttype: 1, tafsiliid: 0, internetbank: 0)))
+              ),
+              'بانک', 'نوع حساب', 'صاحب حساب', 'شماره حساب', 'تاریخ افتتاح'
+            ], 
+            endbuttons: 2
+          ),
           Expanded(
             child: StreamBuilder(
               stream: bloc.propertyStream$,
@@ -271,15 +293,19 @@ class PnBankHesab extends StatelessWidget {
                       itemBuilder: (context, idx){
                         return Card(
                           color: idx.isOdd ? appbarColor(context) : Colors.transparent,
-                          child: Row(
-                            children: [
-                              Expanded(child: Text('')),
-                              Expanded(child: Text('')),
-                              Expanded(child: Text('')),
-                              Switch(value: true, onChanged: (_){}),
-                              Expanded(child: Text('')),
-                              MyIconButton(type: ButtonType.del, onPressed: (){})
-                            ],
+                          child: GestureDetector(
+                            onDoubleTap: ()=> showFormAsDialog(context: context, form: NewBankHesab(bloc: bloc, prop: snap.data.rows[idx])),
+                            child: Row(
+                              children: [
+                                Switch(value: snap.data.rows[idx].internetbank==1, onChanged: (val)=>bloc.setInternetBank(context, snap.data.rows[idx].id)),
+                                Expanded(child: Text('${snap.data.rows[idx].bankName}')),
+                                Expanded(child: Text('${snap.data.rows[idx].accountTypeName()}')),
+                                Expanded(child: Text('${snap.data.rows[idx].owner}')),
+                                Expanded(child: Text('${snap.data.rows[idx].hesabno}')),
+                                Expanded(child: Text('${snap.data.rows[idx].buydate}')),
+                                MyIconButton(type: ButtonType.del, onPressed: ()=> bloc.delBankHesab(context, snap.data.rows[idx]))
+                              ],
+                            ),
                           ),
                         );
                       }
@@ -387,6 +413,156 @@ class NewCar extends StatelessWidget {
   }
 }
 
+class NewPropGHM extends StatelessWidget {
+  const NewPropGHM({Key key, @required this.bloc, @required this.prop}) : super(key: key);
 
+  final Property prop;
+  final PropertyBloc bloc;
 
+  @override
+  Widget build(BuildContext context) {
+    final _formkey = GlobalKey<FormState>();
+    TextEditingController _date = TextEditingController(text: prop.buydate);
+    TextEditingController _cntdate = TextEditingController(text: prop.contractdate);
+    bloc.setMultItem(prop.malekiat, malekiat: true);
+    bloc.setMultItem(prop.tenant, tenant: true);
+    return Directionality(
+      textDirection: TextDirection.rtl, 
+      child: Container(
+        width: screenWidth(context) * 0.5,
+        child: Form(
+          key: _formkey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FormHeader(title: 'تعریف/ویرایش اطلاعات اموال غیرمنقول', btnRight: MyIconButton(type: ButtonType.save, onPressed: (){prop.buydate = _date.text; prop.contractdate = _cntdate.text; if (_formkey.currentState.validate()) bloc.savePropGHM(context, prop);})),
+              SizedBox(height: 10.0),
+              Row(
+                children: [
+                  Expanded(child: GridTextField(hint: 'عنوان',  initialValue: prop.name, autofocus: true, onChange: (val)=>prop.name = val, notempty: true)),
+                  Expanded(
+                    child: StreamBuilder<Object>(
+                      stream: bloc.malekiaTypeStream$,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData)
+                          return MultiChooseItem(
+                            hint: 'نوع مالکیت',
+                            val: snapshot.data,
+                            onChange: (val)=>bloc.setMultItem(val, malekiat: true),
+                            items: [{'id': 1, 'title': 'تملیک'},{'id': 2, 'title': 'استیجاری'}],
+                          );
+                        return Center(child: CupertinoActivityIndicator());
+                      }
+                    )
+                  ),
+                  Expanded(child: GridTextField(hint: 'مورد استفاده', initialValue: prop.usage, onChange: (val)=>prop.usage = val)),
+                ],
+              ),
+              SizedBox(height: 10.0),
+              Row(
+                children: [
+                  Expanded(child: GridTextField(hint: 'تاریخ انعقاد قرارداد',  controller: _cntdate, datepicker: true, notempty: true)),
+                  Expanded(child: GridTextField(hint: 'قیمت خرید/اجاره',  initialValue: '${moneySeprator(prop.price.toString())}', onChange: (val)=>prop.price = double.parse(val.replaceAll(",", "")), money: true, notempty: true)),
+                  Expanded(child: GridTextField(hint: 'متراژ(مترمربع)',  initialValue: '${prop.metraj}', onChange: (val)=>prop.metraj = int.parse(val), notempty: true)),
+                  Expanded(child: GridTextField(hint: 'سن بنا (سال)',  initialValue: '${prop.age}', onChange: (val)=>prop.age = int.parse(val), notempty: true)),
+                ],
+              ),
+              SizedBox(height: 10.0),
+              Row(
+                children: [
+                  Expanded(child: GridTextField(hint: 'ارزش تقریبی روز',  initialValue: '${moneySeprator(prop.cprice.toString())}', onChange: (val)=>prop.cprice = double.parse(val.replaceAll(",", "")), money: true,)),
+                  Expanded(child: GridTextField(hint: 'کاربری',  initialValue: prop.karbari, onChange: (val)=>prop.karbari = val)),
+                  Expanded(
+                    child: StreamBuilder<Object>(
+                      stream: bloc.tenantTypeStream$,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData)
+                          return MultiChooseItem(
+                            hint: 'بهره بردار',
+                            val: snapshot.data,
+                            onChange: (val)=>bloc.setMultItem(val, tenant: true),
+                            items: [{'id': 1, 'title': 'اتحادیه'},{'id': 2, 'title': 'اتاق'},{'id': 3, 'title': 'مستاجر'}],
+                          );
+                        return Center(child: CupertinoActivityIndicator());
+                      }
+                    )
+                  ),
+                  Expanded(child: GridTextField(hint: 'پلاک ثبتی',  initialValue: prop.pelak, onChange: (val)=>prop.pelak = val)),
+                ],
+              ),
+              GridTextField(hint: 'نشانی',  initialValue: prop.address, onChange: (val)=>prop.address = val, notempty: true)
+            ],
+          ),
+        ),
+      )
+    );
+  }
+}
+
+class NewBankHesab extends StatelessWidget {
+  const NewBankHesab({Key key, @required this.bloc, @required this.prop}) : super(key: key);
+
+  final Property prop;
+  final PropertyBloc bloc;
+
+  @override
+  Widget build(BuildContext context) {
+    final _formkey = GlobalKey<FormState>();
+    TextEditingController _date = TextEditingController(text: prop.buydate);
+    bloc.setMultItem(prop.accounttype, account: true);
+    return Directionality(
+      textDirection: TextDirection.rtl, 
+      child: Container(
+        width: screenWidth(context) * 0.5,
+        child: Form(
+          key: _formkey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FormHeader(title: 'تعریف/ویرایش اطلاعات حسابهای بانک', btnRight: MyIconButton(type: ButtonType.save, onPressed: (){prop.buydate = _date.text; if (_formkey.currentState.validate()) bloc.saveBankHesab(context, prop);})),
+              SizedBox(height: 10.0),
+              Row(
+                children: [
+                  Expanded(
+                    child: StreamBuilder<Object>(
+                      stream: bloc.accountTypeStream$,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData)
+                          return MultiChooseItem(
+                            hint: 'نوع حساب',
+                            val: snapshot.data,
+                            onChange: (val)=>bloc.setMultItem(val, account: true),
+                            items: [{'id': 1, 'title': 'جاری'},{'id': 2, 'title': 'سپرده'},{'id': 3, 'title': 'قرض الحسنه'}],
+                          );
+                        return Center(child: CupertinoActivityIndicator());
+                      }
+                    )
+                  ),
+                  Expanded(child: ForeignKeyField(hint: 'نام بانک', initialValue: {'id': prop.bankid, "name": prop.bankName}, f2key: "Bank", onChange: (val){prop.bankid=val['id'];prop.bankName=val['name'];})),
+                  Expanded(child: GridTextField(hint: 'تاریخ افتتاح حساب',  controller: _date, datepicker: true, notempty: true)),
+                ],
+              ),
+              SizedBox(height: 10.0),
+              Row(
+                children: [
+                  Expanded(child: GridTextField(hint: 'صاحب حساب',  initialValue: prop.owner, onChange: (val)=>prop.owner = val)),
+                  Expanded(child: GridTextField(hint: 'شرایط برداشت', initialValue: prop.bcondition, onChange: (val)=>prop.bcondition = val)),
+                  Expanded(child: GridTextField(hint: 'حساب تفصیلی سانیار', initialValue: '${prop.tafsiliid}', onChange: (val)=>prop.tafsiliid = int.parse(val), notempty: true)),
+                ],
+              ),
+              SizedBox(height: 10.0),
+              Row(
+                children: [
+                  Expanded(child: GridTextField(hint: 'شماره حساب',  initialValue: prop.hesabno, onChange: (val)=>prop.hesabno = val, notempty: true)),
+                  Expanded(child: GridTextField(hint: 'شماره شبا',  initialValue: prop.shaba, onChange: (val)=>prop.shaba = val, notempty: true)),
+                  Expanded(child: GridTextField(hint: 'شماره کارت',  initialValue: prop.cardno, onChange: (val)=>prop.cardno = val, notempty: true)),
+                ],
+              ),
+            ],
+          ),
+        ),
+      )
+    );
+  }
+}
 

@@ -1446,20 +1446,19 @@ class Property{
 	int age;
 	String karbari;
 	int tenant;
-	String pelakSabti;
 	String address;
 	int accounttype;
 	int bankid;
   String bankName;
 	String bcondition;
-	String hesano;
+	String hesabno;
 	String shaba;
 	String cardno;
 	int internetbank;
 	int tafsiliid;
 	String token;
 
-  Property({this.cmpid,this.id,this.kind,this.name,this.active,this.buydate,this.owner,this.peopid, this.peopfamily,this.color,this.status,this.pelak,this.malekiat,this.usage,this.contractdate,this.price,this.cprice,this.metraj,this.age,this.karbari,this.tenant,this.pelakSabti,this.address,this.accounttype,this.bankid,this.bankName,this.bcondition,this.hesano,this.shaba,this.cardno,this.internetbank,this.tafsiliid,this.token});
+  Property({this.cmpid,this.id,this.kind,this.name,this.active,this.buydate,this.owner,this.peopid, this.peopfamily,this.color,this.status,this.pelak,this.malekiat,this.usage,this.contractdate,this.price,this.cprice,this.metraj,this.age,this.karbari,this.tenant,this.address,this.accounttype,this.bankid,this.bankName,this.bcondition,this.hesabno,this.shaba,this.cardno,this.internetbank,this.tafsiliid,this.token});
 
   Property.fromJson(Map<String, dynamic> json)
     :cmpid = json['cmpid'],
@@ -1483,13 +1482,12 @@ class Property{
     age = json['age'],
     karbari = json['karbari'],
     tenant = json['tenant'],
-    pelakSabti = json['pelakSabti'],
     address = json['address'],
     accounttype = json['accounttype'],
     bankid = json['bankid'],
     bankName = json['bankname'],
     bcondition = json['bcondition'],
-    hesano = json['hesano'],
+    hesabno = json['hesabno'],
     shaba = json['shaba'],
     cardno = json['cardno'],
     internetbank = json['internetbank'],
@@ -1552,7 +1550,7 @@ class Property{
     json['buydate'] = buydate;
     json['owner'] = owner;
     json['bcondition'] = bcondition;
-    json['hesano'] = hesano;
+    json['hesabno'] = hesabno;
     json['shaba'] = shaba;
     json['cardno'] = cardno;
     json['tafsiliid'] = tafsiliid;
