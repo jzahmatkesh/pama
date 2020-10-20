@@ -1585,3 +1585,126 @@ class Property{
           : '';
   }
 } 
+
+class Inspection{
+    int cmpid;
+    int id;
+    String name;
+    String topic;
+    String bdate;
+    String edate;
+    String range;
+    String note;
+    String token;
+    bool gov;
+    bool compay;
+ 
+    Inspection({this.cmpid,this.id,this.name,this.topic,this.bdate,this.edate,this.range,this.note, this.token, this.gov=false, this.compay=false});
+ 
+    Inspection.fromJson(Map<String, dynamic> json):
+        cmpid = json['cmpid'],
+        id = json['id'],
+        name = json['name'],
+        topic = json['topic'],
+        bdate = json['bdate'],
+        edate = json['edate'],
+        range = json['range'],
+        note = json['note'],
+        compay = false,
+        gov = false;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['cmpid'] = this.cmpid;
+        data['id'] = this.id;
+        data['name'] = this.name;
+        data['topic'] = this.topic;
+        data['bdate'] = this.bdate;
+        data['edate'] = this.edate;
+        data['range'] = this.range;
+        data['note'] = this.note;
+        data['token'] = this.token;
+        return data;
+    }
+}
+
+class Inspectioncompany{
+    int insid;
+    int cmpid;
+    String cmpname;
+    String note;
+    String token;
+ 
+    Inspectioncompany({this.insid,this.cmpid,this.cmpname,this.note, this.token});
+ 
+    Inspectioncompany.fromJson(Map<String, dynamic> json):
+        insid = json['insid'],
+        cmpid = json['cmpid'],
+        cmpname = json['cmpname'],
+        note = json['note'];
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['insid'] = this.insid;
+        data['cmpid'] = this.cmpid;
+        data['cmpname'] = this.cmpname;
+        data['note'] = this.note;
+        data['token'] = this.token;
+        return data;
+    }
+}
+
+class Inspectioncompanypeop{
+    int insid;
+    int cmpid;
+    int peopid;
+    String peopfamily;
+    int kind;
+    String token;
+ 
+    Inspectioncompanypeop({this.insid,this.cmpid,this.peopid,this.peopfamily,this.kind, this.token});
+ 
+    Inspectioncompanypeop.fromJson(Map<String, dynamic> json):
+        insid = json['insid'],
+        cmpid = json['cmpid'],
+        peopid = json['peopid'],
+        peopfamily = json['peopfamily'],
+        kind = json['kind'];
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['insid'] = this.insid;
+        data['cmpid'] = this.cmpid;
+        data['peopid'] = this.peopid;
+        data['peopfamily'] = this.peopfamily;
+        data['kind'] = this.kind;
+        data['token'] = this.token;
+        return data;
+    }
+}
+
+class Inspectiongov{
+    int insid;
+    int govid;
+    String govname;
+    String note;
+    String token;
+ 
+    Inspectiongov({this.insid,this.govid,this.govname,this.note, this.token});
+ 
+    Inspectiongov.fromJson(Map<String, dynamic> json):
+        insid = json['insid'],
+        govid = json['govid'],
+        govname = json['govname'],
+        note = json['note'];
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['insid'] = this.insid;
+        data['govid'] = this.govid;
+        data['govname'] = this.govname;
+        data['note'] = this.note;
+        data['token'] = this.token;
+        return data;
+    }
+}

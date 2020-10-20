@@ -913,3 +913,34 @@ class PropertyRepository{
     throw Exception(_data['msg']);
   }
 }
+
+class InspectionRepository{
+  Future<List<Inspection>> loadInspection(String token, int cmpid) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Inspection', body: jsonEncode({"token": token, "cmpid": cmpid}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Inspection>((data) => Inspection.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> delInspection(Inspection insp) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Inspection', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': insp.token,
+       'id': insp.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> saveInspection(Inspection insp) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Inspection', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(insp.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+}

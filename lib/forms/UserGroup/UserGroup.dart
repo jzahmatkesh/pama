@@ -43,6 +43,7 @@ class FmUserGroup extends StatelessWidget {
                                 children: [
                                   Card(color: accentcolor(context).withOpacity(0.3), child: UserGroupRow(usergroupBloc: _usergroupBloc, grp: _grp)),
                                   GridTextField(hint: '... جستجو', width: 250.0, onChange: (val) => _usergroupBloc.searchInPermission(val),),
+                                  SizedBox(height: 15),
                                   StreamBuilder(
                                     stream: _usergroupBloc.groupPermissionStream$,
                                     builder: (BuildContext context, AsyncSnapshot<GroupPermissionModel> snapshot){
@@ -53,10 +54,13 @@ class FmUserGroup extends StatelessWidget {
                                           return Wrap(
                                             children: snapshot.data.rows.map((e) => e.insearch ? Padding(
                                               padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                                              child: PermissionChip(
-                                                selected: e.valid,
-                                                title: e.title, 
-                                                onSelected: (val)=>_usergroupBloc.setGroupPermission(context, _grp.id, e.id)
+                                              child: Container(
+                                                margin: EdgeInsets.all(5.0),
+                                                child: PermissionChip(
+                                                  selected: e.valid,
+                                                  title: e.title, 
+                                                  onSelected: (val)=>_usergroupBloc.setGroupPermission(context, _grp.id, e.id)
+                                                ),
                                               )
                                             ) : Container(width: 0,)).toList(),
                                           );
@@ -64,6 +68,7 @@ class FmUserGroup extends StatelessWidget {
                                       return Center(child: CupertinoActivityIndicator());
                                     }
                                   ),
+                                  SizedBox(height: 25),
                                 ],
                               ),
                             )
