@@ -18,6 +18,7 @@ class GovBloc{
   
   BehaviorSubject<GovModel> _govbloc = BehaviorSubject<GovModel>.seeded(GovModel(status: Status.loading));
   Stream<GovModel> get govStream$ => _govbloc.stream;
+  List<Gov> get govlists$ => _govbloc.value.rows;
 
   loadData(BuildContext context) async{
     try{

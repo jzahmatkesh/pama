@@ -943,4 +943,96 @@ class InspectionRepository{
       return _data['body']['id'];
     throw Exception(_data['msg']);
   }
+
+  Future<List<Inspectiongov>> loadInspectionGov(String token, int insid) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Inspection/Gov', body: jsonEncode({"token": token, "insid": insid}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Inspectiongov>((data) => Inspectiongov.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> delInspectionGov(Inspectiongov gov) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Inspection/Gov', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': gov.token,
+       'insid': gov.insid.toString(),
+       'govid': gov.govid.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> saveInspectionGov(Inspectiongov gov) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Inspection/Gov', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(gov.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+  Future<List<Inspectioncompany>> loadInspectionCompany(String token, int insid) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Inspection/Company', body: jsonEncode({"token": token, "insid": insid}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Inspectioncompany>((data) => Inspectioncompany.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> delInspectionCompany(Inspectioncompany obj) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Inspection/Company', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': obj.token,
+       'insid': obj.insid.toString(),
+       'cmpid': obj.cmpid.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> saveInspectionCompany(Inspectioncompany obj) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Inspection/Company', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(obj.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+  Future<List<Inspectioncompanypeop>> loadInspectionCompanyPeop(String token, int insid, int cmpid) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Inspection/CompanyPeop', body: jsonEncode({"token": token, "insid": insid, "cmpid": cmpid}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Inspectioncompanypeop>((data) => Inspectioncompanypeop.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> delInspectionCompanyPeop(Inspectioncompanypeop obj) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Inspection/CompanyPeop', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': obj.token,
+       'insid': obj.insid.toString(),
+       'cmpid': obj.cmpid.toString(),
+       'peopid': obj.peopid.toString(),
+       'kind': obj.kind.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> saveInspectionCompanyPeop(Inspectioncompanypeop obj) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Inspection/CompanyPeop', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(obj.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['msg'];
+    throw Exception(_data['msg']);
+  }
 }

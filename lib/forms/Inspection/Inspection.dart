@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pama/forms/Gov/GovBloc.dart';
 import 'package:pama/forms/Inspection/InspectionBloc.dart';
 import 'package:pama/module/consts.dart';
 import 'package:pama/module/functions.dart';
@@ -164,11 +165,51 @@ class GovList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    GovBloc _govBlov = GovBloc()..loadData(context);
     return Container(
       height: 300,
       child: Column(
         children: [
-          FormHeader(title: 'سازمان های همکار', btnRight: MyIconButton(type: ButtonType.add, onPressed: (){}), btnLeft: MyIconButton(type: ButtonType.none),),
+          SizedBox(height: 10),
+          GridCaption(
+            obj: [
+              MyIconButton(
+                type: ButtonType.add, 
+                onPressed: () => showFormAsDialog(context: context, form: ForeignKeySelect(list: _govBlov.govlists$, onDone: (gov){
+                  bloc.saveInspectiongov(context, Inspectiongov(govid: gov.id, govname: gov.name, insid: insp.id, note: ''));
+                }))
+              ),
+              'عنوان سازمان', 'توضیحات', ''
+            ]
+          ),
+          Expanded(
+            child: StreamBuilder(
+              stream: bloc.inspgovStream$,
+              builder: (BuildContext context, AsyncSnapshot<InspectiongovModel> snap){
+                if (snap.hasData)
+                  if (snap.data.status == Status.error)
+                    return ErrorInGrid(snap.data.msg);
+                  else if (snap.data.status == Status.loaded)
+                    return ListView.builder(
+                      itemCount: snap.data.rows.length,
+                      itemBuilder: (context, idx){
+                        var _gov = snap.data.rows[idx];
+                        return Card(
+                          child: Row(
+                            children: [
+                              SizedBox(width: 10.0,),
+                              Expanded(child: Text(_gov.govname)),
+                              Expanded(child: Text(_gov.note)),
+                              MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delInspectiongov(context, _gov))
+                            ],
+                          )
+                        );
+                      }
+                    );
+                return Center(child: CupertinoActivityIndicator());
+              },
+            ),
+          )
         ],
       ),
     );
@@ -187,7 +228,6 @@ class CompanyList extends StatelessWidget {
       height: 300,
       child: Column(
         children: [
-          FormHeader(title: 'اتحادیه های همکار', btnRight: MyIconButton(type: ButtonType.add, onPressed: (){}), btnLeft: MyIconButton(type: ButtonType.none),),
         ],
       ),
     );
