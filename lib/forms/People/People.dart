@@ -8,16 +8,17 @@ import '../../module/functions.dart';
 import 'PeopleBloc.dart';
 
 class FmPeople extends StatelessWidget {
-  const FmPeople({Key key, this.nationalid, this.justcheck}) : super(key: key);
+  const FmPeople({Key key, this.nationalid, this.justcheck, this.cmpid}) : super(key: key);
 
   final String nationalid;
   final bool justcheck;
+  final int cmpid;
 
   @override
   Widget build(BuildContext context) {
     PeopleBloc _peopbloc = PeopleBloc();
 
-    if (nationalid.isNotEmpty)
+    if (nationalid!=null && nationalid.isNotEmpty)
       _peopbloc.checkNationalID(context, {'nationalid': nationalid, 'family': '', 'mobile': ''}, this.justcheck);
 
     // _peopbloc.peopleStream$.listen((data){
@@ -59,7 +60,7 @@ class FmPeople extends StatelessWidget {
                                   hovercolor: Colors.lightGreen, 
                                   title: 'بررسی', 
                                   icon: Icons.cloud_queue, 
-                                  onPressed: () => _peopbloc.checkNationalID(context, _data, this.justcheck)
+                                  onPressed: () => _peopbloc.checkNationalID(context, _data, this.justcheck, cmpid: this.cmpid ?? 0)
                                 ),
                             ),
                             Expanded(

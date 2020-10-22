@@ -46,6 +46,9 @@ class InspectionBloc{
   BehaviorSubject<InspectiongovModel> _inspgovBloc = BehaviorSubject<InspectiongovModel>.seeded(InspectiongovModel(status: Status.loading));
   Stream<InspectiongovModel> get inspgovStream$ => _inspgovBloc.stream;
 
+  BehaviorSubject<InspectioncompanypeopModel> _inspcmppeopBloc = BehaviorSubject<InspectioncompanypeopModel>.seeded(InspectioncompanypeopModel(status: Status.loading));
+  Stream<InspectioncompanypeopModel> get inspcmppeopStream$ => _inspcmppeopBloc.stream;
+
   load(BuildContext context, int cmp) async{
     try{
       _inspBloc.add(InspectionModel(status: Status.loading));
@@ -144,24 +147,45 @@ class InspectionBloc{
 
   saveInspectiongov(BuildContext context, Inspectiongov obj) async{
     try{
-      showWaiting(context);
       obj.token = readToken(context);
-      await _repository.saveInspectionGov(obj);
+      if (obj.note.trim() != "addnew")
+        if (obj.note.trim().isEmpty){
+          myAlert(context: context, title: 'مقادیر اجباری', message: 'توضیحات مشخص نشده است');
+          return;
+        }
+        else{
+          showWaiting(context);
+          await _repository.saveInspectionGov(obj);
+          hideWaiting(context);
+        }
+      else 
+        obj.note = "";
       bool nv = true;
       _inspgovBloc.value.rows.forEach((element) {
-        if (element.govid== obj.govid)
+        if (element.govid== obj.govid){
           nv = false;
+          element.edit = !element.edit;
+        }
       });
       if (nv){
         _inspgovBloc.value.rows.insert(0, obj);
       }
       _inspgovBloc.add(_inspgovBloc.value);
-      hideWaiting(context);
     }
     catch(e){
       hideWaiting(context);
       analyzeError(context, '$e');
     }
+  }
+
+  editModeInspectionGov(Inspectiongov gov){
+    _inspgovBloc.value.rows.forEach((element) {
+      if (element.govid == gov.govid)
+        element.edit = !element.edit;
+      else
+        element.edit = false;
+    });
+    _inspgovBloc.add(_inspgovBloc.value);
   }
 
   loadCompany(BuildContext context, int insid) async{
@@ -192,23 +216,126 @@ class InspectionBloc{
 
   saveInspectioncompany(BuildContext context, Inspectioncompany obj) async{
     try{
-      showWaiting(context);
       obj.token = readToken(context);
-      await _repository.saveInspectionCompany(obj);
+      if (obj.note.trim() != "addnew")
+        if (obj.note.trim().isEmpty){
+          myAlert(context: context, title: 'مقادیر اجباری', message: 'توضیحات مشخص نشده است');
+          return;
+        }
+        else{
+          showWaiting(context);
+          await _repository.saveInspectionCompany(obj);
+          hideWaiting(context);
+        }
+      else 
+        obj.note = "";
       bool nv = true;
       _inspcompanyBloc.value.rows.forEach((element) {
-        if (element.cmpid == obj.cmpid)
+        if (element.cmpid == obj.cmpid){
           nv = false;
+          element.edit = !element.edit;
+        }
       });
       if (nv){
         _inspcompanyBloc.value.rows.insert(0, obj);
       }
       _inspcompanyBloc.add(_inspcompanyBloc.value);
-      hideWaiting(context);
     }
     catch(e){
       hideWaiting(context);
       analyzeError(context, '$e');
     }
+  }
+
+  editModeInspectionCompany(BuildContext context,Inspectioncompany com, {bool edit=false, bool peop=false, bool emp=false}){
+    _inspcompanyBloc.value.rows.forEach((element) {
+      if (edit){
+        if (element.cmpid == com.cmpid)
+          element.edit = !element.edit;
+        else
+          element.edit = false;
+        element.peop = false;
+        element.emp = false;
+      }
+      if (peop){
+        if (element.cmpid == com.cmpid)
+          element.peop = !element.peop;
+        else
+          element.peop = false;
+        element.edit = false;
+        element.emp = false;
+      }
+      if (emp){
+        if (element.cmpid == com.cmpid)
+          element.emp = !element.emp;
+        else
+          element.emp = false;
+        element.peop = false;
+        element.edit = false;
+      }
+      if (peop && element.peop)
+        loadCompanyPeop(context, com.insid, com.cmpid, 2);
+      if (emp && element.emp)
+        loadCompanyPeop(context, com.insid, com.cmpid, 1);
+    });
+    _inspcompanyBloc.add(_inspcompanyBloc.value);
+  }
+
+  loadCompanyPeop(BuildContext context, int insid, int cmpid, int kind) async{
+    try{
+      _inspcmppeopBloc.add(InspectioncompanypeopModel(status: Status.loading));
+      _inspcmppeopBloc.add(InspectioncompanypeopModel(status: Status.loaded, rows: await _repository.loadInspectionCompanyPeop(readToken(context), insid, cmpid, kind)));
+    }
+    catch(e){
+      analyzeError(context, '$e');
+      _inspcmppeopBloc.add(InspectioncompanypeopModel(status: Status.error, msg: '$e'));
+    }
+  }
+
+  manageCompanyPeop(BuildContext context, Inspectioncompanypeop peop, {bool save=false}) async{
+    peop.token = readToken(context);
+    if (peop.kind==1)
+      try{
+        if (peop.valid)
+          await _repository.delInspectionCompanyPeop(peop);
+        else
+          await _repository.saveInspectionCompanyPeop(peop);
+          _inspcmppeopBloc.value.rows.forEach((element){
+            if (element.peopid==peop.peopid)
+              element.valid = !element.valid;
+          });
+          _inspcmppeopBloc.add(_inspcmppeopBloc.value);
+      }
+      catch(e){
+        analyzeError(context, '$e');
+      }
+    else if (save){
+      try{
+        await _repository.saveInspectionCompanyPeop(peop);
+        bool _nv=true;
+        _inspcmppeopBloc.value.rows.forEach((element){
+          if (element.peopid==peop.peopid)
+            _nv=false;
+        });
+        if (_nv)
+          _inspcmppeopBloc.value.rows.insert(0, Inspectioncompanypeop(insid: peop.insid, cmpid: peop.cmpid, peopid: peop.peopid, peopfamily: peop.peopfamily, kind: 2));
+        _inspcmppeopBloc.add(_inspcmppeopBloc.value);
+      }
+      catch(e){
+        analyzeError(context, '$e');
+      }
+    }
+    else
+      confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف ${peop.peopfamily} می باشید؟', yesclick: () async{
+        try{
+          await _repository.delInspectionCompanyPeop(peop);
+          _inspcmppeopBloc.value.rows.removeWhere((element) => element.peopid==peop.peopid);
+          _inspcmppeopBloc.add(_inspcmppeopBloc.value);
+        }
+        catch(e){
+          analyzeError(context, '$e');
+        }
+        Navigator.pop(context);
+      });
   }
 }

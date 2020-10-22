@@ -1004,8 +1004,8 @@ class InspectionRepository{
     throw Exception(_data['msg']);
   }
 
-  Future<List<Inspectioncompanypeop>> loadInspectionCompanyPeop(String token, int insid, int cmpid) async{
-    Map<String, dynamic> _data = await postToServer(api: 'Inspection/CompanyPeop', body: jsonEncode({"token": token, "insid": insid, "cmpid": cmpid}));
+  Future<List<Inspectioncompanypeop>> loadInspectionCompanyPeop(String token, int insid, int cmpid, int kind) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Inspection/CompanyPeop', body: jsonEncode({"token": token, "insid": insid, "cmpid": cmpid, "kind": kind}));
     if (_data['msg'] == "Success")
       return _data['body'].map<Inspectioncompanypeop>((data) => Inspectioncompanypeop.fromJson(json.decode(data))).toList();
     throw Exception(_data['msg']);
@@ -1027,12 +1027,12 @@ class InspectionRepository{
     throw Exception(_data['msg']);
   }
 
-  Future<int> saveInspectionCompanyPeop(Inspectioncompanypeop obj) async{
+  Future<bool> saveInspectionCompanyPeop(Inspectioncompanypeop obj) async{
      Map<String, dynamic> _data = await putToServer(api: 'Inspection/CompanyPeop', header: {'Content-Type': 'application/json'}, 
       body: jsonEncode(obj.toJson())
     );
     if (_data['msg'] == "Success")
-      return _data['body']['msg'];
+      return true;
     throw Exception(_data['msg']);
   }
 }

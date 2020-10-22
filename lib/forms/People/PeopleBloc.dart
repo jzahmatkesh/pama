@@ -27,7 +27,7 @@ class PeopleBloc{
     _peoplebloc.add(PeopleModel(status: Status.initial));
   }
 
-  checkNationalID(BuildContext context, Map<String, dynamic> data, bool justcheck) async{
+  checkNationalID(BuildContext context, Map<String, dynamic> data, bool justcheck, {int cmpid=0}) async{
     if (data['nationalid'].toString().trim().isEmpty && data['family'].toString().trim().isEmpty && data['mobile'].toString().trim().isEmpty)
       myAlert(context: context, title: 'هشدارر', message: 'یکی از مقادیر جهت جستجو می بایست مشخص شود');
     else

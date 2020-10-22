@@ -1634,14 +1634,20 @@ class Inspectioncompany{
     String cmpname;
     String note;
     String token;
+    bool edit;
+    bool peop;
+    bool emp;
  
-    Inspectioncompany({this.insid,this.cmpid,this.cmpname,this.note, this.token});
+    Inspectioncompany({this.insid,this.cmpid,this.cmpname,this.note, this.token, this.edit=false, this.peop=false, this.emp=false});
  
     Inspectioncompany.fromJson(Map<String, dynamic> json):
         insid = json['insid'],
         cmpid = json['cmpid'],
         cmpname = json['cmpname'],
-        note = json['note'];
+        note = json['note'],
+        edit = false,
+        peop = false,
+        emp = false;
  
     Map<String, dynamic> toJson(){
         final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -1661,15 +1667,17 @@ class Inspectioncompanypeop{
     String peopfamily;
     int kind;
     String token;
+    bool valid;
  
-    Inspectioncompanypeop({this.insid,this.cmpid,this.peopid,this.peopfamily,this.kind, this.token});
+    Inspectioncompanypeop({this.insid,this.cmpid,this.peopid,this.peopfamily,this.kind, this.token, this.valid});
  
     Inspectioncompanypeop.fromJson(Map<String, dynamic> json):
         insid = json['insid'],
         cmpid = json['cmpid'],
         peopid = json['peopid'],
         peopfamily = json['peopfamily'],
-        kind = json['kind'];
+        kind = json['kind'],
+        valid = json['valid'] == 1;
  
     Map<String, dynamic> toJson(){
         final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -1689,14 +1697,16 @@ class Inspectiongov{
     String govname;
     String note;
     String token;
+    bool edit;
  
-    Inspectiongov({this.insid,this.govid,this.govname,this.note, this.token});
+    Inspectiongov({this.insid,this.govid,this.govname,this.note, this.token, this.edit=false});
  
     Inspectiongov.fromJson(Map<String, dynamic> json):
         insid = json['insid'],
         govid = json['govid'],
         govname = json['govname'],
-        note = json['note'];
+        note = json['note'],
+        edit = false;
  
     Map<String, dynamic> toJson(){
         final Map<String, dynamic> data = new Map<String, dynamic>();
