@@ -297,12 +297,14 @@ class PnBankHesab extends StatelessWidget {
                             onDoubleTap: ()=> showFormAsDialog(context: context, form: NewBankHesab(bloc: bloc, prop: snap.data.rows[idx])),
                             child: Row(
                               children: [
-                                Switch(value: snap.data.rows[idx].internetbank==1, onChanged: (val)=>bloc.setInternetBank(context, snap.data.rows[idx].id)),
+                                SizedBox(width: 5),
                                 Expanded(child: Text('${snap.data.rows[idx].bankName}')),
+                                SizedBox(width: 50),
                                 Expanded(child: Text('${snap.data.rows[idx].accountTypeName()}')),
                                 Expanded(child: Text('${snap.data.rows[idx].owner}')),
                                 Expanded(child: Text('${snap.data.rows[idx].hesabno}')),
                                 Expanded(child: Text('${snap.data.rows[idx].buydate}')),
+                                Tooltip(message: 'اینترنت بانک', child: Switch(value: snap.data.rows[idx].internetbank==1, onChanged: (val)=>bloc.setInternetBank(context, snap.data.rows[idx].id))),
                                 MyIconButton(type: ButtonType.del, onPressed: ()=> bloc.delBankHesab(context, snap.data.rows[idx]))
                               ],
                             ),

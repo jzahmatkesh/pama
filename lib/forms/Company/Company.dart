@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pama/forms/NoLicense/NoLicense.dart';
 
 import '../../classes/classes.dart';
 import '../../module/Widgets.dart';
@@ -150,6 +151,7 @@ class GridCompanyList extends StatelessWidget {
                                   _company.id > 1 ? DesktopIcon(title: 'آیین نامه', subtitle: 'آیین نامه تحادیه', icon: Icon(CupertinoIcons.rectangle_on_rectangle_angled), onPressed: () => showFormAsDialog(context: context, form: CompanybyLaw(companyBloc: companyBloc, cmp: _company))): Container(width: 0),
                                   DesktopIcon(title: 'اموال منقول/غیر منقول', subtitle: 'اموال ${_company.cntproperty} رکورد', icon: Icon(Icons.web_asset), onPressed: () => showFormAsDialog(context: context, form: FmProperty(cmp: _company))),
                                   DesktopIcon(title: 'طرح های بازرسی و نظارت',  subtitle: 'طرح های بازرسی ${_company.cntbzr} رکورد', icon: Icon(Icons.security), onPressed: () => showFormAsDialog(context: context, form: FmInspection(company: _company))),
+                                  DesktopIcon(title: 'فاقدین پروانه شناسایی شده',  subtitle: 'افراد شناسایی شده ${_company.cntlcn} نفر', icon: Icon(CupertinoIcons.person_crop_circle_fill_badge_exclam), onPressed: () => showFormAsDialog(context: context, form: FmNoLicense(cmpid: _company.id))),
                                   DesktopIcon(title: 'تنظیم کدینگ درآمد',  subtitle: 'کدینگ درآمد ${_company.cnttcoding} رکورد', icon: Icon(Icons.monetization_on), onPressed: (){}),
 
                                 ],
@@ -539,7 +541,7 @@ class CompanybyLaw extends StatelessWidget {
               ),
               GridTextField(hint: 'ماده ۱ - تعریف اتحادیه', initialValue: cmp.made1, onChange: (val) => cmp.made1=val, notempty: true),
               GridTextField(hint: 'ماده ۲ - تعریف فرد صنفی', initialValue: cmp.made2, onChange: (val) => cmp.made2=val, notempty: true),
-              GridCaption(obj: ['فعال', 'کد آیسیک', 'عنوان']),
+              GridCaption(obj: [SizedBox(width: 65), 'کد آیسیک','', 'عنوان','']),
               Container(
                 height: 300,
                 child: StreamBuilder(
@@ -557,6 +559,7 @@ class CompanybyLaw extends StatelessWidget {
                               return MyRow(
                                 children: [
                                   Switch(value: _rs.active, onChanged: (_){}),
+                                  SizedBox(width: 25),
                                   _rs.isic,
                                   _rs.name
                                 ],

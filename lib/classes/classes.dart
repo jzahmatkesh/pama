@@ -165,6 +165,7 @@ class Company{
 	int cntletter;
 	int cntproperty;
 	int cntbzr;
+	int cntlcn;
 	int cnttcoding;
   String andate1;
   String andate2;
@@ -217,6 +218,7 @@ class Company{
 	    cntletter = data['cntletter'] ?? 0,
       cntproperty = data['cntproperty'] ?? 0,
       cntbzr = data['cntbzr'] ?? 0,
+      cntlcn = data['cntlcn'] ?? 0,
       cnttcoding = data['cnttcoding'] ?? 0,
       andate1 = data['andate1'],
       andate2 = data['andate2'],
@@ -1718,3 +1720,59 @@ class Inspectiongov{
         return data;
     }
 }
+
+class Nolicense{
+    int cmpid;
+    int id;
+    int peopid;
+    String name;
+    String family;
+    String nationalid;
+    int isic;
+    String tel;
+    String post;
+    String nosazicode;
+    String address;
+    String note;
+    String token;
+ 
+    Nolicense({this.cmpid,this.id,this.peopid,this.name,this.family,this.nationalid,this.isic,this.tel,this.post,this.nosazicode,this.address,this.note, this.token});
+ 
+    Nolicense.fromJson(Map<String, dynamic> json):
+        cmpid = json['cmpid'],
+        id = json['id'],
+        peopid = json['peopid'],
+        name = json['name'],
+        family = json['family'],
+        nationalid = json['nationalid'],
+        isic = json['isic'],
+        tel = json['tel'],
+        post = json['post'],
+        nosazicode = json['nosazicode'],
+        address = json['address'],
+        note = json['note'] ?? '';
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['cmpid'] = this.cmpid;
+        data['id'] = this.id;
+        data['peopid'] = this.peopid ?? 0;
+        data['name'] = this.name;
+        data['family'] = this.family;
+        data['nationalid'] = this.nationalid;
+        data['isic'] = this.isic;
+        data['tel'] = this.tel;
+        data['post'] = this.post;
+        data['nosazicode'] = this.nosazicode;
+        data['address'] = this.address;
+        data['note'] = this.note ?? '';
+        data['token'] = this.token;
+        return data;
+    }
+}
+
+
+
+
+
+

@@ -71,7 +71,7 @@ class PropertyBloc{
     }   
   }
   delMobile(BuildContext context, Property prop){
-    confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف موبایل ${prop.name} می باشید؟', yesclick: () async {
+    confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف همراه ${prop.name} می باشید؟', yesclick: () async {
       try{
         prop.token = readToken(context);
         await _repository.delMobile(readToken(context), prop);

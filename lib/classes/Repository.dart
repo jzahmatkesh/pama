@@ -1036,3 +1036,35 @@ class InspectionRepository{
     throw Exception(_data['msg']);
   }
 }
+
+class NoLicenseRepository{
+  Future<List<Nolicense>> load(String token, int cmpid) async{
+    Map<String, dynamic> _data = await postToServer(api: 'NoLicense', body: jsonEncode({"token": token, "cmpid": cmpid}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Nolicense>((data) => Nolicense.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> save(Nolicense lcn) async{
+     Map<String, dynamic> _data = await putToServer(api: 'NoLicense', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(lcn.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+ 
+  Future<bool> delete(Nolicense lcn) async{
+     Map<String, dynamic> _data = await delToServer(api: 'NoLicense', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': lcn.token,
+       'cmpid': lcn.cmpid.toString(),
+       'id': lcn.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+}

@@ -416,7 +416,18 @@ class DetailMosavabat extends StatelessWidget {
             child: CommitteeDetailRow(committee: this.committee, dtl: dtl, committeeBloc: committeeBloc)
           ),
           SizedBox(height: 15.0),
-          GridCaption(obj: [MyIconButton(type: ButtonType.add, onPressed: (){},), 'عنوان','واحد پیگیری','مسئول پیگیری', 'اتحادیه مرتبط'], endbuttons: 2,),
+          GridCaption(
+            obj: [
+              MyIconButton(
+                type: ButtonType.add, 
+                onPressed: (){
+                  context.read<ThemeManager>().setCompany(dtl.cmpid); 
+                  showFormAsDialog(context: context, form: PnEditMosavabat(committeeBloc: this.committeeBloc, mos: CommitteeDetailMosavabat(cmpid: committee.cmpid, cmtid: committee.id, detailid: dtl.id, id: 0, empid: 0, mcmpid: 0)));
+                }
+              ), 'عنوان','واحد پیگیری','مسئول پیگیری', 'اتحادیه مرتبط'
+            ], 
+            endbuttons: 2
+          ),
           Expanded(
             child: StreamBuilder(
               stream: committeeBloc.committeeDetailMosavabatStream$,
@@ -435,6 +446,7 @@ class DetailMosavabat extends StatelessWidget {
                             onDoubleTap: (){context.read<ThemeManager>().setCompany(dtl.cmpid); showFormAsDialog(context: context, form: PnEditMosavabat(committeeBloc: this.committeeBloc, mos: _mos));},
                             child: Row(
                               children: [
+                                SizedBox(width: 10),
                                 Expanded(child: Text('${_mos.title}')),
                                 Expanded(child: Text('${_mos.vahed}')),
                                 PeoplePic(id: _mos.empid),
