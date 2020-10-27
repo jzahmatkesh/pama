@@ -319,7 +319,7 @@ class FmCompanyUsers extends StatelessWidget {
                 }
               })
             )),
-            GridCaption(obj: ['کد ملی', 'نام و نام خانوادگی', 'شماره همراه', 'آخرین ورود', 'تغییر کلمه عبور']),
+            GridCaption(obj: ['کد ملی', 'نام و نام خانوادگی', 'شماره همراه', 'آخرین ورود', 'تغییر کلمه عبور',Text('کاربر اجراییات', style: gridFieldStyle())]),
             Expanded(
               child: StreamBuilder(
                 stream: companybloc.companyUserStream$,
@@ -388,13 +388,14 @@ class GroupUserRow extends StatelessWidget {
       child: Row(
         children: [
           UserPic(id: user.id,),
-          Switch(value: user.active, onChanged: (val)=> companybloc.setCompanyUserActive(context, company.id, user)),
+          Tooltip(message: 'فعال/غیرفعال', child: Switch(value: user.active, onChanged: (val)=> companybloc.setCompanyUserActive(context, company.id, user))),
           SizedBox(width: 5.0,),
           Expanded(child: Text('${user.nationalid}')),
           Expanded(child: Text('${user.name} ${user.family}')),
           Expanded(child: Text('${user.mobile}')),
           Expanded(child: Text('${user.lastlogin}')),
           Expanded(child: Text('${user.lastpasschange}')),
+          Tooltip(message: 'کاربر اجراییات', child: Switch(value: user.ejriat, onChanged: (val)=>companybloc.setEjriatUser(context, user))),
           PopupMenuButton(
             tooltip: 'تنظیمات',
             itemBuilder: (_) => <PopupMenuItem<int>>[

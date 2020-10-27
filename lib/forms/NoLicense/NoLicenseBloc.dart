@@ -71,4 +71,31 @@ class NoLicenseBloc{
       }
     });
   }  
+
+  search(String val){
+    _nolicenseBloc.value.rows.forEach((element) {
+      element.inSearch = element.cmpname.contains(val) || element.nationalid.contains(val) || element.name.contains(val) || element.family.contains(val) || element.tel.contains(val) || element.post.contains(val) || element.nosazicode.contains(val) || element.address.contains(val) || element.note.contains(val);
+    });
+    _nolicenseBloc.add(_nolicenseBloc.value);
+  }
+
+  saveNote(BuildContext context, Nolicense lcn) async{
+    try{
+      showWaiting(context);
+      lcn.token = readToken(context);
+      await _repository.saveNote(lcn);
+      _nolicenseBloc.value.rows.forEach((element) {
+        if (element.cmpid == lcn.cmpid && element.id == lcn.id){
+          element.note = lcn.note;
+        }
+      });
+      _nolicenseBloc.add(_nolicenseBloc.value);
+      hideWaiting(context);
+      Navigator.pop(context);
+    }
+    catch(e){
+      hideWaiting(context);
+      analyzeError(context, '$e');
+    }
+  }
 }

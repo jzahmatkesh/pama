@@ -22,7 +22,7 @@ class Login extends StatelessWidget {
       if (data.status == LoginStatus.error)
         myAlert(context: context, title: 'خطا', message: data.msg);
       else if (data.status == LoginStatus.loaded){
-          context.read<ThemeManager>().setToken(data.user.token);
+          context.read<ThemeManager>().setToken(data.user.token, data.user.ejriat);
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => Dashboard(user: data.user,)),

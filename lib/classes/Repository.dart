@@ -57,6 +57,18 @@ class CompanyRepository{
       return "موفقیت آمیز بود";
     throw Exception(_data['msg']);
   }
+  Future<bool> setEjriatUser(String token, CompanyUser user) async{
+    Map<String, dynamic> _data = await putToServer(api: 'Company/users/Ejriat',
+      body: jsonEncode({
+      'token': token,
+	 		'id': user.id,
+	 		'ejriat': user.ejriat ? 0 : 1,
+      })
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
   Future<String> delCompanyUser(String token, int cmp, int user) async{
     Map<String, dynamic> _data = await delToServer(api: 'Company/users', 
       header: {
@@ -1051,6 +1063,15 @@ class NoLicenseRepository{
     );
     if (_data['msg'] == "Success")
       return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> saveNote(Nolicense lcn) async{
+     Map<String, dynamic> _data = await putToServer(api: 'NoLicense/Note', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(lcn.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return true;
     throw Exception(_data['msg']);
   }
  

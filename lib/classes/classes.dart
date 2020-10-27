@@ -13,22 +13,24 @@ class User{
   int sex;
   String token;
   bool admin;
+  bool ejriat;
 
-  User({@required this.id, @required this.cmpid, @required this.sex, @required this.name, @required this.family, @required this.cmpname, @required this.mobile, this.pic, this.lastlogin, this.ip, @required this.token, this.admin = false});
+  User({@required this.id, @required this.cmpid, @required this.sex, @required this.name, @required this.family, @required this.cmpname, @required this.mobile, this.pic, this.lastlogin, this.ip, @required this.token, this.admin = false, this.ejriat = false});
 
   User.fromJson(Map<String, dynamic> json)
     : id = json['id'],
       cmpid = json['cmpid'],
       name = json['name'],
       family = json['family'],
-      cmpname = json['cmpname'],
+      cmpname = json['cmptitle'],
       mobile = json['mobile'],
       ip = json['ip'],
-      pic = json['pic'],
+      // pic = json['pic'],
       lastlogin = json['lastlogin'],
       sex = json['sex'],
       token = json['token'],
-      admin = json['admin'] == 1;
+      admin = json['admin'] == 1,
+      ejriat = json['ejriat'] == 1;
 }
 
 class Raste{
@@ -285,23 +287,24 @@ class CompanyUser{
   String lastpasschange;
   bool insearchquery;
   bool showgroups;
+  bool ejriat;
 
-  CompanyUser({this.id, this.peopid, this.active, this.name, this.family, this.mobile, this.nationalid, this.lastlogin, this.lastpasschange, this.showgroups = false});
+  CompanyUser({this.id, this.peopid, this.active, this.name, this.family, this.mobile, this.nationalid, this.lastlogin, this.lastpasschange, this.showgroups = false, this.ejriat = false});
 
-  CompanyUser.fromJson(Map<String, dynamic> data){
-    this.id = data['id'];
-    this.peopid = data['peopid'];
-    this.active = data['active'] == 1;
-    this.name = data['name'];
-    this.family = data['family'];
-    this.mobile = data['mobile'];
-    this.nationalid = data['nationalid'];
-    // this.pic = data['pic'];
-    this.lastlogin = data['lastlogin'];
-    this.lastpasschange = data['lastpasschange'];
-    this.showgroups = false;
-    this.insearchquery = true;
-  }
+  CompanyUser.fromJson(Map<String, dynamic> data)
+    : id = data['id'],
+      peopid = data['peopid'],
+      active = data['active'] == 1,
+      name = data['name'],
+      family = data['family'],
+      mobile = data['mobile'],
+      nationalid = data['nationalid'],
+    // pic = data['pic'],
+      lastlogin = data['lastlogin'],
+      lastpasschange = data['lastpasschange'],
+      ejriat = data['ejriat'] == 1,
+      showgroups = false,
+      insearchquery = true;
   
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -1723,6 +1726,7 @@ class Inspectiongov{
 
 class Nolicense{
     int cmpid;
+    String cmpname;
     int id;
     int peopid;
     String name;
@@ -1735,11 +1739,13 @@ class Nolicense{
     String address;
     String note;
     String token;
+    bool inSearch;
  
-    Nolicense({this.cmpid,this.id,this.peopid,this.name,this.family,this.nationalid,this.isic,this.tel,this.post,this.nosazicode,this.address,this.note, this.token});
+    Nolicense({this.cmpid,this.cmpname,this.id,this.peopid,this.name,this.family,this.nationalid,this.isic,this.tel,this.post,this.nosazicode,this.address,this.note, this.token, this.inSearch = true});
  
     Nolicense.fromJson(Map<String, dynamic> json):
         cmpid = json['cmpid'],
+        cmpname = json['cmpname'],
         id = json['id'],
         peopid = json['peopid'],
         name = json['name'],
@@ -1750,13 +1756,15 @@ class Nolicense{
         post = json['post'],
         nosazicode = json['nosazicode'],
         address = json['address'],
-        note = json['note'] ?? '';
+        note = json['note'],
+        inSearch = true;
  
     Map<String, dynamic> toJson(){
         final Map<String, dynamic> data = new Map<String, dynamic>();
         data['cmpid'] = this.cmpid;
+        data['cmpname'] = this.cmpname;
         data['id'] = this.id;
-        data['peopid'] = this.peopid ?? 0;
+        data['peopid'] = this.peopid;
         data['name'] = this.name;
         data['family'] = this.family;
         data['nationalid'] = this.nationalid;
@@ -1765,7 +1773,7 @@ class Nolicense{
         data['post'] = this.post;
         data['nosazicode'] = this.nosazicode;
         data['address'] = this.address;
-        data['note'] = this.note ?? '';
+        data['note'] = this.note;
         data['token'] = this.token;
         return data;
     }

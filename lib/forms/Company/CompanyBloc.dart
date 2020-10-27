@@ -257,6 +257,19 @@ class CompanyBloc{
       analyzeError(context, e.toString());
     }
   }
+  setEjriatUser(BuildContext context, CompanyUser user){
+      _companyUserbloc.value.rows.forEach((element) async { 
+        if (element.id == user.id){
+          try{
+            await _repository.setEjriatUser(readToken(context), user);
+            element.ejriat = !element.ejriat;
+            _companyUserbloc.add(_companyUserbloc.value);
+          }catch(e){
+            analyzeError(context, e.toString());
+          }
+        }
+      });  
+  }
 
   loadEmployee(BuildContext context, int cmpid) async{
     try {
