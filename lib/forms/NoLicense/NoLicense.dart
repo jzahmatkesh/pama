@@ -101,6 +101,8 @@ class NewNoLicense extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _formkey = GlobalKey<FormState>();
+    TextEditingController _name = TextEditingController(text: lcn.name);
+    TextEditingController _family = TextEditingController(text: lcn.family);
     return Container(
       width: screenWidth(context) * 0.65,
       child: Directionality(
@@ -114,9 +116,20 @@ class NewNoLicense extends StatelessWidget {
               SizedBox(height: 10.0,),
               Row(
                 children: [
-                  Expanded(child: GridTextField(hint: 'کد ملی', initialValue: lcn.nationalid, onChange: (val)=>lcn.nationalid=val, autofocus: true, notempty: true)),
-                  Expanded(child: GridTextField(hint: 'نام', initialValue: lcn.name, onChange: (val)=>lcn.name=val, notempty: true)),
-                  Expanded(child: GridTextField(hint: 'نام خانوادگی', initialValue: lcn.family, onChange: (val)=>lcn.family=val, notempty: true)),
+                  Expanded(child: GridTextField(hint: 'کد ملی', initialValue: lcn.nationalid, onChange: (val) async{
+                    var _data = await bloc.checkNationlID(context, val);
+                    if (_data != null && val.isNotEmpty){
+                      _name.text = _data['name'];
+                      _family.text = _data['family'];
+                    }
+                    else{
+                      _name.text = lcn.name ?? "";
+                      _family.text = lcn.family ?? "";
+                    }
+                    lcn.nationalid=val;
+                  }, autofocus: true, notempty: true)),
+                  Expanded(child: GridTextField(hint: 'نام', controller: _name, notempty: true)),
+                  Expanded(child: GridTextField(hint: 'نام خانوادگی', controller: _family, notempty: true)),
                 ],
               ),
               Row(

@@ -1,5 +1,20 @@
 import 'package:flutter/material.dart';
 
+class F2Key{
+  int id;
+  String name;
+  int hisic;
+  int isic;
+
+  F2Key({this.id, this.name, this.hisic, this.isic});
+
+  F2Key.fromJson(Map<String, dynamic> json)
+    : id = json['id'],
+      name = json['name'],
+      hisic = json['hisic'],
+      isic = json['isic'];
+}
+
 class User{
   int id;
   int cmpid;
@@ -1762,9 +1777,7 @@ class Nolicense{
     Map<String, dynamic> toJson(){
         final Map<String, dynamic> data = new Map<String, dynamic>();
         data['cmpid'] = this.cmpid;
-        data['cmpname'] = this.cmpname;
         data['id'] = this.id;
-        data['peopid'] = this.peopid;
         data['name'] = this.name;
         data['family'] = this.family;
         data['nationalid'] = this.nationalid;
@@ -1779,8 +1792,180 @@ class Nolicense{
     }
 }
 
+class Income{
+    int id;
+    String name;
+    bool active;
+    bool epay;
+    bool refund;
+    bool off;
+    bool allcmp;
+    String token;
+    double price;
+    bool edit;
+    bool company;
+    bool share;
+    bool pricehistory;
+ 
+    Income({this.id,this.name,this.active,this.epay,this.refund,this.off,this.allcmp, this.token, this.edit=false, this.price, this.share=false, this.pricehistory=false, this.company=false});
+ 
+    Income.fromJson(Map<String, dynamic> json):
+        id = json['id'],
+        name = json['name'],
+        active = json['active'] == 1,
+        epay = json['epay'] == 1,
+        refund = json['refund'] == 1,
+        off = json['off'] == 1,
+        allcmp = json['allcmp'] == 1,
+        price = json['price'],
+        edit = false,
+        share = false,
+        pricehistory = false,
+        company = false;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['id'] = this.id;
+        data['name'] = this.name;
+        data['active'] = this.active ? 1 : 0;
+        data['epay'] = this.epay ? 1 : 0;
+        data['refund'] = this.refund ? 1 : 0;
+        data['off'] = this.off ? 1 : 0;
+        data['allcmp'] = this.allcmp ? 1 : 0;
+        data['token'] = this.token;
+        return data;
+    }
+}
 
+class Incomeshare{
+    int incid;
+    int id;
+    String name;
+    int perc;
+    String token;
+    bool edit;
+ 
+    Incomeshare({this.incid,this.id,this.name,this.perc, this.token, this.edit=false});
+ 
+    Incomeshare.fromJson(Map<String, dynamic> json):
+        incid = json['incid'],
+        id = json['id'],
+        name = json['name'],
+        perc = json['perc'],
+        edit = false;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['incid'] = this.incid;
+        data['id'] = this.id;
+        data['name'] = this.name;
+        data['perc'] = this.perc;
+        data['token'] = this.token;
+        return data;
+    }
+}
 
+class Incomehistory{
+    int incid;
+    int id;
+    String date;
+    double price;
+    String token;
+    bool edit;
+ 
+    Incomehistory({this.incid,this.id,this.date,this.price, this.token, this.edit=false});
+ 
+    Incomehistory.fromJson(Map<String, dynamic> json):
+        incid = json['incid'],
+        id = json['id'],
+        date = json['date'],
+        price = json['price'],
+        edit = false;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['incid'] = this.incid;
+        data['id'] = this.id;
+        data['date'] = this.date;
+        data['price'] = this.price;
+        data['token'] = this.token;
+        return data;
+    }
+}
 
+class Incomecompany{
+    int incid;
+    int cmpid;
+    int old;
+    String cmpname;
+    bool allraste;
+    String token;
+    bool edit;
+ 
+    Incomecompany({this.incid,this.old,this.cmpid,this.cmpname,this.allraste, this.token, this.edit=false});
+ 
+    Incomecompany.fromJson(Map<String, dynamic> json):
+        incid = json['incid'],
+        old = json['cmpid'],
+        cmpid = json['cmpid'],
+        cmpname = json['cmpname'],
+        allraste = (json['allraste'] ?? 0) == 1,
+        edit = false;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['incid'] = this.incid;
+        data['old'] = this.old;
+        data['cmpid'] = this.cmpid;
+        data['cmpname'] = this.cmpname;
+        data['allraste'] = this.allraste ? 1 : 0;
+        data['token'] = this.token;
+        return data;
+    }
+}
 
-
+class Incomecompanyraste{
+    int incid;
+    int cmpid;
+    int id;
+    String name;
+    int hisic;
+    int isic;
+    bool grade1;
+    bool grade2;
+    bool grade3;
+    bool grade4;
+    String token;
+    bool edit;
+ 
+    Incomecompanyraste({this.incid,this.cmpid,this.id,this.name,this.hisic,this.isic,this.grade1,this.grade2,this.grade3,this.grade4, this.token, this.edit=false});
+ 
+    Incomecompanyraste.fromJson(Map<String, dynamic> json):
+        incid = json['incid'],
+        cmpid = json['cmpid'],
+        id = json['id'],
+        name = json['name'],
+        hisic = json['hisic'],
+        isic = json['isic'],
+        grade1 = json['grade1'] == 1,
+        grade2 = json['grade2'] == 1,
+        grade3 = json['grade3'] == 1,
+        grade4 = json['grade4'] == 1,
+        edit = false;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['incid'] = this.incid;
+        data['cmpid'] = this.cmpid;
+        data['id'] = this.id;
+        data['name'] = this.name;
+        data['hisic'] = this.hisic;
+        data['isic'] = this.isic;
+        data['grade1'] = this.grade1 ? 1 : 0;
+        data['grade2'] = this.grade2 ? 1 : 0;
+        data['grade3'] = this.grade3 ? 1 : 0;
+        data['grade4'] = this.grade4 ? 1 : 0;
+        data['token'] = this.token;
+        return data;
+    }
+}

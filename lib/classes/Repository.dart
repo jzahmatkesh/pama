@@ -1089,3 +1089,159 @@ class NoLicenseRepository{
     throw Exception(_data['msg']);
   }
 }
+
+class IncomeRepository{
+  Future<List<Income>> load(String token) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Income', body: jsonEncode({"token": token}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Income>((data) => Income.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> save(Income inc) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Income', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(inc.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> delete(Income inc) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Income', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': inc.token,
+       'id': inc.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+
+  Future<List<Incomeshare>> loadShare(String token, int incid) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Income/Share', body: jsonEncode({"token": token, "incid": incid}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Incomeshare>((data) => Incomeshare.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> saveShare(Incomeshare shr) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Income/Share', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(shr.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> deleteShare(Incomeshare shr) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Income/Share', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': shr.token,
+       'incid': shr.incid.toString(),
+       'id': shr.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+
+  Future<List<Incomehistory>> loadHistory(String token, int incid) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Income/History', body: jsonEncode({"token": token, "incid": incid}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Incomehistory>((data) => Incomehistory.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> saveHistory(Incomehistory hst) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Income/History', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(hst.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> deleteHistory(Incomehistory hst) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Income/History', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': hst.token,
+       'incid': hst.incid.toString(),
+       'id': hst.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+
+  Future<List<Incomecompany>> loadCompany(String token, int incid) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Income/Company', body: jsonEncode({"token": token, "incid": incid}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Incomecompany>((data) => Incomecompany.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> saveCompany(Incomecompany cmp) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Income/Company', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(cmp.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> deleteCompany(Incomecompany hst) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Income/Company', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': hst.token,
+       'incid': hst.incid.toString(),
+       'cmpid': hst.cmpid.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+
+  Future<List<Incomecompanyraste>> loadCompanyRaste(String token, int incid, int cmpid) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Income/Company/Raste', body: jsonEncode({"token": token, "incid": incid, "cmpid": cmpid}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Incomecompanyraste>((data) => Incomecompanyraste.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> saveCompanyRaste(Incomecompanyraste rst) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Income/Company/Raste', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(rst.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> deleteCompanyRaste(Incomecompanyraste rst) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Income/Company/Raste', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': rst.token,
+       'incid': rst.incid.toString(),
+       'cmpid': rst.cmpid.toString(),
+       'id': rst.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+}

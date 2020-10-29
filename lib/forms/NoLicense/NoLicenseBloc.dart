@@ -98,4 +98,17 @@ class NoLicenseBloc{
       analyzeError(context, '$e');
     }
   }
+
+  Future<Map<String, dynamic>> checkNationlID(BuildContext context, String national) async{
+    try{
+      PeopleRepository _peop = PeopleRepository();
+      List<People> _rows = await _peop.checkNationalID(readToken(context), national, "", "");
+      if (_rows.length > 0)
+        return {'name': _rows[0].name, 'family': _rows[0].family};
+    }
+    catch(e){
+      analyzeError(context, '$e');
+    }
+    return null;
+  }
 }
