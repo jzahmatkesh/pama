@@ -55,7 +55,7 @@ class FMRaste extends StatelessWidget {
                                   GridCaption(
                                     obj: [
                                       MyIconButton(type: ButtonType.other, hint: 'زیر رسته جدید', icon: Icon(CupertinoIcons.plus_app), onPressed: () => showFormAsDialog(context: context, form: FmEditDRaste(rastebloc: _rasteBloc, rst: new DRaste(cmpid: _raste.cmpid, hisic: _raste.isic, isic: 0, old: 0, name: "", cmpname: _raste.cmpname, mosavabeno: 0, active: true)))),
-                                      'کد آیسیک','عنوان آیسیک','عنوان اتحادیه','مصوبه صندوق',
+                                      'کد آیسیک زیر رسته','عنوان زیر رسته','عنوان اتحادیه','مصوبه صندوق',
                                       MyIconButton(type: ButtonType.exit, onPressed: () => _rasteBloc.hideDRaste(_raste.isic)),
                                     ], 
                                     endbuttons: 0,

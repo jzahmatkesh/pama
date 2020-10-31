@@ -196,8 +196,8 @@ class CompanyBloc{
         }
       });  
   }
-  deleteCompanyUser(BuildContext context, int cmp, int user){
-    confirmMessage(context, 'حذف کاربر', 'آیا مایل به حذف کاربر زحمتکش می باشید؟', yesclick: () async{
+  deleteCompanyUser(BuildContext context, int cmp, int user, String family){
+    confirmMessage(context, 'حذف کاربر', 'آیا مایل به حذف $family می باشید؟', yesclick: () async{
       try{
         await _repository.delCompanyUser(readToken(context), cmp, user);
         _companyUserbloc.value.rows.removeWhere((element) => element.id == user);

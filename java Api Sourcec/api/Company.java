@@ -252,7 +252,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -292,7 +292,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -326,7 +326,41 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
+					.build();
+		}
+	}
+
+	@Path("/users/Ejriat")
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON+"; charset=UTF-8")
+	public Response userEjriat(TBUser user, @Context HttpServletRequest request)
+	{
+		try {
+			DataBase db = new DataBase();
+			Connection con = db.getConnection();
+			PreparedStatement p = con.prepareStatement("Exec Pama.PrcSet_User_Ejriat ?,?,?,?,?");
+	 		p.setString(1, user.getToken());
+	 		p.setString(2, db.GetIPAddress(request));
+	 		p.setString(3, db.BrowserInfo(request));
+	 		p.setInt(4, user.getId());
+	 		p.setInt(5, user.getEjriat());
+	 		java.sql.ResultSet rs = p.executeQuery();
+			if (rs != null && rs.next())
+				if (db.CheckStrFieldValue(rs, "Msg").equals("Success")){
+					JSONObject data = new JSONObject();
+					data.put("msg", "موفقیت آمیز بود");
+					return Response.ok(data.toString(), MediaType.APPLICATION_JSON).build();
+				}
+			return Response
+					.status(Response.Status.UNAUTHORIZED)
+					.entity(db.CheckStrFieldValue(rs, "Msg"))
+					.build();
+		}
+		catch(Exception e) {
+			return Response
+					.status(Response.Status.FORBIDDEN)
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -360,7 +394,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("کاربر در سیستم فعالیت داشته و کد کاربری در فرم های مختلف ثبت شده است. حذف امکان پذیر نمی باشد. می توانید کاربر مورد نظر را غیرفعال نمایید")
 					.build();
 		}
 	}
@@ -397,7 +431,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -431,7 +465,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -468,7 +502,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -517,7 +551,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -557,7 +591,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -595,7 +629,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -640,7 +674,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -681,7 +715,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -718,7 +752,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -764,7 +798,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -804,7 +838,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -845,7 +879,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -886,7 +920,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -924,7 +958,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -969,7 +1003,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -1010,7 +1044,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -1128,7 +1162,7 @@ public class Company {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}

@@ -151,7 +151,7 @@ class GridCompanyList extends StatelessWidget {
                                   _company.id > 1 ? DesktopIcon(title: 'آیین نامه', subtitle: 'آیین نامه تحادیه', icon: Icon(CupertinoIcons.rectangle_on_rectangle_angled), onPressed: () => showFormAsDialog(context: context, form: CompanybyLaw(companyBloc: companyBloc, cmp: _company))): Container(width: 0),
                                   DesktopIcon(title: 'اموال منقول/غیر منقول', subtitle: 'اموال ${_company.cntproperty} رکورد', icon: Icon(Icons.web_asset), onPressed: () => showFormAsDialog(context: context, form: FmProperty(cmp: _company))),
                                   DesktopIcon(title: 'طرح های بازرسی و نظارت',  subtitle: 'طرح های بازرسی ${_company.cntbzr} رکورد', icon: Icon(Icons.security), onPressed: () => showFormAsDialog(context: context, form: FmInspection(company: _company))),
-                                  DesktopIcon(title: 'فاقدین پروانه شناسایی شده',  subtitle: 'افراد شناسایی شده ${_company.cntlcn} نفر', icon: Icon(CupertinoIcons.person_crop_circle_fill_badge_exclam), onPressed: () => showFormAsDialog(context: context, form: FmNoLicense(cmpid: _company.id))),
+                                  DesktopIcon(title: 'فاقدین پروانه شناسایی شده',  subtitle: 'افراد شناسایی شده ${_company.cntlcn} نفر', icon: Icon(CupertinoIcons.person_crop_circle_fill_badge_exclam), onPressed: () => showFormAsDialog(context: context, form: FmNoLicense(cmp: _company))),
                                   DesktopIcon(title: 'تنظیم کدینگ درآمد',  subtitle: 'کدینگ درآمد ${_company.cnttcoding} رکورد', icon: Icon(Icons.monetization_on), onPressed: (){}),
 
                                 ],
@@ -319,7 +319,7 @@ class FmCompanyUsers extends StatelessWidget {
                 }
               })
             )),
-            GridCaption(obj: ['کد ملی', 'نام و نام خانوادگی', 'شماره همراه', 'آخرین ورود', 'تغییر کلمه عبور',Text('کاربر اجراییات', style: gridFieldStyle())]),
+            GridCaption(obj: ['کد ملی', 'نام و نام خانوادگی', 'شماره همراه', 'آخرین ورود', 'تغییر کلمه عبور',Text('${company.id == 1 ? 'کاربر اجراییات' : ''}', style: gridFieldStyle())]),
             Expanded(
               child: StreamBuilder(
                 stream: companybloc.companyUserStream$,
@@ -395,7 +395,9 @@ class GroupUserRow extends StatelessWidget {
           Expanded(child: Text('${user.mobile}')),
           Expanded(child: Text('${user.lastlogin}')),
           Expanded(child: Text('${user.lastpasschange}')),
-          Tooltip(message: 'کاربر اجراییات', child: Switch(value: user.ejriat, onChanged: (val)=>companybloc.setEjriatUser(context, user))),
+          company.id == 1
+            ? Tooltip(message: 'کاربر اجراییات', child: Switch(value: user.ejriat, onChanged: (val)=>companybloc.setEjriatUser(context, user)))
+            : Container(width: 0),
           PopupMenuButton(
             tooltip: 'تنظیمات',
             itemBuilder: (_) => <PopupMenuItem<int>>[
@@ -406,7 +408,7 @@ class GroupUserRow extends StatelessWidget {
             ],
             onSelected: (int menu){
               if (menu == 1)
-                companybloc.deleteCompanyUser(context, company.id, user.id);
+                companybloc.deleteCompanyUser(context, company.id, user.id, user.family);
               else if (menu == 2)
                 companybloc.loadCompanyUserGroup(context, company.id, user.id);
               else if (menu == 3)

@@ -1747,7 +1747,9 @@ class Nolicense{
     String name;
     String family;
     String nationalid;
+    int hisic;
     int isic;
+    String isicname;
     String tel;
     String post;
     String nosazicode;
@@ -1756,7 +1758,7 @@ class Nolicense{
     String token;
     bool inSearch;
  
-    Nolicense({this.cmpid,this.cmpname,this.id,this.peopid,this.name,this.family,this.nationalid,this.isic,this.tel,this.post,this.nosazicode,this.address,this.note, this.token, this.inSearch = true});
+    Nolicense({this.cmpid,this.cmpname,this.id,this.peopid,this.name,this.family,this.nationalid,this.hisic,this.isic,this.isicname,this.tel,this.post,this.nosazicode,this.address,this.note, this.token, this.inSearch = true});
  
     Nolicense.fromJson(Map<String, dynamic> json):
         cmpid = json['cmpid'],
@@ -1766,7 +1768,9 @@ class Nolicense{
         name = json['name'],
         family = json['family'],
         nationalid = json['nationalid'],
+        hisic = json['hisic'],
         isic = json['isic'],
+        isicname = json['isicname'],
         tel = json['tel'],
         post = json['post'],
         nosazicode = json['nosazicode'],
@@ -1781,6 +1785,7 @@ class Nolicense{
         data['name'] = this.name;
         data['family'] = this.family;
         data['nationalid'] = this.nationalid;
+        data['hisic'] = this.hisic;
         data['isic'] = this.isic;
         data['tel'] = this.tel;
         data['post'] = this.post;

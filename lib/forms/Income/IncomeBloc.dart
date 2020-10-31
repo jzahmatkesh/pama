@@ -207,6 +207,8 @@ class IncomeBloc{
     _incomShareBloc.value.rows.forEach((element) {
       if (element.id == id)
         element.edit = true;
+      else
+        element.edit = false;
     });
     _incomShareBloc.add(_incomShareBloc.value);
   }
@@ -284,6 +286,8 @@ class IncomeBloc{
     _incomHistoryBloc.value.rows.forEach((element) {
       if (element.id == id)
         element.edit = true;
+      else
+        element.edit = false;
     });
     _incomHistoryBloc.add(_incomHistoryBloc.value);
   }
@@ -359,6 +363,8 @@ class IncomeBloc{
     _incomCompanyBloc.value.rows.forEach((element) {
       if (element.cmpid == cmpid)
         element.edit = true;
+      else
+        element.edit = false;
     });
     _incomCompanyBloc.add(_incomCompanyBloc.value);
   }
@@ -420,6 +426,8 @@ class IncomeBloc{
     _incomCompanyRasteBloc.value.rows.forEach((element) {
       if (element.id == id)
         element.edit = true;
+      else
+        element.edit = false;
     });
     _incomCompanyRasteBloc.add(_incomCompanyRasteBloc.value);
   }

@@ -173,7 +173,7 @@ public class Raste {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}	
@@ -230,7 +230,7 @@ public class Raste {
 	 		p.setInt(4, raste.gethisic());
 	 		p.setInt(5, raste.getOld());
 	 		p.setInt(6, raste.getIsic());
-	 		p.setString(7, raste.getCmpname());
+	 		p.setInt(7, raste.getCmpid());
 	 		p.setString(8, raste.getName());
 	 		p.setInt(9, raste.getMosavabeno());
 			java.sql.ResultSet rs = p.executeQuery();
@@ -251,7 +251,7 @@ public class Raste {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}	

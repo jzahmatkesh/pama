@@ -57,7 +57,7 @@ public class F2Key{
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}	
@@ -91,7 +91,7 @@ public class F2Key{
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}	
@@ -126,7 +126,7 @@ public class F2Key{
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}	
@@ -162,7 +162,42 @@ public class F2Key{
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
+					.build();
+		}
+	}	
+
+	@Path("/Raste")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON+"; charset=UTF-8")
+	public Response loadRaste(TBCompany cmp, @Context HttpServletRequest request)
+	{
+		JSONArray data = new JSONArray();
+		try {
+			DataBase db = new DataBase();
+			Connection con = db.getConnection();
+			PreparedStatement p = con.prepareStatement("Exec Pama.PrcF2Key ?,?");
+			p.setString(1, "Raste");
+			p.setInt(2, cmp.getId());
+			java.sql.ResultSet rs = p.executeQuery();
+			if (rs != null){
+				while(rs.next())
+					if (!db.CheckStrFieldValue(rs, "Msg").equals("Failed")){
+						data.put(tojson.ResultsetToJson(rs));
+					}
+					else {
+						return Response
+								.status(Response.Status.UNAUTHORIZED)
+								.entity(db.CheckStrFieldValue(rs, "Note"))
+								.build();
+					}
+			}
+			return Response.ok(data.toString(), MediaType.APPLICATION_JSON).build();
+		}
+		catch(Exception e) {
+			return Response
+					.status(Response.Status.FORBIDDEN)
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}	

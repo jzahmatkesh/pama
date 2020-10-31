@@ -47,7 +47,7 @@ class FmCommittee extends StatelessWidget {
                                 ? PnCommitteeMember(com: _com, committeeBloc: _committeeBloc, company: company)
                                 : _com.detail
                                   ? PnCommitteeDetail(com: _com, committeeBloc: _committeeBloc, company: company)
-                                  : CommitteeRow(com: _com, committeeBloc: _committeeBloc),
+                                  : CommitteeRow(company: company, com: _com, committeeBloc: _committeeBloc),
                           );
                         }
                       );
@@ -77,7 +77,7 @@ class PnCommitteeMember extends StatelessWidget {
       children: [
         Card(
           color: accentcolor(context).withOpacity(0.5),
-          child: CommitteeRow(com: com, committeeBloc: committeeBloc)
+          child: CommitteeRow(company: company, com: com, committeeBloc: committeeBloc)
         ),
         SizedBox(height: 10.0,),
         GridCaption(
@@ -137,8 +137,9 @@ class PnCommitteeMember extends StatelessWidget {
 }
 
 class CommitteeRow extends StatelessWidget {
-  const CommitteeRow({Key key,@required this.com,@required this.committeeBloc,}) : super(key: key);
+  const CommitteeRow({Key key,@required this.company,@required this.com,@required this.committeeBloc,}) : super(key: key);
 
+  final Company company;
   final Committee com;
   final CommitteeBloc committeeBloc;
 
@@ -215,7 +216,7 @@ class PnCommitteeDetail extends StatelessWidget {
       children: [
         Card(
           color: accentcolor(context).withOpacity(0.5),
-          child: CommitteeRow(com: com, committeeBloc: committeeBloc)
+          child: CommitteeRow(company: company, com: com, committeeBloc: committeeBloc)
         ),
         SizedBox(height: 10.0,),
         GridCaption(
@@ -243,7 +244,7 @@ class PnCommitteeDetail extends StatelessWidget {
                         child: _dtl.absent 
                           ? DetailAbsent(committee: com, dtl: _dtl, committeeBloc: committeeBloc)
                           : _dtl.mosavabat
-                            ? DetailMosavabat(committee: this.com, dtl: _dtl, committeeBloc: committeeBloc)
+                            ? DetailMosavabat(company: company, committee: this.com, dtl: _dtl, committeeBloc: committeeBloc)
                             : CommitteeDetailRow(committee: com, dtl: _dtl, committeeBloc: committeeBloc),
                       );
                     }
@@ -397,8 +398,9 @@ class EditDetail extends StatelessWidget {
 }
 
 class DetailMosavabat extends StatelessWidget {
-  const DetailMosavabat({Key key, @required this.committee, @required this.committeeBloc, @required this.dtl}) : super(key: key);
+  const DetailMosavabat({Key key, @required this.company, @required this.committee, @required this.committeeBloc, @required this.dtl}) : super(key: key);
 
+  final Company company;
   final Committee committee;
   final CommitteeDetail dtl;
   final CommitteeBloc committeeBloc;
@@ -422,7 +424,7 @@ class DetailMosavabat extends StatelessWidget {
                 type: ButtonType.add, 
                 onPressed: (){
                   context.read<ThemeManager>().setCompany(dtl.cmpid); 
-                  showFormAsDialog(context: context, form: PnEditMosavabat(committeeBloc: this.committeeBloc, mos: CommitteeDetailMosavabat(cmpid: committee.cmpid, cmtid: committee.id, detailid: dtl.id, id: 0, empid: 0, mcmpid: 0)));
+                  showFormAsDialog(context: context, form: PnEditMosavabat(committeeBloc: this.committeeBloc, mos: CommitteeDetailMosavabat(cmpid: committee.cmpid, cmtid: committee.id, detailid: dtl.id, id: 0, empid: 0, mcmpid: company.id, mcmpname: company.name)));
                 }
               ), 'عنوان','واحد پیگیری','مسئول پیگیری', 'اتحادیه مرتبط'
             ], 

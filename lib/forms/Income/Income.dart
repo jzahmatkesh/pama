@@ -112,7 +112,7 @@ class IncomeRow extends StatelessWidget {
         Tooltip(message: 'فعال/غیرفعال', child: Switch(value: inc.active, onChanged: (val)=>bloc.setRadio(context, inc.id, act: true))),
         SizedBox(width: 20),
         inc.edit ? Expanded(child: GridTextField(hint: 'عنوان درآمد', initialValue: inc.name, onChange: (val)=>inc.name=val, autofocus: true,)) : '${inc.name}',
-        '${inc.price ?? 0}',
+        '${moneySeprator(inc.price ?? 0)}',
         Tooltip(message: 'پرداخت الکترونیکی', child: Switch(value: inc.epay, onChanged: (val)=>bloc.setRadio(context, inc.id, epay: true))),
         SizedBox(width: 30),
         Tooltip(message: 'قابلیت استرداد', child: Switch(value: inc.refund, onChanged: (val)=>bloc.setRadio(context, inc.id, refund: true))),
@@ -147,7 +147,7 @@ class PnShare extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            GridCaption(obj: [MyIconButton(type: ButtonType.add, onPressed: ()=>bloc.newIncomeShare(inc.id)),'عنوان بستانکار', Container(width: 100, child: Text('درصد', style: gridFieldStyle(),))]),
+            GridCaption(obj: [MyIconButton(type: ButtonType.add, onPressed: ()=>bloc.newIncomeShare(inc.id)),'عنوان بستانکار', 'درصد'], endbuttons: 3,),
             Expanded(
               child: StreamBuilder(
                 stream: bloc.incomShareStream$,
@@ -168,15 +168,15 @@ class PnShare extends StatelessWidget {
                                 : _shr.id==2
                                   ? 'اتاق ایران'
                                   : _shr.edit
-                                    ? Expanded(child: GridTextField(hint: 'عنوان بستانکار', initialValue: _shr.name, onChange: (val)=>_shr.name=val, autofocus: true, width: 150,))
+                                    ? Expanded(child: GridTextField(hint: 'عنوان بستانکار', initialValue: _shr.name, onChange: (val)=>_shr.name=val, autofocus: true))
                                     : '${_shr.name}',
                                 _shr.edit
-                                  ? GridTextField(hint: 'درصد', initialValue: _shr.perc.toString(), onChange: (val){
+                                  ? Expanded(child: GridTextField(hint: 'درصد', initialValue: _shr.perc.toString(), onChange: (val){
                                       if (val.isEmpty)
                                         _shr.perc = 0;
                                       else
                                         _shr.perc = int.parse(val);
-                                    }, autofocus: true, width: 150,)
+                                    }, autofocus: true))
                                   : '${_shr.perc}',
                                 _shr.edit
                                   ? MyIconButton(type: ButtonType.save, onPressed: ()=>bloc.saveIncomeShare(context, _shr))
@@ -237,14 +237,14 @@ class PnHistory extends StatelessWidget {
                                 ? Expanded(child: GridTextField(hint: 'از تاریخ', controller: _eddate, datepicker: true, autofocus: true))
                                 : '${_hst.date}',
                                 _hst.edit
-                                  ? Expanded(child: GridTextField(hint: 'قیمت', initialValue: moneySeprator(_hst.price.toString()), money: true, onChange: (val){
+                                  ? Expanded(child: GridTextField(hint: 'قیمت', initialValue: moneySeprator(_hst.price), money: true, onChange: (val){
                                       if (val.isEmpty)
                                         _hst.price = 0;
                                       else
                                         _hst.price = double.parse(val.replaceAll(',', ''));
                                     }, autofocus: true),
                                   )
-                                  : '${moneySeprator(_hst.price.toString())}',
+                                  : '${moneySeprator(_hst.price)}',
                                 _hst.edit
                                   ? MyIconButton(type: ButtonType.save, onPressed: (){_hst.date = _eddate.text; bloc.saveIncomeHistory(context, _hst);})
                                   : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delIncomeHistory(context, _hst))

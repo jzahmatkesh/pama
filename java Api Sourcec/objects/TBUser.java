@@ -15,6 +15,7 @@ public class TBUser {
 	private String token;
 	private int active;
 	private int admin;
+	private int ejriat;
 	
 	public int getId() {
 		return id;
@@ -99,6 +100,12 @@ public class TBUser {
 	}
 	public void setAdmin(int admin) {
 		this.admin = admin;
+	}
+	public int getEjriat() {
+		return ejriat;
+	}
+	public void setEjriat(int ejriat) {
+		this.ejriat = ejriat;
 	}
 	
 	

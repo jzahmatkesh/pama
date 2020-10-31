@@ -141,7 +141,7 @@ public class Property {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -259,7 +259,7 @@ public class Property {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -383,7 +383,7 @@ public class Property {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}
@@ -505,7 +505,7 @@ public class Property {
 		catch(Exception e) {
 			return Response
 					.status(Response.Status.FORBIDDEN)
-					.entity("خطا در دریافت اطلاعات از سرور"+e.toString())
+					.entity("خطا در دریافت اطلاعات از سرور")
 					.build();
 		}
 	}

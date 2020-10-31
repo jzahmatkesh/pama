@@ -32,16 +32,17 @@ public class User {
 			DataBase db = new DataBase();
 			if (db.ValidateUser(user.getUsername(), user.getPassword())) {
 				jwtPayload.put("token", db.Token);
-				jwtPayload.put("id", db.UserID.toString());
+				jwtPayload.put("id", db.UserID);
 				jwtPayload.put("name", db.Name);
 				jwtPayload.put("family", db.Family);
 				jwtPayload.put("mobile", db.Mobile);
-				jwtPayload.put("cmpid", db.CmpID.toString());
+				jwtPayload.put("cmpid", db.CmpID);
 				jwtPayload.put("cmptitle", db.CmpTitle);
-				jwtPayload.put("sex", db.sex.toString());
+				jwtPayload.put("sex", db.sex);
 //				jwtPayload.put("pic", db.Pic.toString());
 				jwtPayload.put("lastlogin", db.LastLogin);
 				jwtPayload.put("admin", db.admin);
+				jwtPayload.put("ejriat", db.ejriat);
 				jwtPayload.put("ip", db.GetIPAddress(request));
 
 				return Response.ok(jwtPayload.toString(), MediaType.APPLICATION_JSON).build();
@@ -70,17 +71,18 @@ public class User {
 			DataBase db = new DataBase();
 			if (db.ValidateByToken(user.getToken())) {
 				jwtPayload.put("token", db.Token);
-				jwtPayload.put("id", db.UserID.toString());
+				jwtPayload.put("id", db.UserID);
 				jwtPayload.put("name", db.Name);
 				jwtPayload.put("family", db.Family);
 				jwtPayload.put("mobile", db.Mobile);
-				jwtPayload.put("cmpid", db.CmpID.toString());
+				jwtPayload.put("cmpid", db.CmpID);
 				jwtPayload.put("cmptitle", db.CmpTitle);
-				jwtPayload.put("sex", db.sex.toString());
+				jwtPayload.put("sex", db.sex);
 //				jwtPayload.put("pic", db.Pic.toString());
 				jwtPayload.put("lastlogin", db.LastLogin);
 				jwtPayload.put("ip", db.GetIPAddress(request));
 				jwtPayload.put("admin", db.admin);
+				jwtPayload.put("ejriat", db.ejriat);
 				return Response.ok(jwtPayload.toString(), MediaType.APPLICATION_JSON).build();
 			}
 			return Response

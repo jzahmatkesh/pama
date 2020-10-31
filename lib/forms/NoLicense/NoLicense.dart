@@ -1,19 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pama/classes/classes.dart';
-import 'package:pama/forms/NoLicense/NoLicenseBloc.dart';
-import 'package:pama/module/Widgets.dart';
-import 'package:pama/module/consts.dart';
-import 'package:pama/module/functions.dart';
+import '../../classes/classes.dart';
+import 'NoLicenseBloc.dart';
+import '../../module/Widgets.dart';
+import '../../module/consts.dart';
+import '../../module/functions.dart';
+import '../../module/theme-Manager.dart';
+import 'package:provider/provider.dart';
 
 class FmNoLicense extends StatelessWidget {
-  const FmNoLicense({Key key, @required this.cmpid}) : super(key: key);
+  const FmNoLicense({Key key, @required this.cmp}) : super(key: key);
 
-  final int cmpid;
+  final Company cmp;
 
   @override
   Widget build(BuildContext context) {
-    NoLicenseBloc _bloc = NoLicenseBloc()..load(context, cmpid);
+    NoLicenseBloc _bloc = NoLicenseBloc()..load(context, cmp.id);
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -23,17 +25,20 @@ class FmNoLicense extends StatelessWidget {
         child: Column(
           children: [
             FormHeader(
-              title: 'فهرست فاقدین پروانه شناسایی شده', 
+              title: 'فهرست فاقدین پروانه شناسایی شده ${cmp.name}', 
               btnRight: MyIconButton(
-                type: this.cmpid==0 ? ButtonType.none : ButtonType.add, 
-                onPressed: ()=>showFormAsDialog(context: context, form: NewNoLicense(bloc: _bloc, lcn: new Nolicense(cmpid: this.cmpid, id: 0, isic: 0, note: '')))
+                type: this.cmp.id==0 ? ButtonType.none : ButtonType.add, 
+                onPressed: (){
+                  context.read<ThemeManager>().setCompany(this.cmp.id);
+                  showFormAsDialog(context: context, form: NewNoLicense(bloc: _bloc, lcn: new Nolicense(cmpid: this.cmp.id, id: 0, isic: 0, note: '')));
+                }
               ),
-              btnLeft: this.cmpid==0 ? MyIconButton(
+              btnLeft: this.cmp.id==0 ? MyIconButton(
                 type: ButtonType.reload, 
-                onPressed: ()=>_bloc.load(context, cmpid)
+                onPressed: ()=>_bloc.load(context, cmp.id)
               ) : null
             ),
-            this.cmpid == 0
+            this.cmp.id == 0
               ? GridCaption(obj: ['عنوان اتحادیه','کد ملی','نام و نام خانوادگی','کد آیسیک','تلفن','کد پستی','کد نوسازی شهرسازی','نشانی','','توضیحات اجراییات',''])
               : GridCaption(obj: ['کد ملی','نام و نام خانوادگی','کد آیسیک','تلفن','کد پستی','کد نوسازی شهرسازی','نشانی','','توضیحات اجراییات','']),          
             GridTextField(hint: 'جستجو ...', onChange: (val)=>_bloc.search(val)),
@@ -54,21 +59,26 @@ class FmNoLicense extends StatelessWidget {
                               child: Padding(
                                 padding: _lcn.note.isEmpty ? EdgeInsets.symmetric(horizontal: 8) : EdgeInsets.symmetric(vertical: 14, horizontal: 8),
                                 child: GestureDetector(
-                                  onDoubleTap: (){if (_lcn.note.isEmpty) showFormAsDialog(context: context, form: NewNoLicense(bloc: _bloc, lcn: _lcn));},
+                                  onDoubleTap: (){
+                                    if (_lcn.note.isEmpty){
+                                      context.read<ThemeManager>().setCompany(this.cmp.id);
+                                      showFormAsDialog(context: context, form: NewNoLicense(bloc: _bloc, lcn: _lcn));
+                                    }
+                                  },
                                   child: Row(
                                     children: [
-                                      this.cmpid==0 
+                                      this.cmp.id==0 
                                         ? Expanded(child: Text('${_lcn.cmpname}'))
                                         : Container(),
                                       Expanded(child: Text('${_lcn.nationalid}')),
                                       Expanded(child: Text('${_lcn.name} ${_lcn.family}')),
-                                      Expanded(child: Text('${_lcn.isic}')),
+                                      Expanded(child: Text("${_lcn.isicname}")),
                                       Expanded(child: Text('${_lcn.tel}')),
                                       Expanded(child: Text('${_lcn.post}')),
                                       Expanded(child: Text('${_lcn.nosazicode}')),
                                       Expanded(flex: 2, child: Text('${_lcn.address}')),
                                       Expanded(flex: 2, child: Text('${_lcn.note}', softWrap: true, overflow: TextOverflow.ellipsis, maxLines: 2)),
-                                      this.cmpid == 0
+                                      this.cmp.id == 0
                                         ? MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.doc_plaintext), hint: 'ثبت توضیحات', onPressed: ()=>showFormAsDialog(context: context, form: EditNote(bloc: _bloc, lcn: _lcn)))
                                         : _lcn.note.isEmpty 
                                           ? MyIconButton(type: ButtonType.del, onPressed: () => _bloc.delete(context, _lcn)) 
@@ -112,7 +122,19 @@ class NewNoLicense extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              FormHeader(title: 'تعریف/ویرایش اطلاعات فاقدین پروانه', btnRight: MyIconButton(type: ButtonType.save, onPressed: (){if (_formkey.currentState.validate()) bloc.save(context, lcn);})),
+              FormHeader(
+                title: 'تعریف/ویرایش اطلاعات فاقدین پروانه', 
+                btnRight: MyIconButton(
+                  type: ButtonType.save, 
+                  onPressed: (){
+                    if (_formkey.currentState.validate()){
+                      lcn.name = _name.text;
+                      lcn.family = _family.text;
+                      bloc.save(context, lcn);
+                    }
+                  }
+                )
+              ),
               SizedBox(height: 10.0,),
               Row(
                 children: [
@@ -134,7 +156,7 @@ class NewNoLicense extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Expanded(child: GridTextField(hint: 'کد آیسیک', initialValue: lcn.isic.toString(), onChange: (val)=>lcn.isic=int.parse(val), notempty: true)),
+                  Expanded(child: ForeignKeyField(hint: 'کد آیسیک', initialValue: {'hisic': lcn.hisic, 'isic': lcn.isic, 'name': lcn.isicname}, onChange: (val){if (val != null){lcn.hisic=val['hisic'];lcn.isic=val['isic'];lcn.isicname=val['name'];}}, f2key: 'Raste',)),
                   Expanded(child: GridTextField(hint: 'تلفن', initialValue: lcn.tel, onChange: (val)=>lcn.tel=val, notempty: true)),
                   Expanded(child: GridTextField(hint: 'کد پستی', initialValue: lcn.post, onChange: (val)=>lcn.post=val, notempty: true)),
                   Expanded(child: GridTextField(hint: 'کد نوسازی شهرداری', initialValue: lcn.nosazicode, onChange: (val)=>lcn.nosazicode=val)),

@@ -464,7 +464,7 @@ class NewPropGHM extends StatelessWidget {
               Row(
                 children: [
                   Expanded(child: GridTextField(hint: 'تاریخ انعقاد قرارداد',  controller: _cntdate, datepicker: true, notempty: true)),
-                  Expanded(child: GridTextField(hint: 'قیمت خرید/اجاره',  initialValue: '${moneySeprator(prop.price.toString())}', onChange: (val)=>prop.price = double.parse(val.replaceAll(",", "")), money: true, notempty: true)),
+                  Expanded(child: GridTextField(hint: 'قیمت خرید/اجاره',  initialValue: '${moneySeprator(prop.price)}', onChange: (val)=>prop.price = double.parse(val.replaceAll(",", "")), money: true, notempty: true)),
                   Expanded(child: GridTextField(hint: 'متراژ(مترمربع)',  initialValue: '${prop.metraj}', onChange: (val)=>prop.metraj = int.parse(val), notempty: true)),
                   Expanded(child: GridTextField(hint: 'سن بنا (سال)',  initialValue: '${prop.age}', onChange: (val)=>prop.age = int.parse(val), notempty: true)),
                 ],
@@ -472,7 +472,7 @@ class NewPropGHM extends StatelessWidget {
               SizedBox(height: 10.0),
               Row(
                 children: [
-                  Expanded(child: GridTextField(hint: 'ارزش تقریبی روز',  initialValue: '${moneySeprator(prop.cprice.toString())}', onChange: (val)=>prop.cprice = double.parse(val.replaceAll(",", "")), money: true,)),
+                  Expanded(child: GridTextField(hint: 'ارزش تقریبی روز',  initialValue: '${moneySeprator(prop.cprice)}', onChange: (val)=>prop.cprice = double.parse(val.replaceAll(",", "")), money: true,)),
                   Expanded(child: GridTextField(hint: 'کاربری',  initialValue: prop.karbari, onChange: (val)=>prop.karbari = val)),
                   Expanded(
                     child: StreamBuilder<Object>(

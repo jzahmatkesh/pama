@@ -56,7 +56,7 @@ class Dashboard extends StatelessWidget {
                      :context.watch<ThemeManager>().menuitem == 5 ? FmGov() 
                      :context.watch<ThemeManager>().menuitem == 6 ? FmAddInfo() 
                      :context.watch<ThemeManager>().menuitem == 7 ? FmUserGroup() 
-                     :context.watch<ThemeManager>().menuitem == 8 ? FmNoLicense(cmpid: 0) 
+                     :context.watch<ThemeManager>().menuitem == 8 ? FmNoLicense(cmp: Company(id: 0)) 
                      :context.watch<ThemeManager>().menuitem == 9 ? FmIncome() 
                      :Text('در دست طراحی می باشد', textAlign: TextAlign.center, style: titleStyle(),)
               )
