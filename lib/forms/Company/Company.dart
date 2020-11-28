@@ -152,8 +152,6 @@ class GridCompanyList extends StatelessWidget {
                                   DesktopIcon(title: 'اموال منقول/غیر منقول', subtitle: 'اموال ${_company.cntproperty} رکورد', icon: Icon(Icons.web_asset), onPressed: () => showFormAsDialog(context: context, form: FmProperty(cmp: _company))),
                                   DesktopIcon(title: 'طرح های بازرسی و نظارت',  subtitle: 'طرح های بازرسی ${_company.cntbzr} رکورد', icon: Icon(Icons.security), onPressed: () => showFormAsDialog(context: context, form: FmInspection(company: _company))),
                                   DesktopIcon(title: 'فاقدین پروانه شناسایی شده',  subtitle: 'افراد شناسایی شده ${_company.cntlcn} نفر', icon: Icon(CupertinoIcons.person_crop_circle_fill_badge_exclam), onPressed: () => showFormAsDialog(context: context, form: FmNoLicense(cmp: _company))),
-                                  DesktopIcon(title: 'تنظیم کدینگ درآمد',  subtitle: 'کدینگ درآمد ${_company.cnttcoding} رکورد', icon: Icon(Icons.monetization_on), onPressed: (){}),
-
                                 ],
                               ),
                             )  
@@ -504,7 +502,7 @@ class CompanybyLaw extends StatelessWidget {
     TextEditingController _date2 = TextEditingController(text: cmp.andate2);
     TextEditingController _date3 = TextEditingController(text: cmp.andate3);
     TextEditingController _date4 = TextEditingController(text: cmp.andate4);
-    RasteBloc _raste = RasteBloc()..loadData(context);
+    RasteBloc _raste = RasteBloc()..loadRasteDRaste(context);
 
     final _formkey = GlobalKey<FormState>();
     return Directionality(
@@ -563,7 +561,7 @@ class CompanybyLaw extends StatelessWidget {
                                 children: [
                                   Switch(value: _rs.active, onChanged: (_){}),
                                   SizedBox(width: 25),
-                                  _rs.isic,
+                                  _rs.hisic > 0 ? '${_rs.hisic}/${_rs.isic}' : _rs.isic,
                                   _rs.name
                                 ],
                                 padding: false,

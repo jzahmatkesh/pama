@@ -45,61 +45,67 @@ class FMRaste extends StatelessWidget {
                           return Container();
                         return Card(
                           color: idx.isEven && !_raste.showdraste ? appbarColor(context) : Colors.transparent,
-                          child: GestureDetector(
-                            onDoubleTap: () => showFormAsDialog(context: context, form: FmEdit(rastebloc: _rasteBloc, rst: _raste)),
-                            onTap: ()=> _rasteBloc.showDRaste(context, _raste.isic),
-                            child: _raste.showdraste 
-                              ? Column(
-                                children: [
-                                  Card(color: accentcolor(context).withOpacity(0.5), child: BuildRasteRow(raste: _raste, rasteBloc: _rasteBloc)),
-                                  GridCaption(
-                                    obj: [
-                                      MyIconButton(type: ButtonType.other, hint: 'زیر رسته جدید', icon: Icon(CupertinoIcons.plus_app), onPressed: () => showFormAsDialog(context: context, form: FmEditDRaste(rastebloc: _rasteBloc, rst: new DRaste(cmpid: _raste.cmpid, hisic: _raste.isic, isic: 0, old: 0, name: "", cmpname: _raste.cmpname, mosavabeno: 0, active: true)))),
-                                      'کد آیسیک زیر رسته','عنوان زیر رسته','عنوان اتحادیه','مصوبه صندوق',
-                                      MyIconButton(type: ButtonType.exit, onPressed: () => _rasteBloc.hideDRaste(_raste.isic)),
-                                    ], 
-                                    endbuttons: 0,
-                                  ),
-                                  Container(
-                                    height: 300,
-                                    child: StreamBuilder(
-                                      stream: _rasteBloc.drasteblocStream$,
-                                      builder: (BuildContext context, AsyncSnapshot<DRasteModel> snapshot){
-                                        if (snapshot.hasData)
-                                          if (snapshot.data.status == Status.error)
-                                            return ErrorInGrid(snapshot.data.msg);
-                                          else if (snapshot.data.status == Status.loaded)
-                                            return ListView.builder(
-                                              itemCount: snapshot.data.rows.length,
-                                              itemBuilder: (context, idx){
-                                                return Card(
-                                                  child: GestureDetector(
-                                                    onDoubleTap: ()=> showFormAsDialog(context: context, form: FmEditDRaste(rastebloc: _rasteBloc, rst: snapshot.data.rows[idx])),
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.all(3.0),
-                                                      child: Row(
-                                                        children: [
-                                                          Switch(value: snapshot.data.rows[idx].active, onChanged: (val)=> _rasteBloc.setDRasteActive(context, snapshot.data.rows[idx].isic, val)),
-                                                          Expanded(child: Text('${snapshot.data.rows[idx].hisic} / ${snapshot.data.rows[idx].isic}')),    
-                                                          Expanded(child: Text('${snapshot.data.rows[idx].name}')),    
-                                                          Expanded(child: Text('${snapshot.data.rows[idx].cmpname}')),    
-                                                          Expanded(child: Text('${snapshot.data.rows[idx].mosavabeno}')),    
-                                                          MyIconButton(type: ButtonType.del, onPressed: () => _rasteBloc.delDraste(context, snapshot.data.rows[idx]))
-                                                        ],
-                                                      ),
+                          child:  _raste.showdraste 
+                            ? Column(
+                              children: [
+                                Card(color: accentcolor(context).withOpacity(0.5), child: BuildRasteRow(raste: _raste, rasteBloc: _rasteBloc)),
+                                GridCaption(
+                                  obj: [
+                                    MyIconButton(type: ButtonType.other, hint: 'زیر رسته جدید', icon: Icon(CupertinoIcons.plus_app), onPressed: () => showFormAsDialog(context: context, form: FmEditDRaste(rastebloc: _rasteBloc, rst: new DRaste(cmpid: _raste.cmpid, hisic: _raste.isic, isic: 0, old: 0, name: "", cmpname: _raste.cmpname, mosavabeno: 0, active: true)))),
+                                    'کد آیسیک زیر رسته','عنوان زیر رسته','عنوان اتحادیه','مصوبه صندوق',
+                                    MyIconButton(type: ButtonType.exit, onPressed: () => _rasteBloc.hideDRaste(_raste.isic)),
+                                  ], 
+                                  endbuttons: 0,
+                                ),
+                                Container(
+                                  height: 300,
+                                  child: StreamBuilder(
+                                    stream: _rasteBloc.drasteblocStream$,
+                                    builder: (BuildContext context, AsyncSnapshot<DRasteModel> snapshot){
+                                      if (snapshot.hasData)
+                                        if (snapshot.data.status == Status.error)
+                                          return ErrorInGrid(snapshot.data.msg);
+                                        else if (snapshot.data.status == Status.loaded)
+                                          return ListView.builder(
+                                            itemCount: snapshot.data.rows.length,
+                                            itemBuilder: (context, idx){
+                                              return Card(
+                                                child: GestureDetector(
+                                                  onDoubleTap: ()=> showFormAsDialog(context: context, form: FmEditDRaste(rastebloc: _rasteBloc, rst: snapshot.data.rows[idx])),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.all(3.0),
+                                                    child: Row(
+                                                      children: [
+                                                        Switch(value: snapshot.data.rows[idx].active, onChanged: (val)=> _rasteBloc.setDRasteActive(context, snapshot.data.rows[idx].isic, val)),
+                                                        SizedBox(width: 25),
+                                                        Expanded(
+                                                          child: Row(
+                                                            children: [
+                                                              Text('${snapshot.data.rows[idx].isic}'),    
+                                                              Text('/'),
+                                                              Text('${snapshot.data.rows[idx].hisic}'),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 75,),
+                                                        Expanded(child: Text('${snapshot.data.rows[idx].name}')),    
+                                                        Expanded(child: Text('${snapshot.data.rows[idx].cmpname}')),    
+                                                        Expanded(child: Text('${snapshot.data.rows[idx].mosavabeno}')),    
+                                                        MyIconButton(type: ButtonType.del, onPressed: () => _rasteBloc.delDraste(context, snapshot.data.rows[idx]))
+                                                      ],
                                                     ),
                                                   ),
-                                                );
-                                              }
-                                            );
-                                          return CupertinoActivityIndicator();
-                                      }
-                                    ),
-                                  )  
-                                ],
-                              )
-                              : BuildRasteRow(raste: _raste, rasteBloc: _rasteBloc),
-                          ),
+                                                ),
+                                              );
+                                            }
+                                          );
+                                        return CupertinoActivityIndicator();
+                                    }
+                                  ),
+                                )  
+                              ],
+                            )
+                            : BuildRasteRow(raste: _raste, rasteBloc: _rasteBloc),
                         );
                       }
                     );
@@ -125,32 +131,36 @@ class BuildRasteRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(3.0),
-      child: Row(
-        children: [
-          Switch(value: raste.active, onChanged: (val) => rasteBloc.setActive(context, val, raste.isic)),
-          Expanded(child: Text('${raste.isic}')),
-          Expanded(flex: 3, child: Text('${raste.name}')),
-          Expanded(flex: 3, child: Text('${raste.cmpname}')),
-          Expanded(child: Text('${raste.kindName()}')),
-          Expanded(child: Text('${raste.mosavabeno}')),
-          Expanded(child: Text('${raste.priceName()}')),
-          PopupMenuButton(
-            tooltip: 'تنظیمات',
-            itemBuilder: (_) => <PopupMenuItem<int>>[
-              myPopupMenuItem(icon: Icons.supervised_user_circle, title: 'زیر رسته', value: 1),
-              myPopupMenuItem(icon: Icons.people, title: 'حذف رسته', value: 2),
-              myPopupMenuItem(icon: Icons.people, title: 'بارگذاری فایل', value: 3),
-            ],
-            onSelected: (int idx) async{
-              if (idx == 1)
-                rasteBloc.showDRaste(context, raste.isic);
-              else if (idx == 2)
-                rasteBloc.delraste(context, raste);
-            }
-          ),
-        ],
+    return GestureDetector(
+      onDoubleTap: ()=>showFormAsDialog(context: context, form: FmEdit(rastebloc: rasteBloc, rst: raste)),
+      onTap: ()=> rasteBloc.showDRaste(context, raste.isic),
+      child: Padding(
+        padding: const EdgeInsets.all(3.0),
+        child: Row(
+          children: [
+            Switch(value: raste.active, onChanged: (val) => rasteBloc.setActive(context, val, raste.isic)),
+            Expanded(child: Text('${raste.isic}')),
+            Expanded(flex: 3, child: Text('${raste.name}')),
+            Expanded(flex: 3, child: Text('${raste.cmpname}')),
+            Expanded(child: Text('${raste.kindName()}')),
+            Expanded(child: Text('${raste.mosavabeno}')),
+            Expanded(child: Text('${raste.priceName()}')),
+            PopupMenuButton(
+              tooltip: 'تنظیمات',
+              itemBuilder: (_) => <PopupMenuItem<int>>[
+                myPopupMenuItem(icon: Icons.supervised_user_circle, title: 'زیر رسته', value: 1),
+                myPopupMenuItem(icon: Icons.people, title: 'حذف رسته', value: 2),
+                myPopupMenuItem(icon: Icons.people, title: 'بارگذاری فایل', value: 3),
+              ],
+              onSelected: (int idx) async{
+                if (idx == 1)
+                  rasteBloc.showDRaste(context, raste.isic);
+                else if (idx == 2)
+                  rasteBloc.delraste(context, raste);
+              }
+            ),
+          ],
+        ),
       ),
     );
   }

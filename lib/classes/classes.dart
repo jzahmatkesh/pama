@@ -49,6 +49,7 @@ class User{
 }
 
 class Raste{
+  int hisic;
   int isic;
   int old;
   int cmpid;
@@ -75,10 +76,11 @@ class Raste{
     else if (pricekind==3) return "ج";
     return "";
   }
-  Raste({@required this.isic, @required this.old, @required this.name, @required this.cmpid, @required this.cmpname, this.active, this.kind, this.mosavabeno, this.pricekind, this.searched = true, this.showdraste = false});
+  Raste({this.hisic, @required this.isic, @required this.old, @required this.name, @required this.cmpid, @required this.cmpname, this.active, this.kind, this.mosavabeno, this.pricekind, this.searched = true, this.showdraste = false});
 
   Raste.fromJson(Map<String, dynamic> json)
-    : isic = json['isic'],
+    : hisic = json['hisic'],
+      isic = json['isic'],
       old = json['isic'],
       cmpid = json['cmpid'],
       cmpname = json['cmpname'],
@@ -1758,7 +1760,7 @@ class Nolicense{
     String token;
     bool inSearch;
  
-    Nolicense({this.cmpid,this.cmpname,this.id,this.peopid,this.name,this.family,this.nationalid,this.hisic,this.isic,this.isicname,this.tel,this.post,this.nosazicode,this.address,this.note, this.token, this.inSearch = true});
+    Nolicense({this.cmpid,this.cmpname="",this.id,this.peopid,this.name="",this.family="",this.nationalid="",this.hisic,this.isic,this.isicname="",this.tel="",this.post="",this.nosazicode="",this.address="",this.note="", this.token, this.inSearch = true});
  
     Nolicense.fromJson(Map<String, dynamic> json):
         cmpid = json['cmpid'],

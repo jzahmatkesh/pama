@@ -58,6 +58,7 @@ class DrtFamilyModel{
 class CompanyBloc{
   BehaviorSubject<CompanyModel> _companybloc = BehaviorSubject<CompanyModel>.seeded(CompanyModel(status: Status.loading));
   Stream<CompanyModel> get companyListStream$ => _companybloc.stream;
+  CompanyModel get companyValue$ => _companybloc.value;
 
   CompanyRepository _repository = CompanyRepository();
 

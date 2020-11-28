@@ -273,6 +273,12 @@ class RasteRepository{
       return _data['body'].map<Raste>((data) => Raste.fromJson(json.decode(data))).toList();
     throw Exception(_data['msg']);
   }
+  Future<List<Raste>> loadRasteDRaste(String token) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Raste/AllByCompany', body: jsonEncode({"token": token}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Raste>((data) => Raste.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
 
   Future<bool> save(Raste raste) async{
      Map<String, dynamic> _data = await putToServer(api: 'Raste', header: {'Content-Type': 'application/json'}, 

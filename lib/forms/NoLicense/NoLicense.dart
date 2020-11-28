@@ -25,12 +25,12 @@ class FmNoLicense extends StatelessWidget {
         child: Column(
           children: [
             FormHeader(
-              title: 'فهرست فاقدین پروانه شناسایی شده ${cmp.name}', 
+              title: 'فهرست فاقدین پروانه شناسایی شده ${cmp.name ?? ''}', 
               btnRight: MyIconButton(
                 type: this.cmp.id==0 ? ButtonType.none : ButtonType.add, 
                 onPressed: (){
                   context.read<ThemeManager>().setCompany(this.cmp.id);
-                  showFormAsDialog(context: context, form: NewNoLicense(bloc: _bloc, lcn: new Nolicense(cmpid: this.cmp.id, id: 0, isic: 0, note: '')));
+                  showFormAsDialog(context: context, form: NewNoLicense(bloc: _bloc, lcn: new Nolicense(cmpid: this.cmp.id, id: 0, hisic: 0, isic: 0, note: '')));
                 }
               ),
               btnLeft: this.cmp.id==0 ? MyIconButton(
@@ -72,7 +72,9 @@ class FmNoLicense extends StatelessWidget {
                                         : Container(),
                                       Expanded(child: Text('${_lcn.nationalid}')),
                                       Expanded(child: Text('${_lcn.name} ${_lcn.family}')),
-                                      Expanded(child: Text("${_lcn.isicname}")),
+                                      _lcn.isic > 0 
+                                        ? Expanded(child: Tooltip(message: '${_lcn.isic} / ${_lcn.hisic}', child: Text("${_lcn.isicname}")))
+                                        : Expanded(child: Tooltip(message: '${_lcn.hisic}', child: Text("${_lcn.isicname}"))),
                                       Expanded(child: Text('${_lcn.tel}')),
                                       Expanded(child: Text('${_lcn.post}')),
                                       Expanded(child: Text('${_lcn.nosazicode}')),
@@ -149,7 +151,7 @@ class NewNoLicense extends StatelessWidget {
                       _family.text = lcn.family ?? "";
                     }
                     lcn.nationalid=val;
-                  }, autofocus: true, notempty: true)),
+                  }, autofocus: true)),
                   Expanded(child: GridTextField(hint: 'نام', controller: _name, notempty: true)),
                   Expanded(child: GridTextField(hint: 'نام خانوادگی', controller: _family, notempty: true)),
                 ],
@@ -158,7 +160,7 @@ class NewNoLicense extends StatelessWidget {
                 children: [
                   Expanded(child: ForeignKeyField(hint: 'کد آیسیک', initialValue: {'hisic': lcn.hisic, 'isic': lcn.isic, 'name': lcn.isicname}, onChange: (val){if (val != null){lcn.hisic=val['hisic'];lcn.isic=val['isic'];lcn.isicname=val['name'];}}, f2key: 'Raste',)),
                   Expanded(child: GridTextField(hint: 'تلفن', initialValue: lcn.tel, onChange: (val)=>lcn.tel=val, notempty: true)),
-                  Expanded(child: GridTextField(hint: 'کد پستی', initialValue: lcn.post, onChange: (val)=>lcn.post=val, notempty: true)),
+                  Expanded(child: GridTextField(hint: 'کد پستی', initialValue: lcn.post, onChange: (val)=>lcn.post=val)),
                   Expanded(child: GridTextField(hint: 'کد نوسازی شهرداری', initialValue: lcn.nosazicode, onChange: (val)=>lcn.nosazicode=val)),
                 ],
               ),

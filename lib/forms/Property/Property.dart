@@ -322,7 +322,6 @@ class PnBankHesab extends StatelessWidget {
   }
 }
 
-
 class NewMobile extends StatelessWidget {
   const NewMobile({Key key, @required this.bloc, @required this.prop}) : super(key: key);
 
@@ -355,7 +354,7 @@ class NewMobile extends StatelessWidget {
               Row(
                 children: [
                   Expanded(child: GridTextField(hint: 'نام مالک',  initialValue: prop.owner, autofocus: true, onChange: (val)=>prop.owner = val, notempty: true)),
-                  Expanded(child: ForeignKeyField(hint: 'تحویل گیرنده', initialValue: {'id': prop.peopid, 'name': prop.peopfamily}, f2key: 'Employee', onChange: (val){prop.peopid = val['id']; prop.peopfamily = val['name'];})),
+                  Expanded(child: ForeignKeyField(hint: 'تحویل گیرنده', initialValue: {'id': prop.peopid, 'name': prop.peopfamily}, f2key: 'Employee', onChange: (val){if (val!=null){prop.peopid = val['id']; prop.peopfamily = val['name'];}})),
                 ],
               ),
             ],
@@ -404,7 +403,7 @@ class NewCar extends StatelessWidget {
               Row(
                 children: [
                   Expanded(child: GridTextField(hint: 'شماره پلاک',  initialValue: prop.pelak, autofocus: true, onChange: (val)=>prop.pelak = val, notempty: true)),
-                  Expanded(child: ForeignKeyField(hint: 'تحویل گیرنده', initialValue: {'id': prop.peopid, 'name': prop.peopfamily}, f2key: 'Employee', onChange: (val){prop.peopid = val['id']; prop.peopfamily = val['name'];})),
+                  Expanded(child: ForeignKeyField(hint: 'تحویل گیرنده', initialValue: {'id': prop.peopid, 'name': prop.peopfamily}, f2key: 'Employee', onChange: (val){if (val!=null){prop.peopid = val['id']; prop.peopfamily = val['name'];}})),
                 ],
               ),
             ],
@@ -540,7 +539,7 @@ class NewBankHesab extends StatelessWidget {
                       }
                     )
                   ),
-                  Expanded(child: ForeignKeyField(hint: 'نام بانک', initialValue: {'id': prop.bankid, "name": prop.bankName}, f2key: "Bank", onChange: (val){prop.bankid=val['id'];prop.bankName=val['name'];})),
+                  Expanded(child: ForeignKeyField(hint: 'نام بانک', initialValue: {'id': prop.bankid, "name": prop.bankName}, f2key: "Bank", onChange: (val){if (val!=null){prop.bankid=val['id'];prop.bankName=val['name'];}})),
                   Expanded(child: GridTextField(hint: 'تاریخ افتتاح حساب',  controller: _date, datepicker: true, notempty: true)),
                 ],
               ),

@@ -44,6 +44,17 @@ class RasteBloc{
       _rasteBloc.add(RasteModel(status: Status.error, msg: '$e'));
     }
   }
+  
+  loadRasteDRaste(BuildContext context) async{
+    try{
+      _rasteBloc.add(RasteModel(status: Status.loading));
+      _rasteBloc.add(RasteModel(status: Status.loaded, rows: await _repository.loadRasteDRaste(readToken(context))));
+    }
+    catch(e){
+      analyzeError(context, '$e', msg: false);
+      _rasteBloc.add(RasteModel(status: Status.error, msg: '$e'));
+    }
+  }
   searchRaste(String val){
     _rasteBloc.value.rows.forEach((element){
       element.searched = element.isic.toString().contains(val) || element.name.contains(val) || element.cmpname.contains(val);
@@ -201,5 +212,4 @@ class RasteBloc{
       Navigator.pop(context);
     });
   }
-
 }

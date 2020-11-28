@@ -77,7 +77,7 @@ class Login extends StatelessWidget {
                         },
                       ),
                     ),
-                    MyTextField(hint: 'شناسه کاربری', onchange: (val){_logindata['username']=val;}, darkmodeForce: true,),
+                    MyTextField(hint: 'شماره همراه', onchange: (val){_logindata['username']=val;}, darkmodeForce: true,),
                     MyTextField(hint: 'کلمه عبور', pass: true, onchange: (val){_logindata['pass']=val;}, darkmodeForce: true,),
                     SizedBox(height: 15.0,),
                     Row(
