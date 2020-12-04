@@ -16,7 +16,6 @@ import '../Bank/Bank.dart';
 import '../Company/Company.dart';
 import '../Document/Document.dart';
 import '../Gov/Gov.dart';
-import '../Login/Login.dart';
 import '../Raste/Raste.dart';
 import '../UserGroup/UserGroup.dart';
 import '../Violation/Violation.dart';
@@ -98,12 +97,13 @@ class Dashboard extends StatelessWidget {
                   SizedBox(height: 15,),
                   ListTile(title: Text('خروج از سامانه'), hoverColor: Colors.redAccent[100], onTap: (){
                     confirmMessage(context, "تایید خروج", "آیا مایل به خروج از سامانه می باشید؟", yesclick: () async{
-                        SharedPreferences prefs = await SharedPreferences.getInstance();
-                        await prefs.remove('token');
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => Login()),
-                        );
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      await prefs.remove('token');
+                      // Navigator.pushReplacement(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => Login()),
+                      // );
+                      Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
                     });
                   }),
                 ],
