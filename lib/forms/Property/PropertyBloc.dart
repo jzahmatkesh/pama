@@ -20,8 +20,10 @@ class PropertyBloc{
 
   BehaviorSubject<int> _accountBloc = BehaviorSubject<int>.seeded(1);
   Stream<int> get accountTypeStream$ => _accountBloc.stream;
+  int get accountTypevalue$ => _accountBloc.stream.value;
   BehaviorSubject<int> _malekiatBloc = BehaviorSubject<int>.seeded(1);
   Stream<int> get malekiaTypeStream$ => _malekiatBloc.stream;
+  int get malekiaTypeValue$ => _malekiatBloc.stream.value;
   BehaviorSubject<int> _tenantBloc = BehaviorSubject<int>.seeded(1);
   Stream<int> get tenantTypeStream$ => _tenantBloc.stream;
 
@@ -217,23 +219,26 @@ class PropertyBloc{
     }   
   }
   saveBankHesab(BuildContext context, Property prop) async{
-    try{
-      showWaiting(context);
-      prop.token = readToken(context);
-      int _id =  await _repository.saveBankHesab(prop);
-      prop.id = _id;
-      bool nv = true;
-      _propertyBloc.value.rows.forEach((element) {if (element.id == prop.id){nv=false;element.id = _id;}});
-      if (nv)
-        _propertyBloc.value.rows.insert(0, prop);
-      _propertyBloc.add(_propertyBloc.value);
-      Navigator.pop(context);
-      hideWaiting(context);      
-    } 
-    catch(e){
-      hideWaiting(context);
-      analyzeError(context, '$e');
-    }   
+    if (prop.bankid == null || prop.bankid == 0)
+      myAlert(context: context, title: 'مقادیر اجباری', message: 'عنوان بانک انتخاب نشده است');
+    else
+      try{
+        showWaiting(context);
+        prop.token = readToken(context);
+        int _id =  await _repository.saveBankHesab(prop);
+        prop.id = _id;
+        bool nv = true;
+        _propertyBloc.value.rows.forEach((element) {if (element.id == prop.id){nv=false;element.id = _id;}});
+        if (nv)
+          _propertyBloc.value.rows.insert(0, prop);
+        _propertyBloc.add(_propertyBloc.value);
+        Navigator.pop(context);
+        hideWaiting(context);      
+      } 
+      catch(e){
+        hideWaiting(context);
+        analyzeError(context, '$e');
+      }   
   }
   delBankHesab(BuildContext context, Property prop){
     confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف ${prop.accountTypeName()} ${prop.hesabno} ${prop.bankName} می باشید؟', yesclick: () async {

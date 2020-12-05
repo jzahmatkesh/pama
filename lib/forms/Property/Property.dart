@@ -274,7 +274,7 @@ class PnBankHesab extends StatelessWidget {
             obj: [
               MyIconButton(
                 type: ButtonType.add, 
-                onPressed: () => showFormAsDialog(context: context, form: NewBankHesab(bloc: bloc, prop: Property(cmpid: cmpid, id: 0, accounttype: 1, tafsiliid: 0, internetbank: 0)))
+                onPressed: () => showFormAsDialog(context: context, form: NewBankHesab(bloc: bloc, prop: Property(cmpid: cmpid, id: 0, accounttype: 1, tafsiliid: 0, internetbank: 0, owner: '')))
               ),
               'بانک', 'نوع حساب', 'صاحب حساب', 'شماره حساب', 'تاریخ افتتاح'
             ], 
@@ -436,7 +436,7 @@ class NewPropGHM extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              FormHeader(title: 'تعریف/ویرایش اطلاعات اموال غیرمنقول', btnRight: MyIconButton(type: ButtonType.save, onPressed: (){prop.buydate = _date.text; prop.contractdate = _cntdate.text; if (_formkey.currentState.validate()) bloc.savePropGHM(context, prop);})),
+              FormHeader(title: 'تعریف/ویرایش اطلاعات اموال غیرمنقول', btnRight: MyIconButton(type: ButtonType.save, onPressed: (){prop.malekiat=bloc.malekiaTypeValue$; prop.buydate = _date.text; prop.contractdate = _cntdate.text; if (_formkey.currentState.validate()) bloc.savePropGHM(context, prop);})),
               SizedBox(height: 10.0),
               Row(
                 children: [
@@ -520,7 +520,7 @@ class NewBankHesab extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              FormHeader(title: 'تعریف/ویرایش اطلاعات حسابهای بانک', btnRight: MyIconButton(type: ButtonType.save, onPressed: (){prop.buydate = _date.text; if (_formkey.currentState.validate()) bloc.saveBankHesab(context, prop);})),
+              FormHeader(title: 'تعریف/ویرایش اطلاعات حسابهای بانک', btnRight: MyIconButton(type: ButtonType.save, onPressed: (){prop.accounttype=bloc.accountTypevalue$; prop.buydate = _date.text; if (_formkey.currentState.validate()) bloc.saveBankHesab(context, prop);})),
               SizedBox(height: 10.0),
               Row(
                 children: [
@@ -556,7 +556,7 @@ class NewBankHesab extends StatelessWidget {
                 children: [
                   Expanded(child: GridTextField(hint: 'شماره حساب',  initialValue: prop.hesabno, onChange: (val)=>prop.hesabno = val, notempty: true)),
                   Expanded(child: GridTextField(hint: 'شماره شبا',  initialValue: prop.shaba, onChange: (val)=>prop.shaba = val, notempty: true)),
-                  Expanded(child: GridTextField(hint: 'شماره کارت',  initialValue: prop.cardno, onChange: (val)=>prop.cardno = val, notempty: true)),
+                  Expanded(child: GridTextField(hint: 'شماره کارت',  initialValue: prop.cardno, onChange: (val)=>prop.cardno = val)),
                 ],
               ),
             ],
