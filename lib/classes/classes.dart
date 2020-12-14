@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class F2Key{
@@ -55,6 +57,7 @@ class Raste{
   int cmpid;
   String cmpname;
   String name;
+  String draste;
   bool active;
   int kind;
   int mosavabeno;
@@ -76,7 +79,7 @@ class Raste{
     else if (pricekind==3) return "ج";
     return "";
   }
-  Raste({this.hisic, @required this.isic, @required this.old, @required this.name, @required this.cmpid, @required this.cmpname, this.active, this.kind, this.mosavabeno, this.pricekind, this.searched = true, this.showdraste = false});
+  Raste({this.hisic, @required this.isic, @required this.old, @required this.name, this.draste, @required this.cmpid, @required this.cmpname, this.active, this.kind, this.mosavabeno, this.pricekind, this.searched = true, this.showdraste = false});
 
   Raste.fromJson(Map<String, dynamic> json)
     : hisic = json['hisic'],
@@ -85,6 +88,7 @@ class Raste{
       cmpid = json['cmpid'],
       cmpname = json['cmpname'],
       name = json['name'],
+      draste = json['draste'],
       active = json['active'] == 1,
       kind = json['kind'],
       mosavabeno = json['mosavabeno'],
@@ -1976,3 +1980,22 @@ class Incomecompanyraste{
         return data;
     }
 }
+
+class Debouncer {
+  final int milliseconds;
+  VoidCallback action;
+  Timer _timer;
+
+  Debouncer({ this.milliseconds });
+
+  run(VoidCallback action) {
+    if (_timer != null && _timer.isActive) {
+      _timer.cancel();
+    }
+
+    _timer = Timer(Duration(milliseconds: milliseconds), action);
+  }
+}
+
+
+

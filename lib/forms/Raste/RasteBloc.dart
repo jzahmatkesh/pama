@@ -57,7 +57,7 @@ class RasteBloc{
   }
   searchRaste(String val){
     _rasteBloc.value.rows.forEach((element){
-      element.searched = element.isic.toString().contains(val) || element.name.contains(val) || element.cmpname.contains(val);
+      element.searched = element.isic.toString().contains(val) || element.name.contains(val) || element.cmpname.contains(val) || element.draste.contains(val);
     });
     _rasteBloc.add(_rasteBloc.value);
   }

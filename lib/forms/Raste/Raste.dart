@@ -13,7 +13,7 @@ class FMRaste extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RasteBloc _rasteBloc = RasteBloc()..loadData(context);
-    
+    final _debouncer = Debouncer(milliseconds: 500);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Column(
@@ -26,7 +26,7 @@ class FMRaste extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal:25),
             height: 75,
-            child: GridTextField(hint: 'جستجو بر اساس کد / عنوان / عنوان اتحادیه', onChange: (val) => _rasteBloc.searchRaste(val)),
+            child: GridTextField(hint: 'جستجو بر اساس کد / عنوان / عنوان اتحادیه', onChange: (val) => _debouncer.run(() => _rasteBloc.searchRaste(val))),
           ),
           GridCaption(obj: ['آیسیک', 'عنوان رسته', '', '', 'عنوان اتحادیه', '','', 'نوع فعالیت', 'مصوبه صندوق', 'نرخ گذاری']),
           Expanded(
