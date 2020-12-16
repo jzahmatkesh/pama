@@ -1,5 +1,8 @@
+import 'package:excel/excel.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import '../../classes/classes.dart';
 import 'NoLicenseBloc.dart';
 import '../../module/Widgets.dart';
@@ -26,12 +29,22 @@ class FmNoLicense extends StatelessWidget {
           children: [
             FormHeader(
               title: 'فهرست فاقدین پروانه شناسایی شده ${cmp.name ?? ''}', 
-              btnRight: MyIconButton(
-                type: this.cmp.id==0 ? ButtonType.none : ButtonType.add, 
-                onPressed: (){
-                  context.read<ThemeManager>().setCompany(this.cmp.id);
-                  showFormAsDialog(context: context, form: NewNoLicense(bloc: _bloc, lcn: new Nolicense(cmpid: this.cmp.id, id: 0, hisic: 0, isic: 0, note: '')));
-                }
+              btnRight: this.cmp.id==0 ? null : Row(
+                children: [
+                  MyIconButton(
+                    type: ButtonType.add,
+                    onPressed: (){
+                      context.read<ThemeManager>().setCompany(this.cmp.id);
+                      showFormAsDialog(context: context, form: NewNoLicense(bloc: _bloc, lcn: new Nolicense(cmpid: this.cmp.id, id: 0, hisic: 0, isic: 0, note: '')));
+                    }
+                  ),
+                  MyIconButton(
+                    type: ButtonType.other,
+                    icon: Icon(FontAwesome5.file_excel),
+                    hint: 'دریافت اطلاعات از فایل اکسل',
+                    onPressed: ()=>importExcel(context, readToken(context), this.cmp)
+                  ),
+                ],
               ),
               btnLeft: this.cmp.id==0 ? MyIconButton(
                 type: ButtonType.reload, 
@@ -206,3 +219,148 @@ class EditNote extends StatelessWidget {
   }
 }
 
+void importExcel(BuildContext context, String token, Company comp) async{
+  FilePickerResult result = await FilePicker.platform.pickFiles();
+  if(result != null) {
+    var bytes = result.files.first.bytes;//file.readAsBytesSync();
+    var excel = Excel.decodeBytes(bytes);
+    showFormAsDialog(context: context, form: FmImportExcel(excel: excel, token: token, cmp: comp));
+  }
+}
+class FmImportExcel extends StatelessWidget {
+  const FmImportExcel({Key key, @required this.cmp, @required this.excel, @required this.token}) : super(key: key);
+
+  final Excel excel;
+  final String token;
+  final Company cmp;
+
+  @override
+  Widget build(BuildContext context) {
+    var table  = excel.tables.keys.first;
+    bool nationalid = false, name = false, family = false, hisic = false, isic = false, tel = false, post = false, nosazi = false, address = false;
+    excel.tables[table].rows[0].forEach((element) {
+      nationalid = nationalid || element.toString().trim() =="کد ملی";
+      name = name || element.toString().trim() =="نام";
+      family = family || element.toString().trim() =="نام خانوادگی";
+      hisic = hisic || element.toString().trim() =="رسته";
+      isic = isic || element.toString().trim() =="زیر رسته";
+      tel = tel || element.toString().trim() =="تلفن";
+      post = post || element.toString().trim() =="کدپستی";
+      nosazi = nosazi || element.toString().trim() =="کد نوسازی";
+      address = address || element.toString().trim() =="آدرس";
+    });
+    ExcelBloc _excelBloc = ExcelBloc(rows: excel.tables[table].rows);
+    
+    void importFromExcel() async{
+      bool res, messaged = false;
+      try{
+        showWaiting(context);
+        if (_excelBloc.value.where((element) => (element.check ?? false) && !element.imported).length == 0)
+          myAlert(context: context, title: 'هشدار', message: 'رکوردی انتخاب نشده است');
+        else{
+          _excelBloc.value.asMap().forEach((idx, element) async{
+            if (idx > 0 && (element.check ?? false) && !element.imported){
+              if ((res ?? true))
+                if (!(element.cells[3] is int))
+                  _excelBloc.checkRow(idx, null, error: '${element.cells[3]} عددی نیست و قابل درج در رسته نمی باشد'); 
+                else if (!(element.cells[4] is int))
+                  _excelBloc.checkRow(idx, null, error: '${element.cells[4]} عددی نیست و قابل درج در زیر رسته نمی باشد');
+                else{
+                  res = await _excelBloc.exportToDB(
+                    context: context, 
+                    api: 'Coding/ImportExcel', 
+                    lcn: Nolicense(
+                      token: this.token,
+                      cmpid: cmp.id,
+                      cmpname: cmp.name,
+                      nationalid: '${element.cells[0]}',
+                      name: '${element.cells[1]}',
+                      family: '${element.cells[2]}',
+                      hisic: element.cells[3],
+                      isic: element.cells[4],
+                      tel: '${element.cells[5]}',
+                      post: '${element.cells[6]}',
+                      nosazicode: '${element.cells[7]}',
+                      address: '${element.cells[8]}',
+                      id: 0,
+                    )
+                  );
+                  if (res)
+                    _excelBloc.imported(idx);
+                  if (_excelBloc.value.where((element) => !element.imported).length == 1 && !messaged){
+                    messaged = true;
+                    Navigator.of(context).pop();
+                    myAlert(context: context, title: 'موفقیت آمیز', message: '${_excelBloc.value.where((element) => element.imported).length} رکورد با موفقیت در بانک  اطلاعاتی درج گردید', color: Colors.green);
+                  }
+                }
+            }
+          });
+        }
+      }
+      finally{
+        hideWaiting(context);
+      }
+    }
+    
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Container(
+        width: screenWidth(context) * 0.75,
+        height: screenHeight(context) * 0.75,
+        child: Column(
+          children: [
+            FormHeader(title: 'دریافت اطلاعات از اکسل', btnLeft: MyIconButton(type: ButtonType.exit), btnRight: nationalid && post && name && family && tel && hisic && isic && nosazi && address ? MyIconButton(type: ButtonType.other, hint: 'درج ردیف های انتخابی در بانک اطلاعات', icon: Icon(CupertinoIcons.layers_alt), onPressed: ()=>importFromExcel()) : null,),
+            SizedBox(height: 15),
+            !nationalid && !name && !family && !tel && !post && !hisic && !isic && !nosazi && !address ? Container(width: screenWidth(context) * 0.65 > 600 ? 600 : screenWidth(context) * 0.50, child: Image(image: AssetImage('images/excel-coding.png'),)) : Container(),
+            SizedBox(height: 15),
+            Expanded(
+              child: StreamBuilder<List<ExcelRow>>(
+                stream: _excelBloc.stream$, 
+                builder: (context, snap)=> snap.connectionState==ConnectionState.active ? ListView.builder(
+                  itemCount: snap.data.length,
+                  itemBuilder: (context, idx)=>snap.data[idx].imported ? Container() : Container(
+                    color: snap.data[idx].error != null ? Colors.red.withOpacity(0.15) : null,
+                    child: Card(
+                      child: Row(
+                        children: [
+                          nationalid && name && family && tel && post && hisic && isic && nosazi && address 
+                            ? snap.data[idx].error != null 
+                              ? Padding(padding: const EdgeInsets.all(4.0),child: Tooltip(message: '${snap.data[idx].error}', child: Icon(CupertinoIcons.xmark_square, color: Colors.red))) 
+                              : Checkbox(value: snap.data[idx].check, onChanged: (val)=>_excelBloc.checkRow(idx, val)) 
+                            : Container(height: 38,),
+                          SizedBox(width: 10),
+                          ... snap.data[idx].cells.map((e) =>  idx == 0
+                            ? snap.data[idx].cells.indexOf(e)==0 && !nationalid 
+                              ? Expanded(child: Row(children: [Tooltip(message: 'عنوان فیلد صحیح نمی باشد به فایل اکسل نمونه توجه فرمایید', child: Icon(CupertinoIcons.hand_thumbsdown, color: Colors.red, size: 14)), SizedBox(width: 5), Expanded(child: Text('$e'))]))
+                              : snap.data[idx].cells.indexOf(e)==1 && !name
+                                ? Expanded(child: Row(children: [Tooltip(message: 'عنوان فیلد صحیح نمی باشد به فایل اکسل نمونه توجه فرمایید', child: Icon(CupertinoIcons.hand_thumbsdown, color: Colors.red, size: 14)), SizedBox(width: 5), Expanded(child: Text('$e'))]))
+                                : snap.data[idx].cells.indexOf(e)==2 && !family 
+                                  ? Expanded(child: Row(children: [Tooltip(message: 'عنوان فیلد صحیح نمی باشد به فایل اکسل نمونه توجه فرمایید', child: Icon(CupertinoIcons.hand_thumbsdown, color: Colors.red, size: 14)), SizedBox(width: 5), Expanded(child: Text('$e'))]))
+                                  : snap.data[idx].cells.indexOf(e)==3 && !hisic 
+                                    ? Expanded(child: Row(children: [Tooltip(message: 'عنوان فیلد صحیح نمی باشد به فایل اکسل نمونه توجه فرمایید', child: Icon(CupertinoIcons.hand_thumbsdown, color: Colors.red, size: 14)), SizedBox(width: 5), Expanded(child: Text('$e'))]))
+                                    : snap.data[idx].cells.indexOf(e)==4 && !isic 
+                                      ? Expanded(child: Row(children: [Tooltip(message: 'عنوان فیلد صحیح نمی باشد به فایل اکسل نمونه توجه فرمایید', child: Icon(CupertinoIcons.hand_thumbsdown, color: Colors.red, size: 14)), SizedBox(width: 5), Expanded(child: Text('$e'))]))
+                                      : snap.data[idx].cells.indexOf(e)==5 && !tel 
+                                        ? Expanded(child: Row(children: [Tooltip(message: 'عنوان فیلد صحیح نمی باشد به فایل اکسل نمونه توجه فرمایید', child: Icon(CupertinoIcons.hand_thumbsdown, color: Colors.red, size: 14)), SizedBox(width: 5), Expanded(child: Text('$e'))]))
+                                        : snap.data[idx].cells.indexOf(e)==6 && !post 
+                                          ? Expanded(child: Row(children: [Tooltip(message: 'عنوان فیلد صحیح نمی باشد به فایل اکسل نمونه توجه فرمایید', child: Icon(CupertinoIcons.hand_thumbsdown, color: Colors.red, size: 14)), SizedBox(width: 5), Expanded(child: Text('$e'))]))
+                                          : snap.data[idx].cells.indexOf(e)==7 && !nosazi
+                                            ? Expanded(child: Row(children: [Tooltip(message: 'عنوان فیلد صحیح نمی باشد به فایل اکسل نمونه توجه فرمایید', child: Icon(CupertinoIcons.hand_thumbsdown, color: Colors.red, size: 14)), SizedBox(width: 5), Expanded(child: Text('$e'))]))
+                                            : snap.data[idx].cells.indexOf(e)==8 && !address 
+                                              ? Expanded(child: Row(children: [Tooltip(message: 'عنوان فیلد صحیح نمی باشد به فایل اکسل نمونه توجه فرمایید', child: Icon(CupertinoIcons.hand_thumbsdown, color: Colors.red, size: 14)), SizedBox(width: 5), Expanded(child: Text('$e'))]))
+                                              : Expanded(child: Text('$e'))
+                            : Expanded(child: Text('$e'))
+                          )
+                        ]
+                      ),
+                    ),
+                  )
+                ) : Center(child: CupertinoActivityIndicator(),)
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}

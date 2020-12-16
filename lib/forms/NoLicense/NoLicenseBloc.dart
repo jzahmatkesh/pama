@@ -112,3 +112,43 @@ class NoLicenseBloc{
     return null;
   }
 }
+
+class ExcelBloc{
+  ExcelBloc({@required this.rows}){
+    this.rows.forEach((element) {
+      value.add(ExcelRow(check: false, cells: element));
+    });
+    _rows.add(value);
+  }
+
+  final List<List<dynamic>> rows;
+  NoLicenseRepository _repository = NoLicenseRepository();
+
+  BehaviorSubject<List<ExcelRow>> _rows = BehaviorSubject<List<ExcelRow>>.seeded([]);
+  Stream<List<ExcelRow>> get stream$ => _rows.stream;
+  List<ExcelRow> get value => _rows.value;
+
+  checkRow(int idx, bool val, {String error}){
+    if (idx==0)
+      value.forEach((element)=>element.check=val);
+    else
+      value[idx].check = val;
+    value[idx].error = error;
+    _rows.add(value);
+  }
+  imported(int idx){
+    value[idx].imported = true;
+    _rows.add(value);
+  }
+
+  Future<bool> exportToDB({BuildContext context, String api, Nolicense lcn}) async{
+    try{
+      await _repository.save(lcn);
+      return true;
+    }
+    catch(e){
+      analyzeError(context, '$e');
+      return false;
+    }
+  }
+}

@@ -1997,5 +1997,13 @@ class Debouncer {
   }
 }
 
+class ExcelRow{
+  bool check;
+  List<dynamic> cells;
+  String error;
+  bool imported;
+
+  ExcelRow({@required this.check, @required this.cells, this.error, this.imported = false});
+}
 
 
