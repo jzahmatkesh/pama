@@ -42,11 +42,11 @@ class FmNoLicense extends StatelessWidget {
                     type: ButtonType.other,
                     icon: Icon(FontAwesome5.file_excel),
                     hint: 'دریافت اطلاعات از فایل اکسل',
-                    onPressed: ()=>importExcel(context, readToken(context), this.cmp)
+                    onPressed: ()=>importExcel(context, _bloc, readToken(context), this.cmp)
                   ),
                 ],
               ),
-              btnLeft: this.cmp.id==0 ? MyIconButton(
+              btnLeft: this.cmp.id > 0 ? MyIconButton(
                 type: ButtonType.reload, 
                 onPressed: ()=>_bloc.load(context, cmp.id)
               ) : null
@@ -219,20 +219,21 @@ class EditNote extends StatelessWidget {
   }
 }
 
-void importExcel(BuildContext context, String token, Company comp) async{
+void importExcel(BuildContext context, NoLicenseBloc bloc, String token, Company comp) async{
   FilePickerResult result = await FilePicker.platform.pickFiles();
   if(result != null) {
     var bytes = result.files.first.bytes;//file.readAsBytesSync();
     var excel = Excel.decodeBytes(bytes);
-    showFormAsDialog(context: context, form: FmImportExcel(excel: excel, token: token, cmp: comp));
+    showFormAsDialog(context: context, form: FmImportExcel(bloc: bloc, excel: excel, token: token, cmp: comp));
   }
 }
 class FmImportExcel extends StatelessWidget {
-  const FmImportExcel({Key key, @required this.cmp, @required this.excel, @required this.token}) : super(key: key);
+  const FmImportExcel({Key key,@required this.bloc, @required this.cmp, @required this.excel, @required this.token}) : super(key: key);
 
   final Excel excel;
   final String token;
   final Company cmp;
+  final NoLicenseBloc bloc;
 
   @override
   Widget build(BuildContext context) {
@@ -291,6 +292,7 @@ class FmImportExcel extends StatelessWidget {
                     messaged = true;
                     Navigator.of(context).pop();
                     myAlert(context: context, title: 'موفقیت آمیز', message: '${_excelBloc.value.where((element) => element.imported).length} رکورد با موفقیت در بانک  اطلاعاتی درج گردید', color: Colors.green);
+                    bloc.load(context, cmp.id);
                   }
                 }
             }
