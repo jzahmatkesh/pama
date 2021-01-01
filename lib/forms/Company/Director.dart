@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pama/forms/AddInfo/AddInfoData.dart';
 
 import '../../classes/classes.dart';
 import '../../module/Widgets.dart';
@@ -134,6 +135,8 @@ class DirectorRow extends StatelessWidget {
                 companybloc.deleteDirector(context, cmpid, drt);
               if (menu == 2)
                 companybloc.showDirectorFamily(context, cmpid, drt.peopid);
+              if (menu == 3)
+                showFormAsDialog(context: context, form: FmAddInfoData(url: 'Company/Director/AddInfo', title: 'اطلاعات تکمیلی عضو هییت رییسه ${drt.name} ${drt.family}', header: {'cmpid': cmpid.toString(), 'peopid': drt.peopid.toString()}));
             }
           )
         ],

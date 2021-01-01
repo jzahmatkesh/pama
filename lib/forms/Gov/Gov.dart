@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../AddInfo/AddInfoData.dart';
 
 import '../../classes/classes.dart';
 import '../../module/Widgets.dart';
@@ -52,6 +53,7 @@ class FmGov extends StatelessWidget {
                                   Expanded(child: Text(gov.post)),
                                   Expanded(child: Text(gov.address)),
                                   Expanded(child: Text(gov.note)),
+                                  MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.info), hint: 'اطلاعات تکمیلی', onPressed: ()=>showFormAsDialog(context: context, form: FmAddInfoData(title: 'اطلاعات تکمیلی ${gov.name}', url: 'Gov/AddInfo', header: {'govid': gov.id.toString()}))),
                                   MyIconButton(type: ButtonType.del, onPressed: () => _govBloc.delGov(context, gov)),
                                 ],
                               ),

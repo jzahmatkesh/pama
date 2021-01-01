@@ -78,8 +78,8 @@ class CompanyRow extends StatelessWidget {
           Switch(value: this.company.active==1, onChanged: (val){
             companyBloc.setActive(context, this.company.id);
           }),
+          this.company.id == 1 ? Icon(CupertinoIcons.star, size: 15, color: Colors.yellow,) : Container(),
           SizedBox(width: 5,),
-          this.company.id == 1 ? Icon(CupertinoIcons.timelapse, color: Colors.yellow,) : Container(),
           Expanded(flex: 2, child: Text("${this.company.name}")),
           SizedBox(width: 5,),
           Expanded(child: Text(this.company.nationalid.toString())),
