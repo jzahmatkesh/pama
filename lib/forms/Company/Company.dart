@@ -516,17 +516,34 @@ class CompanybyLaw extends StatelessWidget {
             children: [
               FormHeader(
                 title: 'آیین نامه اتحادیه ${cmp.name}', 
-                btnRight: MyIconButton(
-                  type: ButtonType.save, 
-                  onPressed: (){
-                    if (_formkey.currentState.validate()){
-                      cmp.andate1 = _date1.text;
-                      cmp.andate2 = _date2.text;
-                      cmp.andate3 = _date3.text;
-                      cmp.andate4 = _date4.text;
-                      companyBloc.saveCompanybylaw(context, cmp);
-                    }
-                  }
+                btnRight: Row(
+                  children: [
+                    MyIconButton(
+                      type: ButtonType.save, 
+                      onPressed: (){
+                        if (_formkey.currentState.validate()){
+                          cmp.andate1 = _date1.text;
+                          cmp.andate2 = _date2.text;
+                          cmp.andate3 = _date3.text;
+                          cmp.andate4 = _date4.text;
+                          companyBloc.saveCompanybylaw(context, cmp);
+                        }
+                      }
+                    ),
+                    MyIconButton(
+                      type: ButtonType.other, 
+                      icon: Icon(CupertinoIcons.list_bullet), 
+                      hint: 'اطلاعات تکمیلی', 
+                      // onPressed: () => showFormAsDialog(
+                      //   context: context, 
+                      //   form: FmAddInfoData(
+                      //     url: 'Cmp_Committee/Detail/AddInfo', 
+                      //     title: 'اطلاعات تکمیلی ${dtl.title}', 
+                      //     header: {'cmpid': dtl.cmpid.toString(), 'cmtid': dtl.cmtid.toString(), 'detailid': dtl.id.toString()}
+                      //   )
+                      // )
+                    ),
+                  ],
                 )
               ),
               SizedBox(height: 10,),

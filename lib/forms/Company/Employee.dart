@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pama/forms/AddInfo/AddInfoData.dart';
 
 import '../../classes/classes.dart';
 import '../../module/Widgets.dart';
@@ -135,6 +136,8 @@ class EmployeeRow extends StatelessWidget {
                 companybloc.deleteEmployee(context, cmpid, emp);
               if (menu == 2)
                 companybloc.showEmployeeFamily(context, cmpid, emp.peopid);
+              if (menu == 3)
+                showFormAsDialog(context: context, form: FmAddInfoData(url: 'Company/Employee/AddInfo', title: 'اطلاعات تکمیلی ${emp.name} ${emp.family}', header: {'cmpid': cmpid.toString(), 'peopid': emp.peopid.toString()}));
             }
           )
         ],
@@ -189,6 +192,7 @@ class EmployeeFamily extends StatelessWidget {
             })),
             'کد ملی','نام و نام خانوادگی', 'نسبت', 'میزان تحصیلات', 'رشته تحصیلی', 'تاریخ ازدواج', 'ایثارگری', 
             MyIconButton(type: ButtonType.exit, onPressed: ()=>companybloc.showEmployeeFamily(context, cmpid, emp.peopid)),
+            SizedBox(width: 30)
           ], endbuttons: 0,
         ),
         Expanded(
@@ -216,7 +220,8 @@ class EmployeeFamily extends StatelessWidget {
                             Expanded(child: Text('${snapshot.data.rows[idx].reshte}')),
                             Expanded(child: Text('${snapshot.data.rows[idx].mdate}')),
                             Expanded(child: Text('${snapshot.data.rows[idx].isargariName()}')),
-                            MyIconButton(type: ButtonType.del, onPressed: ()=>companybloc.deleteEmpFamily(context, cmpid, emp.peopid, snapshot.data.rows[idx]))
+                            MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: ()=>showFormAsDialog(context: context, form: FmAddInfoData(url: 'Company/EmpFamily/AddInfo', title: 'اطلاعات تکمیلی ${snapshot.data.rows[idx].name} ${snapshot.data.rows[idx].family}', header: {'cmpid': cmpid.toString(), 'empid': emp.peopid.toString(), 'peopid': snapshot.data.rows[idx].peopid.toString()}))),
+                            MyIconButton(type: ButtonType.del, onPressed: ()=>companybloc.deleteEmpFamily(context, cmpid, emp.peopid, snapshot.data.rows[idx])),
                           ],
                         ),
                       ),

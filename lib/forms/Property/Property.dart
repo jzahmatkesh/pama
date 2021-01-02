@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pama/classes/classes.dart';
-import 'package:pama/forms/Property/PropertyBloc.dart';
-import 'package:pama/module/Widgets.dart';
-import 'package:pama/module/consts.dart';
-import 'package:pama/module/functions.dart';
-import 'package:pama/module/theme-Manager.dart';
 import 'package:provider/provider.dart';
+
+import '../../classes/classes.dart';
+import '../../module/Widgets.dart';
+import '../../module/consts.dart';
+import '../../module/functions.dart';
+import '../../module/theme-Manager.dart';
+import '../AddInfo/AddInfoData.dart';
+import 'PropertyBloc.dart';
 
 class FmProperty extends StatelessWidget {
   const FmProperty({Key key, @required this.cmp}) : super(key: key);
@@ -109,6 +111,7 @@ class PnMobile extends StatelessWidget {
                                 Expanded(child: Text('${snap.data.rows[idx].buydate}')),
                                 Expanded(child: Text('${snap.data.rows[idx].owner}')),
                                 Expanded(child: Text('${snap.data.rows[idx].peopfamily}')),
+                                MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: ()=>showFormAsDialog(context: context, form: FmAddInfoData(url: 'Property/AddInfo', title: 'اطلاعات تکمیلی ${snap.data.rows[idx].name}', header: {'propid': snap.data.rows[idx].id.toString()}))),
                                 MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delMobile(context, snap.data.rows[idx]))
                               ],
                             ),
@@ -178,6 +181,7 @@ class PnCar extends StatelessWidget {
                                 Expanded(child: Text('${snap.data.rows[idx].status}')),
                                 Expanded(child: Text('${snap.data.rows[idx].pelak}')),
                                 Expanded(child: Text('${snap.data.rows[idx].peopfamily}')),
+                                MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: ()=>showFormAsDialog(context: context, form: FmAddInfoData(url: 'Property/AddInfo', title: 'اطلاعات تکمیلی ${snap.data.rows[idx].name}', header: {'propid': snap.data.rows[idx].id.toString()}))),
                                 MyIconButton(type: ButtonType.del, onPressed: () => bloc.delCar(context, snap.data.rows[idx]))
                               ],
                             ),
@@ -241,6 +245,7 @@ class PnPropGHM extends StatelessWidget {
                                 Expanded(child: Text('${snap.data.rows[idx].age}')),
                                 Expanded(child: Text('${snap.data.rows[idx].pelak}')),
                                 Expanded(child: Text('${snap.data.rows[idx].tenantName()}')),
+                                MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: ()=>showFormAsDialog(context: context, form: FmAddInfoData(url: 'Property/AddInfo', title: 'اطلاعات تکمیلی ${snap.data.rows[idx].name}', header: {'propid': snap.data.rows[idx].id.toString()}))),
                                 MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delPropGHM(context, snap.data.rows[idx]))
                               ],
                             ),
@@ -305,6 +310,7 @@ class PnBankHesab extends StatelessWidget {
                                 Expanded(child: Text('${snap.data.rows[idx].hesabno}')),
                                 Expanded(child: Text('${snap.data.rows[idx].buydate}')),
                                 Tooltip(message: 'اینترنت بانک', child: Switch(value: snap.data.rows[idx].internetbank==1, onChanged: (val)=>bloc.setInternetBank(context, snap.data.rows[idx].id))),
+                                MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: ()=>showFormAsDialog(context: context, form: FmAddInfoData(url: 'Property/AddInfo', title: 'اطلاعات تکمیلی ${snap.data.rows[idx].name}', header: {'propid': snap.data.rows[idx].id.toString()}))),
                                 MyIconButton(type: ButtonType.del, onPressed: ()=> bloc.delBankHesab(context, snap.data.rows[idx]))
                               ],
                             ),
