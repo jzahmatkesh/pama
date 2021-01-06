@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pama/classes/Repository.dart';
+import 'package:pama/forms/AddInfo/AddInfoData.dart';
 import 'package:pama/forms/Inspection/InspectionBloc.dart';
 import 'package:pama/forms/People/People.dart';
 import 'package:pama/module/consts.dart';
@@ -96,6 +97,7 @@ class InspRow extends StatelessWidget {
           Expanded(child: Text('${insp.range}')),
           MyIconButton(type: ButtonType.other, hint: 'سازمان های همکار', icon: Icon(CupertinoIcons.building_2_fill), onPressed: ()=>inspBloc.setMode(context, insp.id, gov: true)),
           MyIconButton(type: ButtonType.other, hint: 'اتحادیه های همکار', icon: Icon(CupertinoIcons.person_2_square_stack), onPressed: ()=>inspBloc.setMode(context, insp.id, company: true)),
+          MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: () => showFormAsDialog(context: context, form: FmAddInfoData(url: 'Inspection/AddInfo', title: 'اطلاعات تکمیلی ${insp.name}', header: {'insid': insp.id.toString()}))),
           MyIconButton(type: ButtonType.del, onPressed: ()=>inspBloc.delInspection(context, insp),)
         ],
       ),
@@ -204,7 +206,9 @@ class GovList extends StatelessWidget {
                                 Expanded(child: Text(_gov.govname)),
                                 Expanded(child: _gov.edit 
                                   ? GridTextField(hint: 'توضیحات', initialValue: _gov.note, onChange: (val)=>_gov.note=val, autofocus: true) 
-                                  : Text(_gov.note)),
+                                  : Text(_gov.note)
+                                ),
+                                _gov.edit ? Container() : MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: () => showFormAsDialog(context: context, form: FmAddInfoData(url: 'Inspection/Gov/AddInfo', title: 'اطلاعات تکمیلی ${_gov.govname}', header: {'govid': _gov.govid.toString(), 'insid': _gov.insid.toString()}))),
                                 _gov.edit
                                   ? MyIconButton(type: ButtonType.save, onPressed: ()=>bloc.saveInspectiongov(context, _gov))
                                   : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delInspectiongov(context, _gov))
@@ -330,6 +334,7 @@ class InspectionCompanyRow extends StatelessWidget {
           : Text(this.cmp.note)),
         this.cmp.edit ? Container() : MyIconButton(type: ButtonType.other, hint: 'فهرست کارشناسان', icon: Icon(CupertinoIcons.person_2_alt), onPressed: ()=>bloc.editModeInspectionCompany(context, cmp, peop: true)),
         this.cmp.edit ? Container() : MyIconButton(type: ButtonType.other, hint: 'فهرست کارکنان', icon: Icon(CupertinoIcons.person_3_fill), onPressed: ()=>bloc.editModeInspectionCompany(context, cmp, emp: true)),
+        this.cmp.edit ? Container() : MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: () => showFormAsDialog(context: context, form: FmAddInfoData(url: 'Inspection/Company/AddInfo', title: 'اطلاعات تکمیلی ${this.cmp.cmpname}', header: {'cmpid': this.cmp.cmpid.toString(), 'insid': this.cmp.insid.toString()}))),
         this.cmp.edit 
           ? MyIconButton(type: ButtonType.save, onPressed: ()=>bloc.saveInspectioncompany(context, this.cmp)) 
           : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delInspectioncompany(context, this.cmp))

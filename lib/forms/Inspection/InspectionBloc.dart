@@ -12,6 +12,7 @@ class InspectionModel{
 
   InspectionModel({@required this.status, this.rows, this.msg});
 }
+
 class InspectiongovModel{
   Status status;
   List<Inspectiongov> rows;
@@ -19,6 +20,7 @@ class InspectiongovModel{
 
   InspectiongovModel({@required this.status, this.rows, this.msg});
 }
+
 class InspectioncompanyModel{
   Status status;
   List<Inspectioncompany> rows;
@@ -26,6 +28,7 @@ class InspectioncompanyModel{
 
   InspectioncompanyModel({@required this.status, this.rows, this.msg});
 }
+
 class InspectioncompanypeopModel{
   Status status;
   List<Inspectioncompanypeop> rows;
