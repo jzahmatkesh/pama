@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pama/module/theme-Manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../classes/classes.dart';
 import '../../module/Widgets.dart';
 import '../../module/consts.dart';
 import '../../module/functions.dart';
+import '../../module/theme-Manager.dart';
+import '../AddInfo/AddInfoData.dart';
 import 'IncomeBloc.dart';
 
 class FmIncome extends StatelessWidget {
@@ -126,6 +127,7 @@ class IncomeRow extends StatelessWidget {
           : inc.allcmp ? Container(width: 40,) : MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.building_2_fill), hint: 'اختصاص اتحادیه', onPressed: ()=>bloc.loadIncomeCompany(context, inc.id)),
         inc.edit ? Container(width: 40,) : MyIconButton(type: ButtonType.other, hint: 'جزییات درآمد', icon: Icon(CupertinoIcons.layers_alt), onPressed: ()=>bloc.loadIncomeShare(context, inc.id)),
         inc.edit ? Container(width: 40,) : MyIconButton(type: ButtonType.other, hint: 'تاریخچه درآمد', icon: Icon(CupertinoIcons.line_horizontal_3_decrease), onPressed: ()=>bloc.loadIncomeHistory(context, inc.id)),
+        inc.edit ? Container(width: 40,) : MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: () => showFormAsDialog(context: context, form: FmAddInfoData(url: 'Income/AddInfo', title: 'اطلاعات تکمیلی ${inc.name}', header: {'incid': '${inc.id}'}))),
         inc.edit ? Container(width: 40,) : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delIncome(context, inc))
       ]
     );

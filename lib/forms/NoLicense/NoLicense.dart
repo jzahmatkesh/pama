@@ -3,13 +3,15 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:provider/provider.dart';
+
 import '../../classes/classes.dart';
-import 'NoLicenseBloc.dart';
 import '../../module/Widgets.dart';
 import '../../module/consts.dart';
 import '../../module/functions.dart';
 import '../../module/theme-Manager.dart';
-import 'package:provider/provider.dart';
+import '../AddInfo/AddInfoData.dart';
+import 'NoLicenseBloc.dart';
 
 class FmNoLicense extends StatelessWidget {
   const FmNoLicense({Key key, @required this.cmp}) : super(key: key);
@@ -93,6 +95,9 @@ class FmNoLicense extends StatelessWidget {
                                       Expanded(child: Text('${_lcn.nosazicode}')),
                                       Expanded(flex: 2, child: Text('${_lcn.address}')),
                                       Expanded(flex: 2, child: Text('${_lcn.note}', softWrap: true, overflow: TextOverflow.ellipsis, maxLines: 2)),
+                                      this.cmp.id == 0
+                                        ? Container()
+                                        : MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: () => showFormAsDialog(context: context, form: FmAddInfoData(url: 'NoLicense/AddInfo', title: 'اطلاعات تکمیلی ${_lcn.name} ${_lcn.family}', header: {'cmpid': _lcn.cmpid.toString(), 'lcnid': _lcn.id.toString()}))),
                                       this.cmp.id == 0
                                         ? MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.doc_plaintext), hint: 'ثبت توضیحات', onPressed: ()=>showFormAsDialog(context: context, form: EditNote(bloc: _bloc, lcn: _lcn)))
                                         : _lcn.note.isEmpty 

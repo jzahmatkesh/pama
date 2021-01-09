@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pama/forms/Attach/Attach.dart';
 import 'package:pama/forms/NoLicense/NoLicense.dart';
 
 import '../../classes/classes.dart';
@@ -16,6 +17,7 @@ import 'CompanyBloc.dart';
 import 'Director.dart';
 import 'Employee.dart';
 
+CompanyBloc _companyBloc;
 class FmCompany extends StatelessWidget {
   const FmCompany({Key key, @required this.user}) : super(key: key);
 
@@ -23,7 +25,8 @@ class FmCompany extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CompanyBloc _companyBloc = CompanyBloc()..loadCompany(context);
+    if (_companyBloc == null)
+      _companyBloc = CompanyBloc()..loadCompany(context);
 
     return Container(
       padding: EdgeInsets.all(5.0),
@@ -147,7 +150,7 @@ class GridCompanyList extends StatelessWidget {
                                         showFormAsDialog(context: context, form: FmCommittee(company: _company));
                                     }
                                   ),
-                                  DesktopIcon(title: 'فایلهای ضمیمه', subtitle: 'فایلهای ضمیمه شده ${_company.cntattach} فایل', icon: Icon(Icons.attach_file), onPressed: (){}),
+                                  DesktopIcon(title: 'فایلهای ضمیمه', subtitle: 'فایلهای ضمیمه شده ${_company.cntattach} فایل', icon: Icon(Icons.attach_file), onPressed: ()=>showFormAsDialog(context: context, form: FmAttach(title: 'فایلهای ضمیمه ${_company.name}', url: 'Company/Attach', header: {'cmpid': '${_company.id}'},))),
                                   _company.id > 1 ? DesktopIcon(title: 'آیین نامه', subtitle: 'آیین نامه تحادیه', icon: Icon(CupertinoIcons.rectangle_on_rectangle_angled), onPressed: () => showFormAsDialog(context: context, form: CompanybyLaw(companyBloc: companyBloc, cmp: _company))): Container(width: 0),
                                   DesktopIcon(title: 'اموال منقول/غیر منقول', subtitle: 'اموال ${_company.cntproperty} رکورد', icon: Icon(Icons.web_asset), onPressed: () => showFormAsDialog(context: context, form: FmProperty(cmp: _company))),
                                   DesktopIcon(title: 'طرح های بازرسی و نظارت',  subtitle: 'طرح های بازرسی ${_company.cntbzr} رکورد', icon: Icon(Icons.security), onPressed: () => showFormAsDialog(context: context, form: FmInspection(company: _company))),

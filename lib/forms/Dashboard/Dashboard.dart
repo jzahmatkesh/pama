@@ -1,9 +1,9 @@
-import 'package:file_picker/file_picker.dart';
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pama/forms/Income/Income.dart';
-import 'package:pama/forms/NoLicense/NoLicense.dart';
-// import 'package:lottie/lottie.dart';
+import '../Income/Income.dart';
+import '../NoLicense/NoLicense.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -125,6 +125,7 @@ class SideBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    IntBloc _pic = IntBloc();
     return Container(
       width: 225.0,
       child: Column(
@@ -134,30 +135,36 @@ class SideBar extends StatelessWidget {
             children: [
               Align(
                 alignment: Alignment.topCenter,
-                child: CircleAvatar(
-                  radius: 75,
-                  backgroundImage: NetworkImage("http://${serverIP()}:8080/PamaApi/LoadFile.jsp?type=company&id=${this.user.cmpid}"),
+                child: GestureDetector(
+                  onTap: ()=>prcUploadImg(context: context, id: this.user.cmpid, tag: 'CompanyLogo', ondone: ()=>_pic.setValue(Random().nextInt(100))),
+                  child: StreamBuilder<int>(
+                    stream: _pic.stream$,
+                    builder: (context, snapshot) {
+                      return CircleAvatar(
+                        radius: 75,
+                        backgroundImage: NetworkImage("http://${serverIP()}:8080/PamaApi/LoadFile.jsp?type=company&id=${this.user.cmpid}&flg=${Random().nextInt(1000)}"),
+                      );
+                    }
+                  ),
                 ),
               ),
               Positioned(
                 right: 5,
                 bottom: 5,
                 child: GestureDetector(
-                  onTap: () async{
-                    FilePickerResult result = await FilePicker.platform.pickFiles();
-                    if(result != null) {
-                      PlatformFile file = result.files.first;
-                        
-                      sendFile(context,file.bytes,"UserImage",this.user.id);
+                  onTap: ()=>prcUploadImg(context: context, id: this.user.id, tag: 'UserImage', ondone: ()=>_pic.setValue(Random().nextInt(100))),
+                  child: StreamBuilder<int>(
+                    stream: _pic.stream$,
+                    builder: (context, snapshot) {
+                      return CircleAvatar(
+                        radius: 27,
+                        backgroundColor: Colors.green,
+                        child: CircleAvatar(
+                          radius: 25,
+                          backgroundImage: NetworkImage("http://${serverIP()}:8080/PamaApi/LoadFile.jsp?type=user&id=${this.user.id}&flg=${Random().nextInt(1000)}"),
+                        ),
+                      );
                     }
-                  },
-                  child: CircleAvatar(
-                    radius: 27,
-                    backgroundColor: Colors.green,
-                    child: CircleAvatar(
-                      radius: 25,
-                      backgroundImage: NetworkImage("http://${serverIP()}:8080/PamaApi/LoadFile.jsp?type=user&id=${this.user.id}"),
-                    ),
                   ),
                 ),
               )
