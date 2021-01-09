@@ -1,20 +1,31 @@
 import 'dart:math';
+import 'dart:js' as js;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pama/forms/Attach/AttachBloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../module/Widgets.dart';
 import '../../module/consts.dart';
 import '../../module/functions.dart';
 
+AttachBloc _attachBloc;
 class FmAttach extends StatelessWidget{
-  const FmAttach({Key key, @required this.title, @required this.url, @required this.header}) : super(key: key);
+  const FmAttach({Key key, @required this.title, @required this.tag, this.cmpid=0, this.id1 = 0, this.id2 = 0, this.id3 = 0, this.id4 = 0, this.id5 = 0}) : super(key: key);
 
   final String title;
-  final String url;
-  final Map<String, String> header;
+  final String tag;
+  final int cmpid;
+  final int id1;
+  final int id2;
+  final int id3;
+  final int id4;
+  final int id5;
 
   @override
   Widget build(BuildContext context) {
+    _attachBloc = AttachBloc()..loadData(context, tag, cmpid: cmpid, id1: id1, id2: id2, id3: id3, id4: id4, id5: id5);
     return Directionality(
       textDirection: TextDirection.rtl, 
       child: Container(
@@ -31,13 +42,13 @@ class FmAttach extends StatelessWidget{
                 onPressed: ()=>prcUploadImg(
                   context: context, 
                   id: 0, 
-                  tag: "$url", 
-                  cmpid: int.tryParse(header['cmpid']),
-                  id1: int.tryParse(header['id1'] ?? '0'),
-                  id2: int.tryParse(header['id2'] ?? '0'),
-                  id3: int.tryParse(header['id3'] ?? '0'),
-                  id4: int.tryParse(header['id4'] ?? '0'),
-                  id5: int.tryParse(header['id5'] ?? '0'),
+                  tag: "$tag", 
+                  cmpid: this.cmpid,
+                  id1: this.id1,
+                  id2: this.id2,
+                  id3: this.id3,
+                  id4: this.id4,
+                  id5: this.id5,
                   ondone: (){
                     int _flg = Random().nextInt(48812); 
                     print('$_flg');
@@ -45,6 +56,63 @@ class FmAttach extends StatelessWidget{
                 )
               )
             ),
+            Expanded(
+              child: StreamBuilder<AttachDataModel>(
+                stream: _attachBloc.attachStream$,
+                builder: (context, snap){
+                  if (snap.hasData)
+                    if (snap.data.status == Status.loaded)
+                      return SingleChildScrollView(
+                        child: Wrap(
+                          children: snap.data.rows.map((e)=>Container(
+                            width: 200,
+                            height: 185,
+                            child: ListTile(
+                              onTap: ()=>js.context.callMethod('open', ['http://${serverIP()}:8080/PamaApi/LoadFile.jsp?id=${e.radif}&type=${e.ext}']),
+                              title: Card(
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: 5),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        image: DecorationImage(
+                                          image: e.filetype()=='image' 
+                                            ? NetworkImage("http://${serverIP()}:8080/PamaApi/LoadFile.jsp?id=${e.radif}&type=other")
+                                            : AssetImage('images/${e.filetype()}.png'),
+                                            fit: BoxFit.cover
+                                          )
+                                      ),
+                                      height: 125,
+                                      width: 150,
+                                    ),
+                                    Spacer(),
+                                    Container(
+                                      color: Colors.grey[200],
+                                      width: double.infinity,
+                                      height: 35,
+                                      padding: EdgeInsets.all(4),
+                                      child: Row(
+                                        children: [
+                                          MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.trash, color: Colors.red), hint: 'حذف', onPressed: ()=>print('delete Click')),
+                                          Expanded(child: Text('${e.filename}', style: GoogleFonts.abhayaLibre(fontSize: 10), textAlign: TextAlign.left,)),
+                                        ],
+                                      )
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ),
+                          )).toList()
+                        ),
+                      );
+                      // return ListView.builder(itemCount: snap.data.rows.length, itemBuilder: (context, i)=>Card(child: Text('${snap.data.rows[i].filename}')));
+                    else if (snap.data.status == Status.error)
+                      return Center(child: Text('${snap.data.msg}'));
+                  return Center(child: CupertinoActivityIndicator());
+                },
+              ),
+            )
           ]
         )
       )

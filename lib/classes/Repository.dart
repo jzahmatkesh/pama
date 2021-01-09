@@ -1251,3 +1251,25 @@ class IncomeRepository{
     throw Exception(_data['msg']);
   }
 }
+
+class AttachRepository{
+  Future<List<Attach>> load(String token, Map<String, dynamic> body) async{
+    body.putIfAbsent('token', () => '$token');
+    Map<String, dynamic> _data = await postToServer(api: 'Attach', body: jsonEncode(body));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Attach>((data) => Attach.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> del(String url, Map<String, String> header) async{
+    header.putIfAbsent('Content-Type', () => 'application/json');
+    Map<String, dynamic> _data = await delToServer(api: url, header: header);
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+}
+
+
+
+

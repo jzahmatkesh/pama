@@ -2006,4 +2006,49 @@ class ExcelRow{
   ExcelRow({@required this.check, @required this.cells, this.error, this.imported = false});
 }
 
+class Attach{
+    int radif;
+    String filename;
+    String ext;
+    String size;
+    String token;
+ 
+    Attach({this.radif,this.filename,this.ext,this.size, this.token});
+ 
+    Attach.fromJson(Map<String, dynamic> json):
+        radif = json['radif'],
+        filename = json['filename'],
+        ext = json['ext'],
+        size = json['size'];
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['radif'] = this.radif;
+        data['filename'] = this.filename;
+        data['ext'] = this.ext;
+        data['size'] = this.size;
+        data['token'] = this.token;
+        return data;
+    }
 
+    String filetype(){
+      if (this.ext=='png' || this.ext=='jpg' || this.ext=='jpeg' || this.ext=='bmp')
+        return 'image';
+			if (this.ext=='xls' || this.ext=='xlsx')
+        return 'excel';
+			if (this.ext=='doc')
+        return 'word';
+			if (this.ext=='pdf')
+        return 'pdf';
+			if (this.ext=='rar')
+        return 'rar';
+			if (this.ext=='ppt')
+        return 'powerpoint';
+			if (this.ext=='mp3')
+        return 'mp3';
+			if (this.ext=='mp4' || this.ext=='avi' || this.ext=='mkv' || this.ext=='ogg')
+        return 'mp3';
+			
+      return 'other';
+    }
+}
