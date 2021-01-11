@@ -24,3 +24,18 @@ Content-Type: application/json
     "token": "289D8725-561A-4A09-AC29-C5FFAEFE2AD7"
 }
 
+
+###
+GET https://api.instagram.com/v1/users/search
+Content-Type: application/json
+
+{
+    "q": "zahmatkesh",
+    "count": 10
+}
+
+
+###
+GET http://api.openweathermap.org/data/2.5/weather?q=Tehran&appid=2c25788beeafabb24408586d70a75b29
+
+

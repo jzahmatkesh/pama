@@ -1,14 +1,11 @@
-import 'dart:math';
-import 'dart:js' as js;
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pama/forms/Attach/AttachBloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../module/Widgets.dart';
 import '../../module/consts.dart';
 import '../../module/functions.dart';
+import 'AttachBloc.dart';
 
 AttachBloc _attachBloc;
 class FmAttach extends StatelessWidget{
@@ -25,7 +22,7 @@ class FmAttach extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    _attachBloc = AttachBloc()..loadData(context, tag, cmpid: cmpid, id1: id1, id2: id2, id3: id3, id4: id4, id5: id5);
+    _attachBloc = AttachBloc(tag: tag, cmpid: cmpid, id1: id1, id2: id2, id3: id3, id4: id4, id5: id5)..loadData(context);
     return Directionality(
       textDirection: TextDirection.rtl, 
       child: Container(
@@ -49,10 +46,7 @@ class FmAttach extends StatelessWidget{
                   id3: this.id3,
                   id4: this.id4,
                   id5: this.id5,
-                  ondone: (){
-                    int _flg = Random().nextInt(48812); 
-                    print('$_flg');
-                  }
+                  ondone: ()=>_attachBloc.reLoad(context)
                 )
               )
             ),
@@ -68,7 +62,7 @@ class FmAttach extends StatelessWidget{
                             width: 200,
                             height: 185,
                             child: ListTile(
-                              onTap: ()=>js.context.callMethod('open', ['http://${serverIP()}:8080/PamaApi/LoadFile.jsp?id=${e.radif}&type=${e.ext}']),
+                              onTap: ()=>launchURL('http://${serverIP()}:8080/PamaApi/LoadFile.jsp?id=${e.radif}&type=${e.ext}'),
                               title: Card(
                                 child: Column(
                                   children: [

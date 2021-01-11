@@ -5,6 +5,7 @@ import '../../classes/classes.dart';
 import '../../module/Widgets.dart';
 import '../../module/consts.dart';
 import '../../module/functions.dart';
+import '../Attach/Attach.dart';
 import 'RasteBloc.dart';
 
 class FMRaste extends StatelessWidget {
@@ -157,6 +158,8 @@ class BuildRasteRow extends StatelessWidget {
                   rasteBloc.showDRaste(context, raste.isic);
                 else if (idx == 2)
                   rasteBloc.delraste(context, raste);
+                else if (idx == 3)
+                  showFormAsDialog(context: context, form: FmAttach(title: 'فایلهای ضمیمه ${raste.name}', tag: 'Raste', id1: raste.isic));
               }
             ),
           ],
