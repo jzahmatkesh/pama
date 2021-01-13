@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../AddInfo/AddInfoData.dart';
 
 import '../../classes/classes.dart';
 import '../../module/Widgets.dart';
 import '../../module/consts.dart';
 import '../../module/functions.dart';
+import '../AddInfo/AddInfoData.dart';
+import '../Attach/Attach.dart';
 import 'GovBloc.dart';
 
 class FmGov extends StatelessWidget {
@@ -24,7 +25,7 @@ class FmGov extends StatelessWidget {
             btnRight: MyIconButton(type: ButtonType.add, onPressed: () => showFormAsDialog(context: context, form: FmEditGov(govbloc: _govBloc, gov: new Gov(id: 0)))), 
             btnLeft: MyIconButton(type: ButtonType.reload, onPressed:()=>_govBloc.loadData(context))
           ),
-          GridCaption(obj: ['عنوان سازمان', '', 'رابط', 'شماره همراه', 'تلفن', 'کد پستی', 'آدرس', 'توضیحات']),
+          GridCaption(obj: ['عنوان سازمان', '', 'رابط', 'شماره همراه', 'تلفن', 'کد پستی', 'آدرس', 'توضیحات','']),
           Expanded(
             child: Container(
               padding: EdgeInsets.all(5.0),
@@ -53,6 +54,7 @@ class FmGov extends StatelessWidget {
                                   Expanded(child: Text(gov.post)),
                                   Expanded(child: Text(gov.address)),
                                   Expanded(child: Text(gov.note)),
+                                  MyIconButton(type: ButtonType.attach, onPressed: () => showFormAsDialog(context: context, form: FmAttach(title: 'فایلهای ضمیمه ${gov.name}', tag: 'Gov', id1: gov.id))),
                                   MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: ()=>showFormAsDialog(context: context, form: FmAddInfoData(title: 'اطلاعات تکمیلی ${gov.name}', url: 'Gov/AddInfo', header: {'govid': gov.id.toString()}))),
                                   MyIconButton(type: ButtonType.del, onPressed: () => _govBloc.delGov(context, gov)),
                                 ],

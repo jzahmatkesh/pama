@@ -92,6 +92,7 @@ class FMRaste extends StatelessWidget {
                                                         Expanded(child: Text('${snapshot.data.rows[idx].name}')),    
                                                         Expanded(child: Text('${snapshot.data.rows[idx].cmpname}')),    
                                                         Expanded(child: Text('${snapshot.data.rows[idx].mosavabeno}')),    
+                                                        MyIconButton(type: ButtonType.attach, onPressed: () => showFormAsDialog(context: context, form: FmAttach(title: 'فایلهای ضمیمه ${snapshot.data.rows[idx].name}', tag: 'DRaste', id1: snapshot.data.rows[idx].hisic, id2: snapshot.data.rows[idx].isic))),
                                                         MyIconButton(type: ButtonType.del, onPressed: () => _rasteBloc.delDraste(context, snapshot.data.rows[idx]))
                                                       ],
                                                     ),
@@ -151,7 +152,7 @@ class BuildRasteRow extends StatelessWidget {
               itemBuilder: (_) => <PopupMenuItem<int>>[
                 myPopupMenuItem(icon: Icons.supervised_user_circle, title: 'زیر رسته', value: 1),
                 myPopupMenuItem(icon: Icons.people, title: 'حذف رسته', value: 2),
-                myPopupMenuItem(icon: Icons.people, title: 'بارگذاری فایل', value: 3),
+                myPopupMenuItem(icon: Icons.attach_file, title: 'بارگذاری فایل', value: 3),
               ],
               onSelected: (int idx) async{
                 if (idx == 1)

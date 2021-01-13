@@ -5,6 +5,7 @@ import '../../classes/classes.dart';
 import '../../module/Widgets.dart';
 import '../../module/consts.dart';
 import '../../module/functions.dart';
+import '../Attach/Attach.dart';
 import 'ViolationBloc.dart';
 
 class FmViolation extends StatelessWidget {
@@ -51,6 +52,9 @@ class FmViolation extends StatelessWidget {
                                           child: Text(_vio.name),
                                         )
                                       ),
+                                  _vio.id == 0 || _vio.editing
+                                    ? Container()
+                                    : MyIconButton(type: ButtonType.attach, onPressed: () => showFormAsDialog(context: context, form: FmAttach(title: 'فایلهای ضمیمه ${_vio.name}', tag: 'Violation', id1: _vio.id))),
                                   _vio.id == 0 || _vio.editing 
                                     ? MyIconButton(type: ButtonType.save, onPressed: () => _vioBloc.saveViolation(context, _vio))
                                     : MyIconButton(type: ButtonType.del, onPressed: () => _vioBloc.delViolation(context, _vio)),
