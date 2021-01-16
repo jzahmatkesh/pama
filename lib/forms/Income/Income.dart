@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pama/forms/Attach/Attach.dart';
 import 'package:provider/provider.dart';
 
 import '../../classes/classes.dart';
@@ -34,7 +35,7 @@ class FmIncome extends StatelessWidget {
               Text('تخفیف پذیر', style: gridFieldStyle()),
               SizedBox(width: 15),
               Text('همه اتحادیه ها', style: gridFieldStyle()),
-            ], endbuttons: 3),
+            ], endbuttons: 4),
             Expanded(
               child: StreamBuilder(
                 stream: _bloc.incomStream$,
@@ -128,6 +129,7 @@ class IncomeRow extends StatelessWidget {
         inc.edit ? Container(width: 40,) : MyIconButton(type: ButtonType.other, hint: 'جزییات درآمد', icon: Icon(CupertinoIcons.layers_alt), onPressed: ()=>bloc.loadIncomeShare(context, inc.id)),
         inc.edit ? Container(width: 40,) : MyIconButton(type: ButtonType.other, hint: 'تاریخچه درآمد', icon: Icon(CupertinoIcons.line_horizontal_3_decrease), onPressed: ()=>bloc.loadIncomeHistory(context, inc.id)),
         inc.edit ? Container(width: 40,) : MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: () => showFormAsDialog(context: context, form: FmAddInfoData(url: 'Income/AddInfo', title: 'اطلاعات تکمیلی ${inc.name}', header: {'incid': '${inc.id}'}))),
+        inc.edit ? Container(width: 40,) : MyIconButton(type: ButtonType.attach, onPressed: () => showFormAsDialog(context: context, form: FmAttach(title: 'فایلهای ضمیمه ${inc.name}', tag: 'IncomeMng', id1: inc.id))),
         inc.edit ? Container(width: 40,) : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delIncome(context, inc))
       ]
     );
@@ -282,7 +284,7 @@ class PnCompany extends StatelessWidget {
             'عنوان اتحادیه',
             Text('تمام رسته ها', style: gridFieldStyle()),
             // SizedBox(width: 50)
-          ], endbuttons: 2),
+          ], endbuttons: 3),
           Expanded(
             child: StreamBuilder<IncomeCompanyModel>(
               stream: bloc.incomCompanyStream$,
@@ -320,6 +322,9 @@ class PnCompany extends StatelessWidget {
                             _cmp.allraste
                               ? Container(width: 40)
                               : MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.text_badge_checkmark), hint: 'اختصاص رسته', onPressed: (){bloc.loadIncomeCompanyRaste(context, _cmp.incid, _cmp.cmpid); showFormAsDialog(context: context, form: PnRaste(bloc: bloc, cmp: _cmp));}),
+                            _cmp.edit 
+                              ? Container(width: 40,) 
+                              : MyIconButton(type: ButtonType.attach, onPressed: () => showFormAsDialog(context: context, form: FmAttach(title: 'فایلهای ضمیمه ${_cmp.cmpname}', tag: 'IncomeCmpMng', id1: inc.id, id2: _cmp.cmpid))),
                             _cmp.edit
                               ? MyIconButton(type: ButtonType.save, onPressed: ()=>bloc.saveIncomeCompany(context, _cmp))
                               : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delIncomeCompany(context, _cmp))

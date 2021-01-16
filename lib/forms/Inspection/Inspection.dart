@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pama/classes/Repository.dart';
-import 'package:pama/forms/AddInfo/AddInfoData.dart';
-import 'package:pama/forms/Inspection/InspectionBloc.dart';
-import 'package:pama/forms/People/People.dart';
-import 'package:pama/module/consts.dart';
-import 'package:pama/module/functions.dart';
 
+import '../../classes/Repository.dart';
 import '../../classes/classes.dart';
 import '../../module/Widgets.dart';
+import '../../module/consts.dart';
+import '../../module/functions.dart';
+import '../AddInfo/AddInfoData.dart';
+import '../Attach/Attach.dart';
+import '../People/People.dart';
+import 'InspectionBloc.dart';
 
 class FmInspection extends StatelessWidget {
   const FmInspection({Key key, @required this.company}) : super(key: key);
@@ -27,7 +28,7 @@ class FmInspection extends StatelessWidget {
           children: [
             FormHeader(title: 'طرح های بازرسی و نظارت ${company.name}', btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>showFormAsDialog(context: context, form: NewInspection(bloc: _inspBloc, insp: new Inspection(cmpid: company.id, id: 0))))),
             SizedBox(height: 10),
-            GridCaption(obj: ['نام طرح','','موضوع','','تاریخ آغاز','تاریخ اتمام','محدوده طرح'], endbuttons: 3),
+            GridCaption(obj: ['نام طرح','','موضوع','','تاریخ آغاز','تاریخ اتمام','محدوده طرح'], endbuttons: 4),
             SizedBox(height: 10),
             Expanded(
               child: StreamBuilder(
@@ -98,6 +99,7 @@ class InspRow extends StatelessWidget {
           MyIconButton(type: ButtonType.other, hint: 'سازمان های همکار', icon: Icon(CupertinoIcons.building_2_fill), onPressed: ()=>inspBloc.setMode(context, insp.id, gov: true)),
           MyIconButton(type: ButtonType.other, hint: 'اتحادیه های همکار', icon: Icon(CupertinoIcons.person_2_square_stack), onPressed: ()=>inspBloc.setMode(context, insp.id, company: true)),
           MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: () => showFormAsDialog(context: context, form: FmAddInfoData(url: 'Inspection/AddInfo', title: 'اطلاعات تکمیلی ${insp.name}', header: {'insid': insp.id.toString()}))),
+          MyIconButton(type: ButtonType.attach, onPressed: () => showFormAsDialog(context: context, form: FmAttach(title: 'فایلهای ضمیمه ${insp.name}', tag: 'InspectionMng', id1: insp.id))),
           MyIconButton(type: ButtonType.del, onPressed: ()=>inspBloc.delInspection(context, insp),)
         ],
       ),
@@ -209,6 +211,9 @@ class GovList extends StatelessWidget {
                                   : Text(_gov.note)
                                 ),
                                 _gov.edit ? Container() : MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: () => showFormAsDialog(context: context, form: FmAddInfoData(url: 'Inspection/Gov/AddInfo', title: 'اطلاعات تکمیلی ${_gov.govname}', header: {'govid': _gov.govid.toString(), 'insid': _gov.insid.toString()}))),
+                                _gov.edit
+                                  ? Container()
+                                  : MyIconButton(type: ButtonType.attach, onPressed: () => showFormAsDialog(context: context, form: FmAttach(title: 'فایلهای ضمیمه ${_gov.govname}', tag: 'InspectionGovMng', id1: _gov.insid, id2: _gov.govid))),
                                 _gov.edit
                                   ? MyIconButton(type: ButtonType.save, onPressed: ()=>bloc.saveInspectiongov(context, _gov))
                                   : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delInspectiongov(context, _gov))
@@ -335,6 +340,7 @@ class InspectionCompanyRow extends StatelessWidget {
         this.cmp.edit ? Container() : MyIconButton(type: ButtonType.other, hint: 'فهرست کارشناسان', icon: Icon(CupertinoIcons.person_2_alt), onPressed: ()=>bloc.editModeInspectionCompany(context, cmp, peop: true)),
         this.cmp.edit ? Container() : MyIconButton(type: ButtonType.other, hint: 'فهرست کارکنان', icon: Icon(CupertinoIcons.person_3_fill), onPressed: ()=>bloc.editModeInspectionCompany(context, cmp, emp: true)),
         this.cmp.edit ? Container() : MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: () => showFormAsDialog(context: context, form: FmAddInfoData(url: 'Inspection/Company/AddInfo', title: 'اطلاعات تکمیلی ${this.cmp.cmpname}', header: {'cmpid': this.cmp.cmpid.toString(), 'insid': this.cmp.insid.toString()}))),
+        this.cmp.edit ? Container() : MyIconButton(type: ButtonType.attach, onPressed: () => showFormAsDialog(context: context, form: FmAttach(title: 'فایلهای ضمیمه ${this.cmp.cmpname}', tag: 'InspectionCmpMng', id1: this.cmp.insid, id2: this.cmp.cmpid))),
         this.cmp.edit 
           ? MyIconButton(type: ButtonType.save, onPressed: ()=>bloc.saveInspectioncompany(context, this.cmp)) 
           : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delInspectioncompany(context, this.cmp))

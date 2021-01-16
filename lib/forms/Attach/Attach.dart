@@ -46,7 +46,7 @@ class FmAttach extends StatelessWidget{
                   id3: this.id3,
                   id4: this.id4,
                   id5: this.id5,
-                  ondone: ()=>_attachBloc.reLoad(context)
+                  ondone: ()=>_attachBloc.loadData(context)
                 )
               )
             ),
@@ -88,7 +88,7 @@ class FmAttach extends StatelessWidget{
                                       padding: EdgeInsets.all(4),
                                       child: Row(
                                         children: [
-                                          MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.trash, color: Colors.red), hint: 'حذف', onPressed: ()=>print('delete Click')),
+                                          MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.trash, color: Colors.red), hint: 'حذف', onPressed: ()=>_attachBloc.delAttach(context, e.radif)),
                                           Expanded(child: Text('${e.filename}', style: GoogleFonts.abhayaLibre(fontSize: 10), textAlign: TextAlign.left,)),
                                         ],
                                       )

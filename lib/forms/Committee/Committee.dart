@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pama/forms/AddInfo/AddInfoData.dart';
+import 'package:pama/forms/Attach/Attach.dart';
 import 'package:provider/provider.dart';
 
 import '../../classes/classes.dart';
@@ -27,7 +28,7 @@ class FmCommittee extends StatelessWidget {
         child: Column(
           children: [
             FormHeader(title: 'کمیسیون و جلسات ${company.name}', btnRight: MyIconButton(type: ButtonType.add, onPressed: (){context.read<ThemeManager>().setCompany(company.id);_committeeBloc.newCommittee(context, company.id);})),
-            GridCaption(obj: ['نوع', 'عنوان', 'کارشناس'], endbuttons: 3,),
+            GridCaption(obj: ['نوع', 'عنوان', 'کارشناس'], endbuttons: 5),
             Expanded(
               child: StreamBuilder(
                 stream: _committeeBloc.committeeStream$,
@@ -91,7 +92,8 @@ class PnCommitteeMember extends StatelessWidget {
               })
             ),
             'نام و نام خانوادگی', 'سمت'
-          ]
+          ],
+          endbuttons: 3,
         ),
         Container(
           height: 350.0,
@@ -118,7 +120,12 @@ class PnCommitteeMember extends StatelessWidget {
                               Expanded(child: _mem.edit 
                                 ? MultiChooseItem(val: _mem.semat, items: [{'id': 1, 'title': 'رییس'},{'id': 2, 'title': 'نایب رییس'},{'id': 3, 'title': 'منشی'},{'id': 4, 'title': 'عضو'}], hint: 'سمت', onChange: (val)=> committeeBloc.changeSemat(_mem, val))
                                 : Text('${_mem.sematName()}')),
-                              MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: () => showFormAsDialog(context: context, form: FmAddInfoData(url: 'Cmp_Committee/Member/AddInfo', title: 'اطلاعات تکمیلی ${_mem.name} ${_mem.family}', header: {'cmpid': company.id.toString(), 'cmtid': this.com.id.toString(), 'peopid': _mem.peopid.toString()}))),
+                              _mem.edit
+                                ? Container()
+                                : MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: () => showFormAsDialog(context: context, form: FmAddInfoData(url: 'Cmp_Committee/Member/AddInfo', title: 'اطلاعات تکمیلی ${_mem.name} ${_mem.family}', header: {'cmpid': company.id.toString(), 'cmtid': this.com.id.toString(), 'peopid': _mem.peopid.toString()}))),
+                              _mem.edit
+                                ? Container()
+                                : MyIconButton(type: ButtonType.attach, onPressed: () => showFormAsDialog(context: context, form: FmAttach(title: 'فایلهای ضمیمه ${_mem.name} ${_mem.family}', tag: 'CmpCommitteeMember', cmpid: company.id, id1: this.com.id, id2: _mem.peopid))),
                               _mem.edit
                                 ? MyIconButton(type: ButtonType.save, onPressed: ()=> committeeBloc.saveMember(context, _mem))
                                 : MyIconButton(type: ButtonType.del, onPressed: ()=> committeeBloc.delMember(context, _mem))
@@ -162,6 +169,7 @@ class CommitteeRow extends StatelessWidget {
             : Container(width: 46.0,),
           MyIconButton(type: ButtonType.other, hint: 'فهرست جلسات/کمیسیون ها', icon: Icon(CupertinoIcons.list_bullet_below_rectangle), onPressed: (){committeeBloc.editMode(com, detail: true);committeeBloc.loadDetail(context, com.cmpid, com.id);}),
           MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: () => showFormAsDialog(context: context, form: FmAddInfoData(url: 'Cmp_Committee/AddInfo', title: 'اطلاعات تکمیلی ${this.com.name}', header: {'cmpid': company.id.toString(), 'cmtid': this.com.id.toString()}))),
+          MyIconButton(type: ButtonType.attach, onPressed: () => showFormAsDialog(context: context, form: FmAttach(title: 'فایلهای ضمیمه ${this.com.name}', tag: 'CmpCommittee', cmpid: company.id, id1: this.com.id))),
           MyIconButton(type: ButtonType.del, onPressed: () => this.committeeBloc.delCommittee(context, this.com)),
         ],
       ),
@@ -336,6 +344,7 @@ class CommitteeDetailRow extends StatelessWidget {
             ? MyIconButton(type: ButtonType.other, hint: 'جزییات مصوبات جلسه', icon: Icon(CupertinoIcons.square_stack), onPressed: () => committeeBloc.setDetailMode(context, dtl, mosavabat: true),)
             : Container(),
           MyIconButton(type: ButtonType.other, icon: Icon(CupertinoIcons.list_bullet), hint: 'اطلاعات تکمیلی', onPressed: () => showFormAsDialog(context: context, form: FmAddInfoData(url: 'Cmp_Committee/Detail/AddInfo', title: 'اطلاعات تکمیلی ${dtl.title}', header: {'cmpid': dtl.cmpid.toString(), 'cmtid': dtl.cmtid.toString(), 'detailid': dtl.id.toString()}))),
+          MyIconButton(type: ButtonType.attach, onPressed: () => showFormAsDialog(context: context, form: FmAttach(title: 'فایلهای ضمیمه ${dtl.title}', tag: 'CmpCommitteeDetail', cmpid: dtl.cmpid, id1: dtl.cmtid, id2: dtl.id))),
           MyIconButton(type: ButtonType.del, onPressed: ()=> committeeBloc.delDetail(context, dtl),)
         ],
       ),
@@ -458,6 +467,7 @@ class DetailMosavabat extends StatelessWidget {
                                 SizedBox(width: 5.0,),
                                 Expanded(child: Text('${_mos.empfamily}')),
                                 Expanded(child: Text('${_mos.mcmpname}')),
+                                MyIconButton(type: ButtonType.attach, onPressed: () => showFormAsDialog(context: context, form: FmAttach(title: 'فایلهای ضمیمه ${_mos.title}', tag: 'CmpCommitteeMosavabat', cmpid: _mos.cmpid, id1: _mos.cmtid, id2: _mos.detailid, id3: _mos.id))),
                                 MyIconButton(type: ButtonType.del, onPressed: ()=>committeeBloc.delDetailMosavabat(context, _mos),)
                               ],
                             ),

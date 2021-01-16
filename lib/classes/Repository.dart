@@ -1261,9 +1261,9 @@ class AttachRepository{
     throw Exception(_data['msg']);
   }
 
-  Future<bool> del(String url, Map<String, String> header) async{
+  Future<bool> del(Map<String, String> header) async{
     header.putIfAbsent('Content-Type', () => 'application/json');
-    Map<String, dynamic> _data = await delToServer(api: url, header: header);
+    Map<String, dynamic> _data = await delToServer(api: 'Attach', header: header);
     if (_data['msg'] == "Success")
       return true;
     throw Exception(_data['msg']);
