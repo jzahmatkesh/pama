@@ -2052,3 +2052,31 @@ class Attach{
       return 'other';
     }
 }
+
+class Topic{
+    int id;
+    String title;
+    String teachers;
+    bool edit;
+    String token;
+ 
+    Topic({this.id,this.title, this.token, this.edit=false});
+ 
+    Topic.fromJson(Map<String, dynamic> json):
+        id = json['id'],
+        title = json['title'],
+        teachers = json['teachers'],
+        edit = false;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['id'] = this.id;
+        data['title'] = this.title;
+        data['token'] = this.token;
+        data['teachers'] = this.teachers;
+        return data;
+    }
+}
+
+
+

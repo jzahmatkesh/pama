@@ -1270,6 +1270,37 @@ class AttachRepository{
   }
 }
 
+class TopicRepository{
+  Future<List<Topic>> load(String token) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Topic', body: jsonEncode({"token": token}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Topic>((data) => Topic.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> save(Topic top) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Topic', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(top.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> delete(Topic top) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Topic', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': top.token,
+       'id': top.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+}
+
 
 
 

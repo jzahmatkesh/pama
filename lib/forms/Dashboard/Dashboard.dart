@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pama/forms/Topic/Topic.dart';
 import '../Income/Income.dart';
 import '../NoLicense/NoLicense.dart';
 import 'package:provider/provider.dart';
@@ -57,6 +58,7 @@ class Dashboard extends StatelessWidget {
                      :context.watch<ThemeManager>().menuitem == 7 ? FmUserGroup() 
                      :context.watch<ThemeManager>().menuitem == 8 ? FmNoLicense(cmp: Company(id: 0)) 
                      :context.watch<ThemeManager>().menuitem == 9 ? FmIncome() 
+                     :context.watch<ThemeManager>().menuitem == 10 ? FmTopic() 
                      :Text('در دست طراحی می باشد', textAlign: TextAlign.center, style: titleStyle(),)
               )
             ],
@@ -92,6 +94,10 @@ class Dashboard extends StatelessWidget {
                   this.user.admin ? ListTile(title: Text('مدارک'), onTap: (){context.read<ThemeManager>().setMenuItem(4); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 4,) : Container(),
                   this.user.admin ? ListTile(title: Text('سازمان ها و دستگاه های دولتی'), onTap: (){context.read<ThemeManager>().setMenuItem(5); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 5,) : Container(),
                   this.user.admin ? ListTile(title: Text('اطلاعات تکمیلی'), onTap: (){context.read<ThemeManager>().setMenuItem(6); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 6,) : Container(),
+
+                  this.user.admin ? ListTile(title: Text('سرفصل های آموزشی'), onTap: (){context.read<ThemeManager>().setMenuItem(10); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 10,) : Container(),
+                  this.user.admin ? ListTile(title: Text('اساتید'), onTap: (){context.read<ThemeManager>().setMenuItem(11); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 11,) : Container(),
+
                   this.user.admin ? ListTile(title: Text('گروه های کاربری'), onTap: (){context.read<ThemeManager>().setMenuItem(7); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 7,) : Container(),
                   this.user.admin ? ListTile(title: Text('تنظیمات'), onTap: (){context.read<ThemeManager>().setMenuItem(16); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 16,) : Container(),
                   SizedBox(height: 15,),
@@ -171,9 +177,9 @@ class SideBar extends StatelessWidget {
             ],  
           ),
           SizedBox(height: 50),
-          Card(color: backgroundColor(context).withOpacity(0.5), child: Container(width: double.infinity, padding: EdgeInsets.all(8.0),child: Text('${this.user.cmpname}', style: titleStyle(), textAlign: TextAlign.center,))),
-          Card(color: backgroundColor(context).withOpacity(0.5), child: Container(width: double.infinity, padding: EdgeInsets.all(8.0),child: Text('${this.user.name} ${this.user.family} خوش آمدید', style: gridFieldStyle(), textAlign: TextAlign.center,))),
-          Card(color: backgroundColor(context).withOpacity(0.5), child: Container(width: double.infinity, padding: EdgeInsets.all(8.0),child: Text('${this.user.ip}', style: gridFieldStyle(), textAlign: TextAlign.center,))),
+          Card(color: appbarColor(context), child: Container(width: double.infinity, padding: EdgeInsets.all(8.0),child: Text('${this.user.cmpname}', style: titleStyle(), textAlign: TextAlign.center,))),
+          Card(color: appbarColor(context), child: Container(width: double.infinity, padding: EdgeInsets.all(8.0),child: Text('${this.user.name} ${this.user.family} خوش آمدید', style: gridFieldStyle(), textAlign: TextAlign.center,))),
+          Card(color: appbarColor(context), child: Container(width: double.infinity, padding: EdgeInsets.all(8.0),child: Text('${this.user.ip}', style: gridFieldStyle(), textAlign: TextAlign.center,))),
           Spacer(flex: 2,),
           // Tooltip(message: 'پشتیبانی آنلاین', child: IconButton(iconSize: 175, icon: Lottie.asset('images/support.json', height: 100), onPressed: ()=> myAlert(context: context, title: 'بزودی', message: 'پشتیبانی آنلاین در دست طراحی می باشد', color: Colors.blueGrey))),
           Tooltip(
