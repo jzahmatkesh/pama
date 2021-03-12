@@ -41,17 +41,6 @@ class AttachBloc{
     }
   }
 
-  // reLoad(BuildContext context) async{
-  //   try{
-  //     _attachBloc.add(AttachDataModel(status: Status.loading));
-  //     _attachBloc.add(AttachDataModel(status: Status.loaded, rows: await _repository.load(readToken(context), {'tag': this.tag, 'cmpid': cmpid, 'id1': id1, 'id2': id2, 'id3': id3, 'id4': id4, 'id5': id5})));
-  //   }
-  //   catch(e){
-  //     analyzeError(context, '$e', msg: false);
-  //     _attachBloc.add(AttachDataModel(status: Status.error, msg: '$e'));
-  //   }
-  // }
-
   delAttach(BuildContext context, int id) async{
     confirmMessage(context, 'حذف کارمند', 'آیا مایل به حذف فایل ضمیمه انتخابی می باشید؟', yesclick: () async{
       try{

@@ -40,7 +40,7 @@ class FmAddInfo extends StatelessWidget {
                         itemBuilder: (context, idx){
                           AddInfo _add = snapshot.data.rows[idx];
                           return Card(
-                            color: idx.isOdd ? appbarColor(context) : Colors.transparent,
+                            color: idx.isOdd ? appbarColor(context) : scaffoldcolor(context),
                             child: ! _add.notes && ! _add.forms 
                               ? AddInfoRow(add: _add, addInfoBloc: _addInfoBloc)
                               : Container(
@@ -103,7 +103,7 @@ class AddInfoNotes extends StatelessWidget {
                         AddInfoNote _note = snapshot.data.rows[idx];
                         eddate.text = _note.note;
                         return Card(
-                          color: idx.isOdd ? appbarColor(context) : Colors.transparent,
+                          color: idx.isOdd ? appbarColor(context) : scaffoldcolor(context),
                           child: GestureDetector(
                             onDoubleTap: () => addInfoBloc.editNote(_note),
                             child: Row(

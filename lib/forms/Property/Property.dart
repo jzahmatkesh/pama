@@ -98,7 +98,7 @@ class PnMobile extends StatelessWidget {
                       itemCount: snap.data.rows.length,
                       itemBuilder: (context, idx){
                         return Card(
-                          color: idx.isOdd ? appbarColor(context) : Colors.transparent,
+                          color: idx.isOdd ? appbarColor(context) : scaffoldcolor(context),
                           child: GestureDetector(
                             onDoubleTap: (){
                               context.read<ThemeManager>().setCompany(cmpid);
@@ -168,7 +168,7 @@ class PnCar extends StatelessWidget {
                       itemCount: snap.data.rows.length,
                       itemBuilder: (context, idx){
                         return Card(
-                          color: idx.isOdd ? appbarColor(context) : Colors.transparent,
+                          color: idx.isOdd ? appbarColor(context) : scaffoldcolor(context),
                           child: GestureDetector(
                             onDoubleTap: (){
                               context.read<ThemeManager>().setCompany(cmpid);
@@ -236,7 +236,7 @@ class PnPropGHM extends StatelessWidget {
                       itemCount: snap.data.rows.length,
                       itemBuilder: (context, idx){
                         return Card(
-                          color: idx.isOdd ? appbarColor(context) : Colors.transparent,
+                          color: idx.isOdd ? appbarColor(context) : scaffoldcolor(context),
                           child: GestureDetector(
                             onDoubleTap: ()=>showFormAsDialog(context: context, form: NewPropGHM(bloc: bloc, prop: snap.data.rows[idx])),
                             child: Row(
@@ -301,7 +301,7 @@ class PnBankHesab extends StatelessWidget {
                       itemCount: snap.data.rows.length,
                       itemBuilder: (context, idx){
                         return Card(
-                          color: idx.isOdd ? appbarColor(context) : Colors.transparent,
+                          color: idx.isOdd ? appbarColor(context) : scaffoldcolor(context),
                           child: GestureDetector(
                             onDoubleTap: ()=> showFormAsDialog(context: context, form: NewBankHesab(bloc: bloc, prop: snap.data.rows[idx])),
                             child: Row(

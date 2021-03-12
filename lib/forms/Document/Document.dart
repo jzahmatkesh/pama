@@ -39,7 +39,7 @@ class FmDocument extends StatelessWidget {
                         itemBuilder: (context, idx){
                           Document document = snapshot.data.rows[idx];
                           return Card(
-                            color: idx.isOdd ? appbarColor(context) : Colors.transparent,
+                            color: idx.isOdd ? appbarColor(context) : scaffoldcolor(context),
                             child: GestureDetector(
                               onDoubleTap: () => _documentBloc.editMode(document),
                               child: Row(

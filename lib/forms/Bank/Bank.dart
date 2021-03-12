@@ -38,7 +38,7 @@ class FmBank extends StatelessWidget {
                         itemBuilder: (context, idx){
                           Bank bank = snapshot.data.rows[idx];
                           return Card(
-                            color: idx.isEven ? appbarColor(context) : Colors.transparent,
+                            color: idx.isEven ? appbarColor(context) : scaffoldcolor(context),
                             child: GestureDetector(
                               onDoubleTap: () => _bankBloc.editMode(bank),
                               child: Row(

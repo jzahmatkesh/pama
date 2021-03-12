@@ -9,14 +9,16 @@ import '../../module/theme-Manager.dart';
 import '../Dashboard/Dashboard.dart';
 import 'LoginBloc.dart';
 
-//we must change login screen in future
 class Login extends StatelessWidget {
   const Login({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     LoginBloc _loginBloc = LoginBloc();
-    Map<String, String> _logindata = {'username': '', 'pass': ''};
+
+    Future.delayed(Duration(milliseconds: 3)).then((e){
+      _loginBloc.verify();
+    });
 
     _loginBloc.stream$.listen((data){
       if (data.status == LoginStatus.error)
@@ -29,6 +31,8 @@ class Login extends StatelessWidget {
           );
       }
     });
+    Map<String, String> _logindata = {'username': '', 'pass': ''};
+
 
     return Scaffold(
       body: SafeArea(
@@ -128,7 +132,7 @@ class Login extends StatelessWidget {
                           }
                         ),
                         SizedBox(width: 5.0,),
-                        FlatButton(
+                        TextButton(
                           onPressed: () {myAlert(context: context, title: 'هشدار', message: 'با مدیر سیستم تماس حاصل نمایید', color: Colors.deepOrange);},
                           child: Text('رمز عبورم را فراموش کرده ام!', style: TextStyle(fontFamily: 'yekan',color: Colors.grey))
                         )

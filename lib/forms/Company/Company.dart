@@ -125,7 +125,7 @@ class GridCompanyList extends StatelessWidget {
                     if (!snapshot.data.rows[index].insearchquery)
                       return Container();
                     return Card(
-                      color: index.isOdd && !snapshot.data.rows[index].showinfo ? appbarColor(context) : Colors.transparent,
+                      color: index.isOdd && !snapshot.data.rows[index].showinfo ? appbarColor(context) : scaffoldcolor(context),
                       child: snapshot.data.rows[index].showinfo || snapshot.data.rows.length == 1
                         ? Column(
                           mainAxisSize: MainAxisSize.min,
@@ -332,7 +332,7 @@ class FmCompanyUsers extends StatelessWidget {
                       itemCount: snapshot.data.rows.length,
                       itemBuilder: (BuildContext context, int idx){
                         return Card(
-                          color: idx.isOdd ? appbarColor(context) : Colors.transparent,
+                          color: idx.isOdd ? appbarColor(context) : scaffoldcolor(context),
                           child: snapshot.data.rows[idx].showgroups
                             ? Column(
                               children: [

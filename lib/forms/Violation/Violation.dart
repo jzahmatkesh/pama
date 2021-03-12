@@ -39,7 +39,7 @@ class FmViolation extends StatelessWidget {
                         itemBuilder: (context, idx){
                           Violation _vio = snapshot.data.rows[idx];
                           return Card(
-                            color: idx.isEven ? appbarColor(context) : Colors.transparent,
+                            color: idx.isEven ? appbarColor(context) : scaffoldcolor(context),
                             child: GestureDetector(
                               onDoubleTap: () => _vioBloc.editMode(_vio),
                               child: Row(

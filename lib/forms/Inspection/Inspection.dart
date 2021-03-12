@@ -42,7 +42,7 @@ class FmInspection extends StatelessWidget {
                         itemCount: snap.data.rows.length,
                         itemBuilder: (context, idx){
                           return Card(
-                            color: !snap.data.rows[idx].gov && !snap.data.rows[idx].compay && idx.isOdd ? appbarColor(context) : Colors.transparent,
+                            color: !snap.data.rows[idx].gov && !snap.data.rows[idx].compay && idx.isOdd ? appbarColor(context) : scaffoldcolor(context),
                             child: snap.data.rows[idx].gov
                               ? Column(
                                 children: [

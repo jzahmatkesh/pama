@@ -84,7 +84,7 @@ class FmIncome extends StatelessWidget {
                                     ],
                                   ),
                                 )
-                                : IncomeRow(inc: _inc, bloc: _bloc, color: idx.isOdd && !_inc.share && !_inc.pricehistory && !_inc.edit ? appbarColor(context) : Colors.transparent);
+                                : IncomeRow(inc: _inc, bloc: _bloc, color: idx.isOdd && !_inc.share && !_inc.pricehistory && !_inc.edit ? appbarColor(context) : scaffoldcolor(context));
                         },
                       );
                   return Center(child: CupertinoActivityIndicator());

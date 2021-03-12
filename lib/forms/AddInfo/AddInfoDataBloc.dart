@@ -60,7 +60,7 @@ class AddinfoDataBloc{
     }
  }
 
- delData(BuildContext context, AddInfoData addinfo, String url, Map<String, String> header, {bool pop = true}){
+  delData(BuildContext context, AddInfoData addinfo, String url, Map<String, String> header, {bool pop = true}){
    confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف ${addinfo.name} می باشید؟', yesclick: () async{
     try{
       header.putIfAbsent('token', () => readToken(context));

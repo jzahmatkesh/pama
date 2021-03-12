@@ -70,7 +70,7 @@ class FmEmployee extends StatelessWidget {
                       itemCount: snapshot.data.rows.length,
                       itemBuilder: (BuildContext context, int idx){
                         return Card(
-                          color: idx.isOdd ? appbarColor(context) : Colors.transparent,
+                          color: idx.isOdd ? appbarColor(context) : scaffoldcolor(context),
                           child: snapshot.data.rows[idx].showfamily 
                             ? Container(
                               height: screenHeight(context) * 0.5,
@@ -210,7 +210,7 @@ class EmployeeFamily extends StatelessWidget {
                   itemCount: snapshot.data.rows.length,
                   itemBuilder: (BuildContext context, int idx){
                     return Card(
-                      color: idx.isOdd ? appbarColor(context) : Colors.transparent,
+                      color: idx.isOdd ? appbarColor(context) : scaffoldcolor(context),
                       child: GestureDetector(
                         onDoubleTap: ()=>showFormAsDialog(context: context, form: EmployeeFamilyEdit(companybloc: companybloc, cmpid: cmpid, emp: emp, family: snapshot.data.rows[idx])),
                         child: Row(

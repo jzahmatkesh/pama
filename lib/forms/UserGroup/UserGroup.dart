@@ -35,7 +35,7 @@ class FmUserGroup extends StatelessWidget {
                       itemBuilder: (context, idx){
                         UserGroup _grp = snapshot.data.rows[idx];
                         return Card(
-                          color: idx.isOdd && !_grp.permission && !_grp.users ? appbarColor(context) : Colors.transparent,
+                          color: idx.isOdd && !_grp.permission && !_grp.users ? appbarColor(context) : scaffoldcolor(context),
                           child: _grp.permission 
                             ? Container(
                               child: Column(
@@ -101,7 +101,7 @@ class FmUserGroup extends StatelessWidget {
                                                     GroupUser _user = snapshot.data.rows[idx];
                                                     return _user.insearch 
                                                       ? Card(
-                                                        color: idx.isOdd ? appbarColor(context) : Colors.transparent,
+                                                        color: idx.isOdd ? appbarColor(context) : scaffoldcolor(context),
                                                         child: Row(
                                                           children: [
                                                             CircleAvatar(backgroundImage: NetworkImage("http://${serverIP()}:8080/PamaApi/LoadFile.jsp?type=user&id=${_user.userid}"),),

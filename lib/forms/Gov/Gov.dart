@@ -41,7 +41,7 @@ class FmGov extends StatelessWidget {
                         itemBuilder: (context, idx){
                           Gov gov = snapshot.data.rows[idx];
                           return Card(
-                            color: idx.isOdd ? appbarColor(context) : Colors.transparent,
+                            color: idx.isOdd ? appbarColor(context) : scaffoldcolor(context),
                             child: GestureDetector(
                               onDoubleTap: () => showFormAsDialog(context: context, form: FmEditGov(govbloc: _govBloc, gov: gov,)),
                               child: Row(

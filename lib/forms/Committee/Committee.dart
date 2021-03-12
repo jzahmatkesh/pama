@@ -42,7 +42,7 @@ class FmCommittee extends StatelessWidget {
                         itemBuilder: (BuildContext context, int idx){
                           Committee _com = snapshot.data.rows[idx];
                           return Card(
-                            color: idx.isOdd && !_com.edit && !_com.member && !_com.detail ? appbarColor(context) : Colors.transparent,
+                            color: idx.isOdd && !_com.edit && !_com.member && !_com.detail ? appbarColor(context) : scaffoldcolor(context),
                             child: _com.edit 
                               ? EditCommittee(committeeBloc: _committeeBloc, committee: _com, cmpid: company.id,) 
                               : _com.member 
@@ -109,7 +109,7 @@ class PnCommitteeMember extends StatelessWidget {
                     itemBuilder: (BuildContext context,int idx){
                       CommitteeMember _mem = snapshot.data.rows[idx];
                       return Card(
-                        color: idx.isOdd ? appbarColor(context) : Colors.transparent,
+                        color: idx.isOdd ? appbarColor(context) : scaffoldcolor(context),
                         child: GestureDetector(
                           onDoubleTap: ()=> committeeBloc.addMember(context, com.id, _mem.cmtid, _mem.peopid, _mem.name, _mem.family),
                           child: Row(
@@ -251,7 +251,7 @@ class PnCommitteeDetail extends StatelessWidget {
                     itemBuilder: (BuildContext context,int idx){
                       CommitteeDetail _dtl = snapshot.data.rows[idx];
                       return Card(
-                        color: idx.isOdd && !_dtl.absent && !_dtl.mosavabat ? appbarColor(context) : Colors.transparent,
+                        color: idx.isOdd && !_dtl.absent && !_dtl.mosavabat ? appbarColor(context) : scaffoldcolor(context),
                         child: _dtl.absent 
                           ? DetailAbsent(committee: com, dtl: _dtl, committeeBloc: committeeBloc)
                           : _dtl.mosavabat
@@ -455,7 +455,7 @@ class DetailMosavabat extends StatelessWidget {
                       itemBuilder: (context, idx){
                         CommitteeDetailMosavabat _mos = snapshot.data.rows[idx];
                         return Card(
-                          color: idx.isOdd ? appbarColor(context) : Colors.transparent,
+                          color: idx.isOdd ? appbarColor(context) : scaffoldcolor(context),
                           child: GestureDetector(
                             onDoubleTap: (){context.read<ThemeManager>().setCompany(dtl.cmpid); showFormAsDialog(context: context, form: PnEditMosavabat(committeeBloc: this.committeeBloc, mos: _mos));},
                             child: Row(

@@ -45,7 +45,7 @@ class FMRaste extends StatelessWidget {
                         if (!_raste.searched)
                           return Container();
                         return Card(
-                          color: idx.isEven && !_raste.showdraste ? appbarColor(context) : Colors.transparent,
+                          color: idx.isEven && !_raste.showdraste ? appbarColor(context) : scaffoldcolor(context),
                           child:  _raste.showdraste 
                             ? Column(
                               children: [
