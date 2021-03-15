@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pama/forms/Teacher/Teacher.dart';
 import 'package:pama/forms/Topic/Topic.dart';
 import '../Income/Income.dart';
 import '../NoLicense/NoLicense.dart';
@@ -59,6 +60,7 @@ class Dashboard extends StatelessWidget {
                      :context.watch<ThemeManager>().menuitem == 8 ? FmNoLicense(cmp: Company(id: 0)) 
                      :context.watch<ThemeManager>().menuitem == 9 ? FmIncome() 
                      :context.watch<ThemeManager>().menuitem == 10 ? FmTopic() 
+                     :context.watch<ThemeManager>().menuitem == 11 ? FmTeacher() 
                      :Text('در دست طراحی می باشد', textAlign: TextAlign.center, style: titleStyle(),)
               )
             ],

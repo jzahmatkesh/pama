@@ -42,7 +42,7 @@ class FmPeople extends StatelessWidget {
               if (snap.data.status == Status.initial || snap.data.status == Status.loading || snap.data.status == Status.error){
                 return Container(
                   height: 325.0,
-                  width: 285.0,
+                  width: 335.0,
                   padding: EdgeInsets.all(15.0),
                   child: Center(
                     child: Column(
@@ -57,14 +57,15 @@ class FmPeople extends StatelessWidget {
                               child: (snap.data.status == Status.loading) 
                                 ? Center(child: CupertinoActivityIndicator()) 
                                 : MyOutlineButton(
-                                  hovercolor: Colors.lightGreen, 
+                                  color: Colors.lightGreen, 
                                   title: 'بررسی', 
                                   icon: Icons.cloud_queue, 
                                   onPressed: () => _peopbloc.checkNationalID(context, _data, this.justcheck, cmpid: this.cmpid ?? 0)
                                 ),
                             ),
+                            SizedBox(width: 5),
                             Expanded(
-                              child: MyOutlineButton(hovercolor: Colors.red[400], title: 'انصراف', icon: Icons.redo, onPressed: (){Navigator.of(context).pop('cancel');},),
+                              child: MyOutlineButton(color: Colors.red, title: 'انصراف', icon: Icons.redo, onPressed: (){Navigator.of(context).pop('cancel');},),
                             ),
                           ],
                         ),

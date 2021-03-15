@@ -1299,8 +1299,73 @@ class TopicRepository{
       return true;
     throw Exception(_data['msg']);
   }
+
+  Future<List<TopicTeacher>> loadTeacher(String token, int topic) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Topic/Teachers', body: jsonEncode({"token": token, "topicid": topic}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<TopicTeacher>((data) => TopicTeacher.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+  Future<bool> saveTeacher(TopicTeacher top) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Topic/Teachers', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(top.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+  Future<bool> delTeacher(TopicTeacher top) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Topic/Teachers', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': top.token,
+       'topic': top.topicid.toString(),
+       'peop': top.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
 }
 
+class TeacherRepository{
+  Future<List<Teacher>> load(String token) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Teacher', body: jsonEncode({"token": token}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Teacher>((data) => Teacher.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> save(Teacher obj) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Teacher', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(obj.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> delete(Teacher obj) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Teacher', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': obj.token,
+       'id': obj.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+  Future<List<TeacherTopic>> loadTopic(String token, int peop) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Teacher/Topics', body: jsonEncode({"token": token, "id": peop}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<TeacherTopic>((data) => TeacherTopic.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+}
 
 
 

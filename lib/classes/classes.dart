@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:pama/module/consts.dart';
 
 class F2Key{
   int id;
@@ -651,63 +652,9 @@ class EmpFamily{
       return json;
   }
 
-  String kindName(){
-    switch (this.kind) {
-			case 1:
-        return "پدر";
-        break;
-			case 2:
-        return "مادر";
-        break;
-			case 3:
-        return "برادر";
-        break;
-			case 4:
-        return "خواهر";
-        break;
-			case 5:
-        return "همسر";
-        break;
-			case 6:
-        return "فرزند";
-        break;
-    }
-    return "";
-  }
-  String isargariName(){
-    if (this.isargari == 1)
-      return "دارد";
-    return "ندارد";
-  }
-  String educationName(){
-    switch (this.education) {
-			case 1:
-        return "زیر دیپلم";
-        break;
-			case 2:
-        return "دیپلم";
-        break;
-			case 3:
-        return "دانشجو";
-        break;
-			case 4:
-        return "کاردانی";
-        break;
-			case 5:
-        return "کارشناسی";
-        break;
-			case 6:
-        return "کارشناسی ارشد";
-        break;
-			case 7:
-        return "دکتری";
-        break;
-			case 8:
-        return "فوق دکتری";
-        break;
-    }
-    return "";
-  }
+  String kindName()=>fnRelationName(this.kind);
+  String isargariName()=>fnIsargariName(this.isargari);
+  String educationName()=>fnEducationName(this.education);
 }
 
 class Director{
@@ -841,63 +788,9 @@ class DrtFamily{
 
      return json;
   }
-  String kindName(){
-    switch (this.kind) {
-			case 1:
-        return "پدر";
-        break;
-			case 2:
-        return "مادر";
-        break;
-			case 3:
-        return "برادر";
-        break;
-			case 4:
-        return "خواهر";
-        break;
-			case 5:
-        return "همسر";
-        break;
-			case 6:
-        return "فرزند";
-        break;
-    }
-    return "";
-  }
-  String isargariName(){
-    if (this.isargari == 1)
-      return "دارد";
-    return "ندارد";
-  }
-  String educationName(){
-    switch (this.education) {
-			case 1:
-        return "زیر دیپلم";
-        break;
-			case 2:
-        return "دیپلم";
-        break;
-			case 3:
-        return "دانشجو";
-        break;
-			case 4:
-        return "کاردانی";
-        break;
-			case 5:
-        return "کارشناسی";
-        break;
-			case 6:
-        return "کارشناسی ارشد";
-        break;
-			case 7:
-        return "دکتری";
-        break;
-			case 8:
-        return "فوق دکتری";
-        break;
-    }
-    return "";
-  }
+  String kindName()=>fnRelationName(this.kind);
+  String isargariName()=>fnIsargariName(this.isargari);
+  String educationName()=>fnEducationName(this.education);
 }
 
 class Bank{
@@ -2056,16 +1949,16 @@ class Attach{
 class Topic{
     int id;
     String title;
-    String teachers;
+    List<String> teachers;
     bool edit;
     String token;
  
-    Topic({this.id,this.title, this.token, this.edit=false});
+    Topic({this.id,this.title, this.token, this.edit=false, this.teachers});
  
     Topic.fromJson(Map<String, dynamic> json):
         id = json['id'],
         title = json['title'],
-        teachers = json['teachers'],
+        teachers = json['teachers'].toString().trim().split(','),
         edit = false;
  
     Map<String, dynamic> toJson(){
@@ -2073,9 +1966,122 @@ class Topic{
         data['id'] = this.id;
         data['title'] = this.title;
         data['token'] = this.token;
-        data['teachers'] = this.teachers;
+        // data['teachers'] = this.teachers;
         return data;
     }
+}
+
+class TopicTeacher{
+    bool valid;
+    int topicid;
+    int id;
+    String name;
+    String family;
+    bool teacheract;
+    bool active;
+    String token;
+ 
+    TopicTeacher({this.valid,this.topicid,this.id,this.name,this.family,this.teacheract,this.active, this.token});
+ 
+    TopicTeacher.fromJson(Map<String, dynamic> json):
+        valid = json['valid'] == 1,
+        topicid = json['topicid'],
+        id = json['id'],
+        name = json['name'],
+        family = json['family'],
+        teacheract = json['teacheract'] == 1,
+        active = json['active'] == 1;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['valid'] = this.valid ? 1 : 0;
+        data['topicid'] = this.topicid;
+        data['id'] = this.id;
+        data['name'] = this.name;
+        data['family'] = this.family;
+        data['teacheract'] = this.teacheract ? 1 : 0;
+        data['active'] = this.active ? 1 : 0;
+        data['token'] = this.token;
+        return data;
+    }
+}
+
+class TeacherTopic{
+    int valid;
+    int peopid;
+    int id;
+    String title;
+    int active;
+    String token;
+ 
+    TeacherTopic({this.valid,this.peopid,this.id,this.title,this.active, this.token});
+ 
+    TeacherTopic.fromJson(Map<String, dynamic> json):
+        valid = json['valid'],
+        peopid = json['peopid'],
+        id = json['id'],
+        title = json['title'],
+        active = json['active'];
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['peopid'] = this.peopid;
+        data['topicid'] = this.id;
+        data['active'] = this.active;
+        data['token'] = this.token;
+        return data;
+    }
+}
+
+class Teacher{
+    int id;
+    String nationalid;
+    String name;
+    String family;
+    int education;
+    String mobile;
+    bool teacheract;
+    String teacherbegindate;
+    String teacherenddate;
+    String shaba;
+    String note;
+    String token;
+    bool edit;
+ 
+    Teacher({this.id,this.nationalid,this.name,this.family,this.education,this.mobile,this.teacheract,this.teacherbegindate,this.teacherenddate,this.shaba,this.note, this.token, this.edit=false});
+ 
+    Teacher.fromJson(Map<String, dynamic> json):
+        id = json['id'],
+        nationalid = json['nationalid'],
+        name = json['name'],
+        family = json['family'],
+        education = json['education'],
+        mobile = json['mobile'],
+        teacheract = json['teacheract']==1,
+        teacherbegindate = json['teacherbegindate'],
+        teacherenddate = json['teacherenddate'],
+        shaba = json['shaba'],
+        note = json['note'],
+        edit = false;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['id'] = this.id;
+        data['nationalid'] = this.nationalid;
+        data['name'] = this.name;
+        data['family'] = this.family;
+        data['education'] = this.education;
+        data['mobile'] = this.mobile;
+        data['teacheract'] = this.teacheract ? 1 : 0;
+        data['teacherbegindate'] = this.teacherbegindate;
+        data['teacherenddate'] = this.teacherenddate;
+        data['shaba'] = this.shaba;
+        data['note'] = this.note;
+        data['token'] = this.token;
+        return data;
+    }
+
+    String educationName()=>fnEducationName(this.education);
 }
 
 
