@@ -1994,12 +1994,8 @@ class TopicTeacher{
  
     Map<String, dynamic> toJson(){
         final Map<String, dynamic> data = new Map<String, dynamic>();
-        data['valid'] = this.valid ? 1 : 0;
         data['topicid'] = this.topicid;
         data['id'] = this.id;
-        data['name'] = this.name;
-        data['family'] = this.family;
-        data['teacheract'] = this.teacheract ? 1 : 0;
         data['active'] = this.active ? 1 : 0;
         data['token'] = this.token;
         return data;
@@ -2007,27 +2003,27 @@ class TopicTeacher{
 }
 
 class TeacherTopic{
-    int valid;
+    bool valid;
     int peopid;
     int id;
     String title;
-    int active;
+    bool active;
     String token;
  
     TeacherTopic({this.valid,this.peopid,this.id,this.title,this.active, this.token});
  
     TeacherTopic.fromJson(Map<String, dynamic> json):
-        valid = json['valid'],
+        valid = json['valid']==1,
         peopid = json['peopid'],
         id = json['id'],
         title = json['title'],
-        active = json['active'];
+        active = json['active']==1;
  
     Map<String, dynamic> toJson(){
         final Map<String, dynamic> data = new Map<String, dynamic>();
         data['peopid'] = this.peopid;
         data['topicid'] = this.id;
-        data['active'] = this.active;
+        data['active'] = this.active ? 1 : 0;
         data['token'] = this.token;
         return data;
     }
@@ -2044,11 +2040,11 @@ class Teacher{
     String teacherbegindate;
     String teacherenddate;
     String shaba;
-    String note;
+    String teachernote;
     String token;
     bool edit;
  
-    Teacher({this.id,this.nationalid,this.name,this.family,this.education,this.mobile,this.teacheract,this.teacherbegindate,this.teacherenddate,this.shaba,this.note, this.token, this.edit=false});
+    Teacher({this.id,this.nationalid,this.name,this.family,this.education,this.mobile,this.teacheract=true,this.teacherbegindate='',this.teacherenddate='',this.shaba='',this.teachernote='', this.token, this.edit=false});
  
     Teacher.fromJson(Map<String, dynamic> json):
         id = json['id'],
@@ -2061,22 +2057,17 @@ class Teacher{
         teacherbegindate = json['teacherbegindate'],
         teacherenddate = json['teacherenddate'],
         shaba = json['shaba'],
-        note = json['note'],
+        teachernote = json['teachernote'],
         edit = false;
  
     Map<String, dynamic> toJson(){
         final Map<String, dynamic> data = new Map<String, dynamic>();
         data['id'] = this.id;
-        data['nationalid'] = this.nationalid;
-        data['name'] = this.name;
-        data['family'] = this.family;
-        data['education'] = this.education;
-        data['mobile'] = this.mobile;
         data['teacheract'] = this.teacheract ? 1 : 0;
         data['teacherbegindate'] = this.teacherbegindate;
         data['teacherenddate'] = this.teacherenddate;
         data['shaba'] = this.shaba;
-        data['note'] = this.note;
+        data['teachernote'] = this.teachernote;
         data['token'] = this.token;
         return data;
     }

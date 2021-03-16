@@ -46,6 +46,7 @@ class FmPeople extends StatelessWidget {
                   padding: EdgeInsets.all(15.0),
                   child: Center(
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         GridTextField(hint: 'کد ملی', initialValue: _data['nationalid'], onChange: (val) => _data['nationalid'] = val, autofocus: true,),
                         GridTextField(hint: 'نام و نام خانوادگی', initialValue: _data['family'], onChange: (val) => _data['family'] = val,),
