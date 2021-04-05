@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:pama/classes/Repository.dart';
-import 'package:pama/classes/classes.dart';
-import 'package:pama/module/functions.dart';
+import '../../classes/Repository.dart';
+import '../../classes/classes.dart';
+import '../../module/functions.dart';
 import 'package:rxdart/rxdart.dart';
 
 class TeacherModel{
