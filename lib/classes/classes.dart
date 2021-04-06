@@ -2075,5 +2075,123 @@ class Teacher{
     String educationName()=>fnEducationName(this.education);
 }
 
+class Prcstep{
+    int processid;
+    int id;
+    bool active;
+    String title;
+    int kind;
+    int length;
+    bool startprevend;
+    bool restart;
+    bool sms;
+    bool err27;
+    String token;
+ 
+    Prcstep({this.processid,this.id,this.active,this.title,this.kind,this.length,this.startprevend,this.restart,this.sms,this.err27, this.token});
+ 
+    Prcstep.fromJson(Map<String, dynamic> json):
+        processid = json['processid'],
+        id = json['id'],
+        active = json['active'] == 1,
+        title = json['title'],
+        kind = json['kind'],
+        length = json['length'],
+        startprevend = json['startprevend'] == 1,
+        restart = json['restart'] == 1,
+        sms = json['sms'] == 1,
+        err27 = json['err27'] == 1;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['processid'] = this.processid;
+        data['id'] = this.id;
+        data['active'] = this.active ? 1 : 0;
+        data['title'] = this.title;
+        data['kind'] = this.kind;
+        data['length'] = this.length;
+        data['startprevend'] = this.startprevend ? 1 : 0;
+        data['restart'] = this.restart ? 1 : 0;
+        data['sms'] = this.sms ? 1 : 0;
+        data['err27'] = this.err27 ? 1 : 0;
+        data['token'] = this.token;
+        return data;
+    }
+}
 
+class Process{
+    int id;
+    bool active;
+    String title;
+    int kind;
+    bool recon;
+    bool allcmp;
+    int duration;
+    bool edit;
+    bool showDetail;
+    String token;
+ 
+    Process({this.id,this.active,this.title,this.kind,this.recon,this.allcmp, this.token, this.edit=false, this.duration=0, this.showDetail=false});
+ 
+    Process.fromJson(Map<String, dynamic> json):
+        id = json['id'],
+        active = json['active'] == 1,
+        title = json['title'],
+        kind = json['kind'],
+        duration = json['duration'],
+        recon = json['recon'] == 1,
+        allcmp = json['allcmp'] == 1,
+        showDetail = false,
+        edit = false;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['id'] = this.id;
+        data['active'] = this.active ? 1 : 0;
+        data['title'] = this.title;
+        data['kind'] = this.kind;
+        data['recon'] = this.recon ? 1 : 0;
+        data['allcmp'] = this.allcmp ? 1 : 0;
+        data['token'] = this.token;
+        return data;
+    }
 
+    String kindName(){
+      switch (this.kind) {
+        case 1:
+          return 'صدور';
+          break;
+        case 2:
+          return 'تمدید';
+          break;
+        case 3:
+          return 'تغییر نشانی';
+          break;
+        case 4:
+          return 'تغییر مالکیت';
+          break;
+        case 5:
+          return 'تغییر رسته';
+          break;
+        case 6:
+          return 'معرفی/حذف مباشز';
+          break;
+        case 7:
+          return 'مغرفی/حذف شریک';
+          break;
+        case 8:
+          return 'تغییر درجه عضویت';
+          break;
+        case 9:
+          return 'تعطیلی موقت';
+          break;
+        case 1:
+          return '=بازگشایی';
+          break;
+        case 1:
+          return '=ابطال';
+          break;
+      }
+      return "";
+    }
+}

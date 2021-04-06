@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pama/forms/Process/Process.dart';
 import 'package:pama/forms/Teacher/Teacher.dart';
 import 'package:pama/forms/Topic/Topic.dart';
 import '../Income/Income.dart';
@@ -61,6 +62,7 @@ class Dashboard extends StatelessWidget {
                      :context.watch<ThemeManager>().menuitem == 9 ? FmIncome() 
                      :context.watch<ThemeManager>().menuitem == 10 ? FmTopic() 
                      :context.watch<ThemeManager>().menuitem == 11 ? FmTeacher() 
+                     :context.watch<ThemeManager>().menuitem == 12 ? FmProcess() 
                      :Text('در دست طراحی می باشد', textAlign: TextAlign.center, style: titleStyle(),)
               )
             ],
@@ -99,6 +101,7 @@ class Dashboard extends StatelessWidget {
 
                   this.user.admin ? ListTile(title: Text('سرفصل های آموزشی'), onTap: (){context.read<ThemeManager>().setMenuItem(10); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 10,) : Container(),
                   this.user.admin ? ListTile(title: Text('اساتید'), onTap: (){context.read<ThemeManager>().setMenuItem(11); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 11,) : Container(),
+                  this.user.admin ? ListTile(title: Text('فرآیند ها'), onTap: (){context.read<ThemeManager>().setMenuItem(12); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 12,) : Container(),
 
                   this.user.admin ? ListTile(title: Text('گروه های کاربری'), onTap: (){context.read<ThemeManager>().setMenuItem(7); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 7,) : Container(),
                   this.user.admin ? ListTile(title: Text('تنظیمات'), onTap: (){context.read<ThemeManager>().setMenuItem(16); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 16,) : Container(),

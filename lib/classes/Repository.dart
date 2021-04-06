@@ -1367,5 +1367,35 @@ class TeacherRepository{
   }
 }
 
+class ProcessRepository{
+  Future<List<Process>> load(String token) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Process', body: jsonEncode({"token": token}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Process>((data) => Process.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> save(Process obj) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Process', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(obj.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> delete(Process obj) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Process', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': obj.token,
+       'id': obj.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+}
 
 
