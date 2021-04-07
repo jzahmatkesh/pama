@@ -2087,8 +2087,9 @@ class Prcstep{
     bool sms;
     bool err27;
     String token;
+    bool edit;
  
-    Prcstep({this.processid,this.id,this.active,this.title,this.kind,this.length,this.startprevend,this.restart,this.sms,this.err27, this.token});
+    Prcstep({this.processid,this.id,this.active,this.title,this.kind,this.length,this.startprevend,this.restart,this.sms,this.err27, this.token, this.edit=false});
  
     Prcstep.fromJson(Map<String, dynamic> json):
         processid = json['processid'],
@@ -2100,7 +2101,8 @@ class Prcstep{
         startprevend = json['startprevend'] == 1,
         restart = json['restart'] == 1,
         sms = json['sms'] == 1,
-        err27 = json['err27'] == 1;
+        err27 = json['err27'] == 1,
+        edit = false;
  
     Map<String, dynamic> toJson(){
         final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -2116,6 +2118,27 @@ class Prcstep{
         data['err27'] = this.err27 ? 1 : 0;
         data['token'] = this.token;
         return data;
+    }
+
+    String kindName(){
+      switch (this.kind) {
+        case 1:
+          return 'مدرک';
+          break;
+        case 2:
+          return 'مدیره';
+          break;
+        case 3:
+          return 'بازرسی';
+          break;
+        case 4:
+          return 'حسابداری';
+          break;
+        case 5:
+          return 'آموزش';
+          break;
+      }
+      return "";
     }
 }
 
@@ -2185,13 +2208,68 @@ class Process{
         case 9:
           return 'تعطیلی موقت';
           break;
-        case 1:
+        case 10:
           return '=بازگشایی';
           break;
-        case 1:
+        case 11:
           return '=ابطال';
           break;
       }
       return "";
     }
+}
+
+class PrcStepDocument{
+  int processid;
+  int stepid;
+  int documentid;
+  String documentname;
+  int kind;
+  bool edit;
+  String token;
+
+  PrcStepDocument({this.processid,this.stepid,this.documentid,this.documentname,this.kind, this.token, this.edit=false});
+
+  PrcStepDocument.fromJson(Map<String, dynamic> json):
+      processid = json['processid'],
+      stepid = json['stepid'],
+      documentid = json['documentid'],
+      documentname = json['documentname'],
+      kind = json['kind'],
+      edit = false;
+
+  Map<String, dynamic> toJson(){
+      final Map<String, dynamic> data = new Map<String, dynamic>();
+      data['processid'] = this.processid;
+      data['stepid'] = this.stepid;
+      data['documentid'] = this.documentid;
+      data['documentname'] = this.documentname;
+      data['kind'] = this.kind;
+      data['token'] = this.token;
+      return data;
+  }
+
+  String kindName(){
+    switch (this.kind) {
+        case 1:
+          return 'فرد صنفی';
+          break;
+        case 2:
+          return 'پروانه کسب';
+          break;
+        case 3:
+          return 'واحد صنفی';
+          break;
+        case 4:
+          return 'شریک';
+          break;
+        case 5:
+          return 'مباشر';
+          break;
+        case 6:
+          return 'کارکنان';
+          break;
+    }
+    return "";
+  }
 }

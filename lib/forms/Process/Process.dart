@@ -26,7 +26,7 @@ class FmProcess extends StatelessWidget {
             ),
             GridCaption(obj: [
               Text('فعال', style: gridFieldStyle()),
-              'عنوان فرآیند',
+              Expanded(flex: 2, child: Text('عنوان فرآیند', style: gridFieldStyle(), textAlign: TextAlign.center,)),
               'نوع',
               'مدت مجاز',
               SizedBox(width: 10),  
@@ -37,7 +37,7 @@ class FmProcess extends StatelessWidget {
             ], endbuttons: 1),
             Expanded(
               child: StreamBuilder(
-                stream: _bloc.topicStream$,
+                stream: _bloc.processStream$,
                 builder: (BuildContext context, AsyncSnapshot<ProcessModel> snap){
                   if (snap.hasData)
                     if (snap.data.status == Status.error)
@@ -52,9 +52,9 @@ class FmProcess extends StatelessWidget {
                                 ProcessRow(snap.data.rows[idx], idx),
                                 Card(
                                   child: Container(
-                                    height: screenHeight(context) * 0.3,
+                                    height: screenHeight(context) * 0.5,
                                     width: double.infinity,
-                                    child: ProcessStep(),
+                                    child: ProcessStep(process: snap.data.rows[idx]),
                                   ),
                                 )
                               ],
@@ -87,8 +87,8 @@ class ProcessRow extends StatelessWidget {
         Switch(value: obj.active, onChanged: (val)=>_bloc.changeActive(context, obj.id, val)),
         SizedBox(width: 10),
         obj.edit
-          ? Expanded(child: GridTextField(hint: 'عنوان فرآیند', initialValue: obj.title, autofocus: true, onChange: (val)=>obj.title=val))
-          : '${obj.title}',
+          ? Expanded(flex: 2, child: GridTextField(hint: 'عنوان فرآیند', initialValue: obj.title, autofocus: true, onChange: (val)=>obj.title=val))
+          : Expanded(flex: 2, child: Text('${obj.title}')),
         obj.edit
           ? Expanded(child: MultiChooseItem(
             val: obj.kind, 
@@ -128,11 +128,140 @@ class ProcessRow extends StatelessWidget {
 }
 
 class ProcessStep extends StatelessWidget {
+  final Process process;
+  ProcessStep({@required this.process});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      
+      child: Column(
+        children: [
+          FormHeader(
+            title: 'مراحل فرآیند', 
+            btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.newStep(context, this.process.id)), 
+            btnLeft: MyIconButton(type: ButtonType.exit, onPressed: ()=>_bloc.loadSteps(context, this.process.id))
+          ),
+          GridCaption(obj: [
+            Text('فعال', style: gridFieldStyle()),
+            'عنوان مرحله',
+            'نوع فعالیت',
+            'مدت مجاز',
+          ], endbuttons: 6),
+          Expanded(
+            child: StreamBuilder(
+              stream: _bloc.prcStepStream$,
+              builder: (BuildContext context, AsyncSnapshot<PrcStepModel> snap){
+                if (snap.hasData)
+                  if (snap.data.status == Status.error)
+                    return ErrorInGrid(snap.data.msg);
+                  else if (snap.data.status == Status.loaded)
+                    return ListView.builder(
+                      itemCount: snap.data.rows.length,
+                      itemBuilder: (context, idx){
+                        Prcstep _step = snap.data.rows[idx];
+                        return MyRow(
+                          onDoubleTap: ()=>_bloc.editStep(_step.id),
+                          children: [
+                            Switch(value: _step.active, onChanged: (val)=>_bloc.stepActive(context, _step.id, val)),
+                            _step.edit 
+                              ? Expanded(child: GridTextField(hint: 'عنوان مرحله', initialValue: '${_step.title}', onChange: (val)=>_step.title=val))
+                              : '${_step.title}',
+                            _step.edit
+                              ? Expanded(
+                                child: MultiChooseItem(
+                                  val: _step.kind, 
+                                  items: [
+                                    {'id': 1, 'title': 'مدرک'},
+                                    {'id': 2, 'title': 'هیت مدیره'},
+                                    {'id': 3, 'title': 'بازرسی'},
+                                    {'id': 4, 'title': 'حسابداری'},
+                                    {'id': 5, 'title': 'آموزش'},
+                                  ], 
+                                  hint: 'نوع فعالیت', 
+                                  onChange: (val)=>_bloc.stepKind(_step.id, val)
+                                )
+                              )
+                              : '${_step.kindName()}',
+                            _step.edit 
+                              ? Expanded(child: GridTextField(hint: 'مدت مجاز مرحله', initialValue: '${_step.length}', onChange: (val)=>_step.length=int.tryParse(val)))
+                              : '${_step.length}',
+                            Tooltip(message: 'آغاز با اتمام مرحله قبل', child: Switch(value: _step.startprevend, onChanged: (val)=>_bloc.stepstartprevend(context, _step.id, val))),
+                            Tooltip(message: 'شروع مجدد بعد از انقضاء', child: Switch(value: _step.restart, onChanged: (val)=>_bloc.steprestart(context, _step.id, val))),
+                            Tooltip(message: 'ارسال پیامک', child: Switch(value: _step.sms, onChanged: (val)=>_bloc.stepsms(context, _step.id, val))),
+                            Tooltip(message: 'توقف اخطار ماده 27', child: Switch(value: _step.err27, onChanged: (val)=>_bloc.steperr27(context, _step.id, val))),
+                            _step.edit
+                              ? SizedBox(width: 35)
+                              : MyIconButton(type: ButtonType.other, icon: Icon(Icons.category_outlined), hint: 'آپلود اطلاعات', onPressed: ()=>showStepDetail(context, process, _step)),
+                            _step.edit
+                              ? MyIconButton(type: ButtonType.save, onPressed: ()=>_bloc.saveStep(context, _step))
+                              : MyIconButton(type: ButtonType.del, onPressed: ()=>_bloc.delStep(context, _step)),
+                          ]
+                        );
+                      }
+                    );
+                  return Center(child: CupertinoActivityIndicator());
+              },
+            )
+          )
+        ],
+      ),      
     );
   }
 }
 
+showStepDetail(BuildContext context, Process proc, Prcstep obj){
+  if (obj.kind == 1){
+    _bloc.loadStepDocuemnt(context, proc.id, obj.id);
+    showFormAsDialog(context: context, form: PnDocument(process: proc.title, step: obj.title));
+  }
+}
+
+class PnDocument extends StatelessWidget {
+  final String step;
+  final String process;
+  PnDocument({@required this.process, @required this.step});
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Container(
+        width: screenWidth(context) * 0.65,
+        child: Column(
+          children: [
+            FormHeader(title: 'مدارک  $step $process', btnRight: MyIconButton(type: ButtonType.add, onPressed: (){})),
+            GridCaption(obj: [
+              'عنوان مدرک',
+              'وابستگی'
+            ]),
+            Expanded(
+              child: StreamBuilder<PrcStepDocumentModel>(
+                stream: _bloc.prcStepDocuemtnStream$,
+                builder: (context, snap){
+                  if (snap.hasData)
+                    if (snap.data.status == Status.error)
+                      return ErrorInGrid(snap.data.msg);
+                    else if (snap.data.status == Status.loaded)
+                      return ListView.builder(
+                        itemCount: snap.data.rows.length,
+                        itemBuilder: (context, idx){
+                          PrcStepDocument _doc = snap.data.rows[idx];
+                          return MyRow(
+                            onDoubleTap: (){},
+                            children: [
+                              Switch(value: false, onChanged: (val){}),
+                              '${_doc.documentname}',
+                              '${_doc.kindName()}',
+                            ]
+                          );
+                        }
+                      );
+                  return Center(child: CupertinoActivityIndicator());
+                }
+              )
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
