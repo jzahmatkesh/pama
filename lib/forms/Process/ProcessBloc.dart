@@ -318,5 +318,57 @@ class ProcessBloc{
       _prcStepDocuemtnBloc.add(PrcStepDocumentModel(status: Status.error, msg: '$e'));
     }
   }
-
+  Future<bool> saveStepDocument(BuildContext context, PrcStepDocument obj) async{
+    try{
+      showWaiting(context);
+      obj.token = readToken(context);
+      obj.id = await _repo.saveStepDocument(obj);
+      obj.edit = false;
+      _prcStepDocuemtnBloc.add(_prcStepDocuemtnBloc.value);
+      hideWaiting(context);
+      return true;
+    }
+    catch(e){
+      hideWaiting(context);
+      analyzeError(context, '$e');
+      return false;
+    }
+  }
+  searchDocument(String val){
+    _prcStepDocuemtnBloc.value.rows.forEach((element) {element.search = element.documentname.contains(val);});
+    _prcStepDocuemtnBloc.add(_prcStepDocuemtnBloc.value);
+  }
+  changeStepDocumentKind(int id, int val){
+    _prcStepDocuemtnBloc.value.rows.forEach((element) {
+      if (element.id == id)
+        element.kind = val;
+    });
+    _prcStepDocuemtnBloc.add(_prcStepDocuemtnBloc.value);
+  }
+  insetStepDocument(int processid, int stepid){
+    _prcStepDocuemtnBloc.value.rows.forEach((element)=>element.edit=false);
+    _prcStepDocuemtnBloc.value.rows.insert(0, PrcStepDocument(processid: processid, stepid: stepid, id: 0, documentid: 0, documentname: '', edit: true));
+    _prcStepDocuemtnBloc.add(_prcStepDocuemtnBloc.value);
+  }
+  editStepDocument(int id){
+    _prcStepDocuemtnBloc.value.rows.forEach((element)=>element.edit=element.id==id);
+    _prcStepDocuemtnBloc.add(_prcStepDocuemtnBloc.value);
+  }
+  delStepDocumetn(BuildContext context, PrcStepDocument obj) async{
+    confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف ${obj.documentname} می باشید؟', yesclick: () async{
+      try{
+        showWaiting(context);
+        obj.token = readToken(context);
+        await _repo.delStepDocument(obj);
+        _prcStepDocuemtnBloc.value.rows.removeWhere((element)=> element.id==obj.id);
+        _prcStepDocuemtnBloc.add(_prcStepDocuemtnBloc.value);
+        hideWaiting(context);
+        Navigator.pop(context);
+      }
+      catch(e){
+        hideWaiting(context);
+        analyzeError(context, '$e');
+      }
+    });
+  }
 }

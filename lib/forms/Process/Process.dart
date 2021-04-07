@@ -212,12 +212,12 @@ class ProcessStep extends StatelessWidget {
 showStepDetail(BuildContext context, Process proc, Prcstep obj){
   if (obj.kind == 1){
     _bloc.loadStepDocuemnt(context, proc.id, obj.id);
-    showFormAsDialog(context: context, form: PnDocument(process: proc.title, step: obj.title));
+    showFormAsDialog(context: context, form: PnDocument(process: proc.title, step: obj));
   }
 }
 
 class PnDocument extends StatelessWidget {
-  final String step;
+  final Prcstep step;
   final String process;
   PnDocument({@required this.process, @required this.step});
   @override
@@ -228,7 +228,11 @@ class PnDocument extends StatelessWidget {
         width: screenWidth(context) * 0.65,
         child: Column(
           children: [
-            FormHeader(title: 'مدارک  $step $process', btnRight: MyIconButton(type: ButtonType.add, onPressed: (){})),
+            FormHeader(title: 'مدارک  ${step.title} $process', btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.insetStepDocument(step.processid, step.id))),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 3),
+              child: GridTextField(hint: 'جستجو ...', onChange: (val)=>_bloc.searchDocument(val)),
+            ),
             GridCaption(obj: [
               'عنوان مدرک',
               'وابستگی'
@@ -245,14 +249,34 @@ class PnDocument extends StatelessWidget {
                         itemCount: snap.data.rows.length,
                         itemBuilder: (context, idx){
                           PrcStepDocument _doc = snap.data.rows[idx];
-                          return MyRow(
-                            onDoubleTap: (){},
-                            children: [
-                              Switch(value: false, onChanged: (val){}),
-                              '${_doc.documentname}',
-                              '${_doc.kindName()}',
-                            ]
-                          );
+                          return _doc.search
+                            ? MyRow(
+                                onDoubleTap: ()=>_bloc.editStepDocument(_doc.id),
+                                children: [
+                                  _doc.edit
+                                    ? Expanded(child: ForeignKeyField(hint: 'عنوان مدرک', initialValue: {'id': _doc.documentid, 'name': _doc.documentname}, f2key: 'Document', onChange: (val){_doc.documentid=val['id'];_doc.documentname=val['name'];}))
+                                    : '${_doc.documentname}',
+                                  _doc.edit
+                                    ? Expanded(child: MultiChooseItem(
+                                        val: _doc.kind == 0 ? 1 : _doc.kind, 
+                                        items: [
+                                          {'id': 1, 'title': 'فرد صنفی'},
+                                          {'id': 2, 'title': 'پروانه کسب'},
+                                          {'id': 3, 'title': 'واحد صنفی'},
+                                          {'id': 4, 'title': 'شریک'},
+                                          {'id': 5, 'title': 'مباشر'},
+                                          {'id': 6, 'title': 'کارکنان'},
+                                        ], 
+                                        hint: 'وابستگی', 
+                                        onChange: (val)=>_bloc.changeStepDocumentKind(_doc.id, val)
+                                      ))
+                                    : '${_doc.kindName()}',
+                                  _doc.edit
+                                    ? MyIconButton(type: ButtonType.save, onPressed: ()=>_bloc.saveStepDocument(context, _doc))
+                                    : MyIconButton(type: ButtonType.del, onPressed: ()=>_bloc.delStepDocumetn(context, _doc))
+                                ]
+                              )
+                            : Container();
                         }
                       );
                   return Center(child: CupertinoActivityIndicator());

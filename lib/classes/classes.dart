@@ -2222,26 +2222,31 @@ class Process{
 class PrcStepDocument{
   int processid;
   int stepid;
+  int id;
   int documentid;
   String documentname;
   int kind;
   bool edit;
+  bool search;
   String token;
 
-  PrcStepDocument({this.processid,this.stepid,this.documentid,this.documentname,this.kind, this.token, this.edit=false});
+  PrcStepDocument({this.processid,this.stepid,this.id,this.documentid,this.documentname,this.kind, this.token, this.edit=false, this.search=true});
 
   PrcStepDocument.fromJson(Map<String, dynamic> json):
       processid = json['processid'],
       stepid = json['stepid'],
+      id = json['id'],
       documentid = json['documentid'],
       documentname = json['documentname'],
       kind = json['kind'],
-      edit = false;
+      edit = false,
+      search = true;
 
   Map<String, dynamic> toJson(){
       final Map<String, dynamic> data = new Map<String, dynamic>();
       data['processid'] = this.processid;
       data['stepid'] = this.stepid;
+      data['id'] = this.id;
       data['documentid'] = this.documentid;
       data['documentname'] = this.documentname;
       data['kind'] = this.kind;
