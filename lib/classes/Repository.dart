@@ -1457,6 +1457,37 @@ class ProcessRepository{
       return true;
     throw Exception(_data['msg']);
   }
+
+  Future<List<PrcStepIncome>> loadStepIncome(String token, int processid, int stepid) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Process/Step/Income', body: jsonEncode({"token": token, "processid": processid, "stepid": stepid}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<PrcStepIncome>((data) => PrcStepIncome.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> saveStepIncome(PrcStepIncome obj) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Process/Step/Income', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(obj.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> delStepIncome(PrcStepIncome obj) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Process/Step/Income', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': obj.token,
+       'processid': obj.processid.toString(),
+       'stepid': obj.stepid.toString(),
+       'incomeid': obj.incomeid.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
 }
 
 

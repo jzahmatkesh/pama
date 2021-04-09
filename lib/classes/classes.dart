@@ -2278,3 +2278,29 @@ class PrcStepDocument{
     return "";
   }
 }
+
+class PrcStepIncome{
+    int processid;
+    int stepid;
+    int incomeid;
+    String incomename;
+    String token;
+ 
+    PrcStepIncome({this.processid,this.stepid,this.incomeid,this.incomename, this.token});
+ 
+    PrcStepIncome.fromJson(Map<String, dynamic> json):
+        processid = json['processid'],
+        stepid = json['stepid'],
+        incomeid = json['incomeid'],
+        incomename = json['incomename'];
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['processid'] = this.processid;
+        data['stepid'] = this.stepid;
+        data['incomeid'] = this.incomeid;
+        data['incomename'] = this.incomename;
+        data['token'] = this.token;
+        return data;
+    }
+}

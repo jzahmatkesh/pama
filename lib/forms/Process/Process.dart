@@ -228,7 +228,7 @@ class PnDocument extends StatelessWidget {
         width: screenWidth(context) * 0.65,
         child: Column(
           children: [
-            FormHeader(title: 'مدارک  ${step.title} $process', btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.insetStepDocument(step.processid, step.id))),
+            FormHeader(title: 'مدارک  ${step.title} $process', btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.insertStepDocument(step.processid, step.id))),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 24, vertical: 3),
               child: GridTextField(hint: 'جستجو ...', onChange: (val)=>_bloc.searchDocument(val)),
@@ -289,3 +289,58 @@ class PnDocument extends StatelessWidget {
     );
   }
 }
+
+class PnIncome extends StatelessWidget {
+  final Prcstep step;
+  final String process;
+  PnIncome({@required this.process, @required this.step});
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Container(
+        width: screenWidth(context) * 0.65,
+        child: Column(
+          children: [
+            FormHeader(title: 'درآمدهای  ${step.title} $process', btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.insertStepIncome(step.processid, step.id))),
+            // Container(
+            //   padding: EdgeInsets.symmetric(horizontal: 24, vertical: 3),
+            //   child: GridTextField(hint: 'جستجو ...', onChange: (val)=>_bloc.searchIncome(val)),
+            // ),
+            GridCaption(obj: [
+              'عنوان درآمد',
+            ]),
+            Expanded(
+              child: StreamBuilder<PrcStepIncomeModel>(
+                stream: _bloc.prcStepIncomeStream$,
+                builder: (context, snap){
+                  if (snap.hasData)
+                    if (snap.data.status == Status.error)
+                      return ErrorInGrid(snap.data.msg);
+                    else if (snap.data.status == Status.loaded)
+                      return ListView.builder(
+                        itemCount: snap.data.rows.length,
+                        itemBuilder: (context, idx){
+                          PrcStepIncome _doc = snap.data.rows[idx];
+                          return MyRow(
+                            children: [
+                              _doc.incomeid == 0
+                                ? Expanded(child: ForeignKeyField(hint: 'عنوان درآمد', initialValue: {'id': _doc.incomeid, 'name': _doc.incomename}, f2key: 'Income', onChange: (val){_doc.incomeid=val['id'];_doc.incomename=val['name'];}))
+                                : '${_doc.incomename}',
+                              MyIconButton(type: ButtonType.del, onPressed: ()=>_bloc.delStepIncome(context, _doc))
+                            ]
+                          );
+                        }
+                      );
+                  return Center(child: CupertinoActivityIndicator());
+                }
+              )
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+

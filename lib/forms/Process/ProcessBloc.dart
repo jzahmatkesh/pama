@@ -25,6 +25,13 @@ class PrcStepDocumentModel{
 
   PrcStepDocumentModel({@required this.status, this.rows, this.msg});
 }
+class PrcStepIncomeModel{
+  Status status;
+  List<PrcStepIncome> rows;
+  String msg;
+
+  PrcStepIncomeModel({@required this.status, this.rows, this.msg});
+}
 
 class ProcessBloc{
   ProcessRepository _repo = new ProcessRepository();
@@ -37,6 +44,9 @@ class ProcessBloc{
 
   BehaviorSubject<PrcStepDocumentModel> _prcStepDocuemtnBloc = BehaviorSubject<PrcStepDocumentModel>();
   Stream<PrcStepDocumentModel> get prcStepDocuemtnStream$ => _prcStepDocuemtnBloc.stream;
+
+  BehaviorSubject<PrcStepIncomeModel> _prcStepIncomeBloc = BehaviorSubject<PrcStepIncomeModel>();
+  Stream<PrcStepIncomeModel> get prcStepIncomeStream$ => _prcStepIncomeBloc.stream;
 
   loaddata(BuildContext context) async{
     try{
@@ -345,7 +355,7 @@ class ProcessBloc{
     });
     _prcStepDocuemtnBloc.add(_prcStepDocuemtnBloc.value);
   }
-  insetStepDocument(int processid, int stepid){
+  insertStepDocument(int processid, int stepid){
     _prcStepDocuemtnBloc.value.rows.forEach((element)=>element.edit=false);
     _prcStepDocuemtnBloc.value.rows.insert(0, PrcStepDocument(processid: processid, stepid: stepid, id: 0, documentid: 0, documentname: '', edit: true));
     _prcStepDocuemtnBloc.add(_prcStepDocuemtnBloc.value);
@@ -362,6 +372,53 @@ class ProcessBloc{
         await _repo.delStepDocument(obj);
         _prcStepDocuemtnBloc.value.rows.removeWhere((element)=> element.id==obj.id);
         _prcStepDocuemtnBloc.add(_prcStepDocuemtnBloc.value);
+        hideWaiting(context);
+        Navigator.pop(context);
+      }
+      catch(e){
+        hideWaiting(context);
+        analyzeError(context, '$e');
+      }
+    });
+  }
+
+  loadStepIncome(BuildContext context, int processid, int stepid) async{
+    try{
+      _prcStepIncomeBloc.add(PrcStepIncomeModel(status: Status.loading));
+      _prcStepIncomeBloc.add(PrcStepIncomeModel(status: Status.loaded, rows: await _repo.loadStepIncome(readToken(context), processid, stepid)));
+    }
+    catch(e){
+      analyzeError(context, '$e');
+      _prcStepIncomeBloc.add(PrcStepIncomeModel(status: Status.error, msg: '$e'));
+    }
+  }
+  Future<bool> saveStepIncome(BuildContext context, PrcStepIncome obj) async{
+    try{
+      showWaiting(context);
+      obj.token = readToken(context);
+      await _repo.saveStepIncome(obj);
+      _prcStepIncomeBloc.add(_prcStepIncomeBloc.value);
+      hideWaiting(context);
+      return true;
+    }
+    catch(e){
+      hideWaiting(context);
+      analyzeError(context, '$e');
+      return false;
+    }
+  }
+  insertStepIncome(int processid, int stepid){
+    _prcStepIncomeBloc.value.rows.insert(0, PrcStepIncome(processid: processid, stepid: stepid, incomeid: 0));
+    _prcStepIncomeBloc.add(_prcStepIncomeBloc.value);
+  }
+  delStepIncome(BuildContext context, PrcStepIncome obj) async{
+    confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف ${obj.incomename} می باشید؟', yesclick: () async{
+      try{
+        showWaiting(context);
+        obj.token = readToken(context);
+        await _repo.delStepIncome(obj);
+        _prcStepIncomeBloc.value.rows.removeWhere((element)=> element.incomeid==obj.incomeid);
+        _prcStepIncomeBloc.add(_prcStepIncomeBloc.value);
         hideWaiting(context);
         Navigator.pop(context);
       }
