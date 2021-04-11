@@ -1518,6 +1518,37 @@ class ProcessRepository{
       return true;
     throw Exception(_data['msg']);
   }
+
+  Future<List<PrcCmpRaste>> loadCmpRaste(String token, int processid, int cmpid) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Process/Company/Raste', body: jsonEncode({"token": token, "processid": processid, "cmpid": cmpid}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<PrcCmpRaste>((data) => PrcCmpRaste.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> saveCmpRaste(PrcCmpRaste obj) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Process/Company/Raste', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(obj.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> delCmpRaste(PrcCmpRaste obj) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Process/Company/Raste', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': obj.token,
+       'processid': obj.processid.toString(),
+       'cmpid': obj.cmpid.toString(),
+       'id': obj.id.toString(),
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
 }
 
 

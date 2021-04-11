@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pama/classes/classes.dart';
@@ -5,6 +6,7 @@ import 'package:pama/forms/Process/ProcessBloc.dart';
 import 'package:pama/module/Widgets.dart';
 import 'package:pama/module/consts.dart';
 import 'package:pama/module/functions.dart';
+import 'package:pama/module/theme-Manager.dart';
 
 ProcessBloc _bloc;
 
@@ -396,7 +398,7 @@ class ProcessCompany extends StatelessWidget {
                             Tooltip(message: 'تمام رسته ها', child: Switch(value: _cmp.allraste, onChanged: (val){_cmp.allraste=val;_bloc.saveCompany(context, _cmp);})),
                             _cmp.allraste || _cmp.cmpid==0
                               ? SizedBox(width: 35)
-                              : MyIconButton(type: ButtonType.other, icon: Icon(Icons.details_rounded, color: Colors.grey[600]), hint: 'رسته ها/زیر رسته ها', onPressed: (){}),
+                              : MyIconButton(type: ButtonType.other, icon: Icon(Icons.details_rounded, color: Colors.grey[600]), hint: 'رسته ها/زیر رسته ها', onPressed: (){context.read<ThemeManager>().setCompany(_cmp.cmpid);showFormAsDialog(context: context, form: PnPrcCmpRaste(cmp: _cmp,));}),
                             _cmp.cmpid==0
                               ? MyIconButton(type: ButtonType.save, onPressed: ()=>_bloc.saveCompany(context, _cmp))
                               : MyIconButton(type: ButtonType.del, onPressed: ()=>_bloc.delCompany(context, _cmp)),
@@ -414,3 +416,75 @@ class ProcessCompany extends StatelessWidget {
   }
 }
 
+class PnPrcCmpRaste extends StatelessWidget {
+  final PrcCompany cmp;
+  PnPrcCmpRaste({@required this.cmp});
+
+  @override
+  Widget build(BuildContext context) {
+    _bloc.loadCmpRaste(context, this.cmp.processid, this.cmp.cmpid);
+    return Container(
+      width: screenWidth(context) * 0.65,
+      child: Directionality(
+        textDirection: TextDirection.rtl, 
+        child: Column(
+          children: [
+            FormHeader(title: 'انتخاب رسته/زیر رسته', btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.newCmpRaste(context, cmp.processid, cmp.cmpid)), btnLeft: MyIconButton(type: ButtonType.exit),),
+            GridCaption(obj: ['عنوان رسته', 'درجه'], endbuttons: 2),
+            Expanded(
+              child: StreamBuilder(
+                stream: _bloc.prcCmpRasteStream$,
+                builder: (BuildContext context, AsyncSnapshot<PrcCmpRasteModel> snap){
+                  if (snap.hasData)
+                    if (snap.data.status == Status.error)
+                      return ErrorInGrid(snap.data.msg);
+                    else if (snap.data.status == Status.loaded)
+                      return ListView.builder(
+                        itemCount: snap.data.rows.length,
+                        itemBuilder: (context, idx){
+                          PrcCmpRaste _rst = snap.data.rows[idx];
+                          return MyRow(
+                            children: [
+                              _rst.id == 0
+                                ? Expanded(
+                                  child: ForeignKeyField(
+                                    hint: 'رسته', 
+                                    initialValue: {'hisic': _rst.hisic, 'isic': _rst.isic, 'name': _rst.isicname}, 
+                                    f2key: 'Raste',
+                                    onChange: (val){
+                                      _rst.hisic = val['hisic'];
+                                      _rst.isic = val['isic'];
+                                      _rst.isicname = val['name'];
+                                    },
+                                  )
+                                )
+                                : '${_rst.isicname}',
+                              Expanded(child: MultiChooseItem(
+                                val: _rst.degree, 
+                                items: [
+                                  {'id': 1, 'title': 'درجه یک'},
+                                  {'id': 2, 'title': 'درجه دو'},
+                                  {'id': 3, 'title': 'درجه سه'},
+                                  {'id': 4, 'title': 'درجه چهار'},
+                                  {'id': 5, 'title': 'همه درجه ها'},
+                                ], 
+                                hint: 'درجه', 
+                                onChange: (val){_rst.degree = val;if (_rst.id>0) _bloc.saveCmpRaste(context, _rst);}
+                              )),
+                              _rst.id == 0
+                                ? MyIconButton(type: ButtonType.save, onPressed: ()=>_bloc.saveCmpRaste(context, _rst))
+                                : MyIconButton(type: ButtonType.del, onPressed: ()=>_bloc.delCmpRaste(context, _rst))
+                            ]
+                          );
+                        }
+                      );
+                  return Center(child: CupertinoActivityIndicator());
+                }
+              )
+            )
+          ],
+        )
+      ),
+    );
+  }
+}

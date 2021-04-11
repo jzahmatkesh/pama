@@ -2338,23 +2338,21 @@ class PrcCmpRaste{
     int cmpid;
     int id;
     int hisic;
-    String hisicname;
     int isic;
     String isicname;
     int degree;
     String token;
     bool edit;
  
-    PrcCmpRaste({this.processid,this.cmpid,this.id,this.hisic,this.hisicname,this.isic,this.isicname,this.degree, this.token, this.edit=false});
+    PrcCmpRaste({this.processid,this.cmpid,this.id=0,this.hisic=0,this.isicname='',this.isic=0,this.degree=5, this.token, this.edit=false});
  
     PrcCmpRaste.fromJson(Map<String, dynamic> json):
         processid = json['processid'],
         cmpid = json['cmpid'],
         id = json['id'],
         hisic = json['hisic'],
-        hisicname = json['hisicname'],
-        isic = json['isic'],
         isicname = json['isicname'],
+        isic = json['isic'],
         degree = json['degree'],
         edit=false;
  
@@ -2364,9 +2362,8 @@ class PrcCmpRaste{
         data['cmpid'] = this.cmpid;
         data['id'] = this.id;
         data['hisic'] = this.hisic;
-        data['hisicname'] = this.hisicname;
-        data['isic'] = this.isic;
         data['isicname'] = this.isicname;
+        data['isic'] = this.isic;
         data['degree'] = this.degree;
         data['token'] = this.token;
         return data;

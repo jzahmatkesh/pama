@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pama/classes/Repository.dart';
-import 'package:pama/classes/classes.dart';
-import 'package:pama/module/functions.dart';
+import '../../classes/Repository.dart';
+import '../../classes/classes.dart';
+import '../../module/functions.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ProcessModel{
@@ -467,7 +467,6 @@ class ProcessBloc{
     });
     _processBloc.add(_processBloc.value);
   }
-
   newCompany(BuildContext context, int processid){
     if (_prcCompanyBloc.value.rows.where((element) => element.cmpid==0).length == 0)
       _prcCompanyBloc.value.rows.add(PrcCompany(
@@ -478,7 +477,6 @@ class ProcessBloc{
       ));
     _prcCompanyBloc.add(_prcCompanyBloc.value);
   }
-
   Future<bool> saveCompany(BuildContext context, PrcCompany obj) async{
     if (obj.cmpid==0){
       myAlert(context: context, title: 'مقادیر اجباری', message: 'اتحادیه مشخص نشده است');
@@ -499,7 +497,6 @@ class ProcessBloc{
         return false;
       }
   }
-
   delCompany(BuildContext context, PrcCompany obj) async{
     confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف ${obj.cmpname} می باشید؟', yesclick: () async{
       try{
@@ -508,6 +505,63 @@ class ProcessBloc{
         await _repo.delCompany(obj);
         _prcCompanyBloc.value.rows.removeWhere((element)=> element.cmpid==obj.cmpid);
         _prcCompanyBloc.add(_prcCompanyBloc.value);
+        hideWaiting(context);
+        Navigator.pop(context);
+      }
+      catch(e){
+        hideWaiting(context);
+        analyzeError(context, '$e');
+      }
+    });
+  }
+
+  loadCmpRaste(BuildContext context, int processid, int cmpid) async{
+    try{
+      _prcCmpRasteBloc.add(PrcCmpRasteModel(status: Status.loading));
+      _prcCmpRasteBloc.add(PrcCmpRasteModel(status: Status.loaded, rows: await _repo.loadCmpRaste(readToken(context), processid, cmpid)));
+    }
+    catch(e){
+      analyzeError(context, '$e');
+      _prcCmpRasteBloc.add(PrcCmpRasteModel(status: Status.error, msg: '$e'));
+    }
+  }
+  newCmpRaste(BuildContext context, int processid, int cmpid){
+    if (_prcCmpRasteBloc.value.rows.where((element) => element.cmpid==0).length == 0)
+      _prcCmpRasteBloc.value.rows.add(PrcCmpRaste(
+        processid: processid,
+        cmpid: cmpid,
+        token: readToken(context)
+      ));
+    _prcCmpRasteBloc.add(_prcCmpRasteBloc.value);
+  }
+  Future<bool> saveCmpRaste(BuildContext context, PrcCmpRaste obj) async{
+    if (obj.hisic==0){
+      myAlert(context: context, title: 'مقادیر اجباری', message: 'رسته مشخص نشده است');
+      return false;
+    }
+    else
+      try{
+        showWaiting(context);
+        obj.token = readToken(context);
+        obj.id = await _repo.saveCmpRaste(obj);
+        _prcCmpRasteBloc.add(_prcCmpRasteBloc.value);
+        hideWaiting(context);
+        return true;
+      }
+      catch(e){
+        hideWaiting(context);
+        analyzeError(context, '$e');
+        return false;
+      }
+  }
+  delCmpRaste(BuildContext context, PrcCmpRaste obj) async{
+    confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف ${obj.isicname} می باشید؟', yesclick: () async{
+      try{
+        showWaiting(context);
+        obj.token = readToken(context);
+        await _repo.delCmpRaste(obj);
+        _prcCmpRasteBloc.value.rows.removeWhere((element)=> element.id==obj.id);
+        _prcCmpRasteBloc.add(_prcCmpRasteBloc.value);
         hideWaiting(context);
         Navigator.pop(context);
       }
