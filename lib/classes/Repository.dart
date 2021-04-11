@@ -1488,6 +1488,36 @@ class ProcessRepository{
       return true;
     throw Exception(_data['msg']);
   }
+
+  Future<List<PrcCompany>> loadCompany(String token, int processid) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Process/Company', body: jsonEncode({"token": token, "processid": processid}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<PrcCompany>((data) => PrcCompany.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> saveCompany(PrcCompany obj) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Process/Company', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(obj.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> delCompany(PrcCompany obj) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Process/Company', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': obj.token,
+       'processid': obj.processid.toString(),
+       'cmpid': obj.cmpid.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
 }
 
 

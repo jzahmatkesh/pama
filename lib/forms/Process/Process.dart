@@ -46,7 +46,7 @@ class FmProcess extends StatelessWidget {
                       return ListView.builder(
                         itemCount: snap.data.rows.length,
                         itemBuilder: (context, idx)=>
-                          snap.data.rows[idx].showDetail
+                          snap.data.rows[idx].showStep
                             ? Column(
                               children: [
                                 ProcessRow(snap.data.rows[idx], idx),
@@ -59,7 +59,20 @@ class FmProcess extends StatelessWidget {
                                 )
                               ],
                             )
-                            : ProcessRow(snap.data.rows[idx], idx)
+                            : snap.data.rows[idx].showComnpany
+                              ? Column(
+                                children: [
+                                  ProcessRow(snap.data.rows[idx], idx),
+                                  Card(
+                                    child: Container(
+                                      height: screenHeight(context) * 0.5,
+                                      width: double.infinity,
+                                      child: ProcessCompany(process: snap.data.rows[idx]),
+                                    ),
+                                  )
+                                ],
+                              )
+                              : ProcessRow(snap.data.rows[idx], idx)
                       );
                     return Center(child: CupertinoActivityIndicator());
                 }
@@ -118,7 +131,7 @@ class ProcessRow extends StatelessWidget {
           : MyIconButton(type: ButtonType.other, icon: Icon(Icons.swap_calls_outlined), hint: 'مراحل فرآیند', onPressed: ()=>_bloc.loadSteps(context, obj.id)),
         obj.allcmp
           ? Container(width: 42,)
-          : MyIconButton(type: ButtonType.other, icon: Icon(Icons.category, color: Colors.grey[600]), hint: 'اختصاص اتحادیه ها', onPressed: (){}),
+          : MyIconButton(type: ButtonType.other, icon: Icon(Icons.category, color: Colors.grey[600]), hint: 'اختصاص اتحادیه ها', onPressed: ()=>_bloc.loadCompany(context, obj.id)),
         obj.edit
           ? Container()
           : MyIconButton(type: ButtonType.del, onPressed: ()=>_bloc.delProcess(context, obj)),
@@ -137,7 +150,7 @@ class ProcessStep extends StatelessWidget {
       child: Column(
         children: [
           FormHeader(
-            title: 'مراحل فرآیند', 
+            title: 'مراحل ${this.process.title}', 
             btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.newStep(context, this.process.id)), 
             btnLeft: MyIconButton(type: ButtonType.exit, onPressed: ()=>_bloc.loadSteps(context, this.process.id))
           ),
@@ -183,13 +196,13 @@ class ProcessStep extends StatelessWidget {
                               )
                               : '${_step.kindName()}',
                             _step.edit 
-                              ? Expanded(child: GridTextField(hint: 'مدت مجاز مرحله', initialValue: '${_step.length}', onChange: (val)=>_step.length=int.tryParse(val)))
+                              ? Expanded(child: GridTextField(hint: 'مدت مجاز مرحله', initialValue: '${_step.length}', onChange: (val)=>_step.length=val.trim().isEmpty ? 0 : int.tryParse(val)))
                               : '${_step.length}',
                             Tooltip(message: 'آغاز با اتمام مرحله قبل', child: Switch(value: _step.startprevend, onChanged: (val)=>_bloc.stepstartprevend(context, _step.id, val))),
                             Tooltip(message: 'شروع مجدد بعد از انقضاء', child: Switch(value: _step.restart, onChanged: (val)=>_bloc.steprestart(context, _step.id, val))),
                             Tooltip(message: 'ارسال پیامک', child: Switch(value: _step.sms, onChanged: (val)=>_bloc.stepsms(context, _step.id, val))),
                             Tooltip(message: 'توقف اخطار ماده 27', child: Switch(value: _step.err27, onChanged: (val)=>_bloc.steperr27(context, _step.id, val))),
-                            _step.edit
+                            _step.edit || _step.kind == 2 || _step.kind == 3
                               ? SizedBox(width: 35)
                               : MyIconButton(type: ButtonType.other, icon: Icon(Icons.category_outlined), hint: 'آپلود اطلاعات', onPressed: ()=>showStepDetail(context, process, _step)),
                             _step.edit
@@ -213,6 +226,10 @@ showStepDetail(BuildContext context, Process proc, Prcstep obj){
   if (obj.kind == 1){
     _bloc.loadStepDocuemnt(context, proc.id, obj.id);
     showFormAsDialog(context: context, form: PnDocument(process: proc.title, step: obj));
+  }
+  else if (obj.kind == 4){
+    _bloc.loadStepIncome(context, proc.id, obj.id);
+    showFormAsDialog(context: context, form: PnIncome(process: proc.title, step: obj));
   }
 }
 
@@ -327,7 +344,9 @@ class PnIncome extends StatelessWidget {
                               _doc.incomeid == 0
                                 ? Expanded(child: ForeignKeyField(hint: 'عنوان درآمد', initialValue: {'id': _doc.incomeid, 'name': _doc.incomename}, f2key: 'Income', onChange: (val){_doc.incomeid=val['id'];_doc.incomename=val['name'];}))
                                 : '${_doc.incomename}',
-                              MyIconButton(type: ButtonType.del, onPressed: ()=>_bloc.delStepIncome(context, _doc))
+                              _doc.incomeid == 0
+                                ? MyIconButton(type: ButtonType.save, onPressed: ()=>_bloc.saveStepIncome(context, _doc))
+                                : MyIconButton(type: ButtonType.del, onPressed: ()=>_bloc.delStepIncome(context, _doc))
                             ]
                           );
                         }
@@ -343,4 +362,55 @@ class PnIncome extends StatelessWidget {
   }
 }
 
+class ProcessCompany extends StatelessWidget {
+  final Process process;
+  ProcessCompany({@required this.process});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+          FormHeader(
+            title: 'اتحادیه های ${this.process.title}', 
+            btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.newCompany(context, this.process.id)), 
+            btnLeft: MyIconButton(type: ButtonType.exit, onPressed: ()=>_bloc.loadCompany(context, this.process.id))
+          ),
+          Expanded(
+            child: StreamBuilder(
+              stream: _bloc.prcCompanyStream$,
+              builder: (BuildContext context, AsyncSnapshot<PrcCompanyModel> snap){
+                if (snap.hasData)
+                  if (snap.data.status == Status.error)
+                    return ErrorInGrid(snap.data.msg);
+                  else if (snap.data.status == Status.loaded)
+                    return ListView.builder(
+                      itemCount: snap.data.rows.length,
+                      itemBuilder: (context, idx){
+                        PrcCompany _cmp = snap.data.rows[idx];
+                        return MyRow(
+                          children: [
+                            _cmp.cmpid == 0
+                              ? Container(width: screenWidth(context)*0.5, margin: EdgeInsets.only(left: 50),child: ForeignKeyField(hint: 'عنوان اتحادیه', initialValue: {'id': _cmp.cmpid, 'name': _cmp.cmpname}, f2key: 'Company', onChange: (val){_cmp.cmpid=val['id'];_cmp.cmpname=val['name'];},))
+                              : '${_cmp.cmpname}',
+                            Tooltip(message: 'تمام رسته ها', child: Switch(value: _cmp.allraste, onChanged: (val){_cmp.allraste=val;_bloc.saveCompany(context, _cmp);})),
+                            _cmp.allraste || _cmp.cmpid==0
+                              ? SizedBox(width: 35)
+                              : MyIconButton(type: ButtonType.other, icon: Icon(Icons.details_rounded, color: Colors.grey[600]), hint: 'رسته ها/زیر رسته ها', onPressed: (){}),
+                            _cmp.cmpid==0
+                              ? MyIconButton(type: ButtonType.save, onPressed: ()=>_bloc.saveCompany(context, _cmp))
+                              : MyIconButton(type: ButtonType.del, onPressed: ()=>_bloc.delCompany(context, _cmp)),
+                          ]
+                        );
+                      }
+                    );
+                  return Center(child: CupertinoActivityIndicator());
+              },
+            )
+          )
+        ],
+      ),      
+    );
+  }
+}
 

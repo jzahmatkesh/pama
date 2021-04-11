@@ -2089,7 +2089,7 @@ class Prcstep{
     String token;
     bool edit;
  
-    Prcstep({this.processid,this.id,this.active,this.title,this.kind,this.length,this.startprevend,this.restart,this.sms,this.err27, this.token, this.edit=false});
+    Prcstep({this.processid,this.id,this.active,this.title,this.kind,this.length=0,this.startprevend,this.restart,this.sms,this.err27, this.token, this.edit=false});
  
     Prcstep.fromJson(Map<String, dynamic> json):
         processid = json['processid'],
@@ -2151,10 +2151,11 @@ class Process{
     bool allcmp;
     int duration;
     bool edit;
-    bool showDetail;
+    bool showStep;
+    bool showComnpany;
     String token;
  
-    Process({this.id,this.active,this.title,this.kind,this.recon,this.allcmp, this.token, this.edit=false, this.duration=0, this.showDetail=false});
+    Process({this.id,this.active,this.title,this.kind,this.recon,this.allcmp, this.token, this.edit=false, this.duration=0, this.showStep=false,this.showComnpany=false});
  
     Process.fromJson(Map<String, dynamic> json):
         id = json['id'],
@@ -2164,7 +2165,8 @@ class Process{
         duration = json['duration'],
         recon = json['recon'] == 1,
         allcmp = json['allcmp'] == 1,
-        showDetail = false,
+        showStep = false,
+        showComnpany = false,
         edit = false;
  
     Map<String, dynamic> toJson(){
@@ -2304,3 +2306,94 @@ class PrcStepIncome{
         return data;
     }
 }
+
+class PrcCompany{
+    int processid;
+    int cmpid;
+    String cmpname;
+    bool allraste;
+    String token;
+ 
+    PrcCompany({this.processid,this.cmpid,this.cmpname,this.allraste, this.token});
+ 
+    PrcCompany.fromJson(Map<String, dynamic> json):
+        processid = json['processid'],
+        cmpid = json['cmpid'],
+        cmpname = json['cmpname'],
+        allraste = json['allraste'] == 1;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['processid'] = this.processid;
+        data['cmpid'] = this.cmpid;
+        data['cmpname'] = this.cmpname;
+        data['allraste'] = this.allraste ? 1 : 0;
+        data['token'] = this.token;
+        return data;
+    }
+}
+
+class PrcCmpRaste{
+    int processid;
+    int cmpid;
+    int id;
+    int hisic;
+    String hisicname;
+    int isic;
+    String isicname;
+    int degree;
+    String token;
+    bool edit;
+ 
+    PrcCmpRaste({this.processid,this.cmpid,this.id,this.hisic,this.hisicname,this.isic,this.isicname,this.degree, this.token, this.edit=false});
+ 
+    PrcCmpRaste.fromJson(Map<String, dynamic> json):
+        processid = json['processid'],
+        cmpid = json['cmpid'],
+        id = json['id'],
+        hisic = json['hisic'],
+        hisicname = json['hisicname'],
+        isic = json['isic'],
+        isicname = json['isicname'],
+        degree = json['degree'],
+        edit=false;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['processid'] = this.processid;
+        data['cmpid'] = this.cmpid;
+        data['id'] = this.id;
+        data['hisic'] = this.hisic;
+        data['hisicname'] = this.hisicname;
+        data['isic'] = this.isic;
+        data['isicname'] = this.isicname;
+        data['degree'] = this.degree;
+        data['token'] = this.token;
+        return data;
+    }
+
+    String degreeName(){
+      switch (this.degree) {
+        case 1:
+          return 'درجه یک';
+          break;
+        case 2:
+          return 'درجه دو';
+          break;
+        case 3:
+          return 'درجه سه';
+          break;
+        case 4:
+          return 'درجه چهار';
+          break;
+        case 5:
+          return 'همه درجه ها';
+          break;
+      }
+      return "";
+    }
+}
+
+
+
+

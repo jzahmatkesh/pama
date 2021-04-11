@@ -32,6 +32,20 @@ class PrcStepIncomeModel{
 
   PrcStepIncomeModel({@required this.status, this.rows, this.msg});
 }
+class PrcCompanyModel{
+  Status status;
+  List<PrcCompany> rows;
+  String msg;
+
+  PrcCompanyModel({@required this.status, this.rows, this.msg});
+}
+class PrcCmpRasteModel{
+  Status status;
+  List<PrcCmpRaste> rows;
+  String msg;
+
+  PrcCmpRasteModel({@required this.status, this.rows, this.msg});
+}
 
 class ProcessBloc{
   ProcessRepository _repo = new ProcessRepository();
@@ -47,6 +61,12 @@ class ProcessBloc{
 
   BehaviorSubject<PrcStepIncomeModel> _prcStepIncomeBloc = BehaviorSubject<PrcStepIncomeModel>();
   Stream<PrcStepIncomeModel> get prcStepIncomeStream$ => _prcStepIncomeBloc.stream;
+
+  BehaviorSubject<PrcCompanyModel> _prcCompanyBloc = BehaviorSubject<PrcCompanyModel>();
+  Stream<PrcCompanyModel> get prcCompanyStream$ => _prcCompanyBloc.stream;
+
+  BehaviorSubject<PrcCmpRasteModel> _prcCmpRasteBloc = BehaviorSubject<PrcCmpRasteModel>();
+  Stream<PrcCmpRasteModel> get prcCmpRasteStream$ => _prcCmpRasteBloc.stream;
 
   loaddata(BuildContext context) async{
     try{
@@ -169,8 +189,9 @@ class ProcessBloc{
 
   loadSteps(BuildContext context, int id){
     _processBloc.value.rows.forEach((element) async{
-      element.showDetail = element.id == id && !element.showDetail;
-      if (element.showDetail){
+      element.showComnpany = false;
+      element.showStep = element.id == id && !element.showStep;
+      if (element.showStep){
         try{
           _prcStepBloc.add(PrcStepModel(status: Status.loading));
           _prcStepBloc.add(PrcStepModel(status: Status.loaded, rows: await _repo.loadStep(readToken(context), id)));
@@ -200,7 +221,7 @@ class ProcessBloc{
       err27: false,
       token: readToken(context)
     ));
-    _processBloc.add(_processBloc.value);
+    _prcStepBloc.add(_prcStepBloc.value);
   }
 
   Future<bool> saveStep(BuildContext context, Prcstep obj) async{
@@ -419,6 +440,74 @@ class ProcessBloc{
         await _repo.delStepIncome(obj);
         _prcStepIncomeBloc.value.rows.removeWhere((element)=> element.incomeid==obj.incomeid);
         _prcStepIncomeBloc.add(_prcStepIncomeBloc.value);
+        hideWaiting(context);
+        Navigator.pop(context);
+      }
+      catch(e){
+        hideWaiting(context);
+        analyzeError(context, '$e');
+      }
+    });
+  }
+
+  loadCompany(BuildContext context, int id){
+    _processBloc.value.rows.forEach((element) async{
+      element.showStep = false;
+      element.showComnpany = element.id == id && !element.showComnpany;
+      if (element.showComnpany){
+        try{
+          _prcCompanyBloc.add(PrcCompanyModel(status: Status.loading));
+          _prcCompanyBloc.add(PrcCompanyModel(status: Status.loaded, rows: await _repo.loadCompany(readToken(context), id)));
+        }
+        catch(e){
+          analyzeError(context, '$e');
+          _prcCompanyBloc.add(PrcCompanyModel(status: Status.error, msg: '$e'));
+        }
+      }
+    });
+    _processBloc.add(_processBloc.value);
+  }
+
+  newCompany(BuildContext context, int processid){
+    if (_prcCompanyBloc.value.rows.where((element) => element.cmpid==0).length == 0)
+      _prcCompanyBloc.value.rows.add(PrcCompany(
+        processid: processid,
+        cmpid: 0,
+        allraste: false,
+        token: readToken(context)
+      ));
+    _prcCompanyBloc.add(_prcCompanyBloc.value);
+  }
+
+  Future<bool> saveCompany(BuildContext context, PrcCompany obj) async{
+    if (obj.cmpid==0){
+      myAlert(context: context, title: 'مقادیر اجباری', message: 'اتحادیه مشخص نشده است');
+      return false;
+    }
+    else
+      try{
+        showWaiting(context);
+        obj.token = readToken(context);
+        await _repo.saveCompany(obj);
+        _prcCompanyBloc.add(_prcCompanyBloc.value);
+        hideWaiting(context);
+        return true;
+      }
+      catch(e){
+        hideWaiting(context);
+        analyzeError(context, '$e');
+        return false;
+      }
+  }
+
+  delCompany(BuildContext context, PrcCompany obj) async{
+    confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف ${obj.cmpname} می باشید؟', yesclick: () async{
+      try{
+        showWaiting(context);
+        obj.token = readToken(context);
+        await _repo.delCompany(obj);
+        _prcCompanyBloc.value.rows.removeWhere((element)=> element.cmpid==obj.cmpid);
+        _prcCompanyBloc.add(_prcCompanyBloc.value);
         hideWaiting(context);
         Navigator.pop(context);
       }
