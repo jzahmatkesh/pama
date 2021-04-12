@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pama/module/consts.dart';
-import '../../classes/classes.dart';
+import '../../../module/consts.dart';
+import '../../../classes/classes.dart';
 import 'TopicBloc.dart';
-import '../../module/functions.dart';
+import '../../../module/functions.dart';
 
-import '../../module/Widgets.dart';
+import '../../../module/Widgets.dart';
 
 class FmTopic extends StatelessWidget {
   @override

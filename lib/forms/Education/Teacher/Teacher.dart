@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pama/classes/classes.dart';
-import 'package:pama/forms/People/People.dart';
-import 'package:pama/forms/Teacher/TeacherBloc.dart';
-import 'package:pama/module/Widgets.dart';
-import 'package:pama/module/consts.dart';
-import 'package:pama/module/functions.dart';
+
+import '../../../classes/classes.dart';
+import '../../../module/Widgets.dart';
+import '../../../module/consts.dart';
+import '../../../module/functions.dart';
+import '../../People/People.dart';
+import '../Teacher/TeacherBloc.dart';
 
 class FmTeacher extends StatelessWidget {
   @override

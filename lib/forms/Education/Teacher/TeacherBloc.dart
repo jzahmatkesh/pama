@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../classes/Repository.dart';
-import '../../classes/classes.dart';
-import '../../module/functions.dart';
 import 'package:rxdart/rxdart.dart';
+
+import '../../../classes/Repository.dart';
+import '../../../classes/classes.dart';
+import '../../../module/functions.dart';
 
 class TeacherModel{
   Status status;
