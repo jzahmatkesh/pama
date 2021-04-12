@@ -1551,4 +1551,35 @@ class ProcessRepository{
   }
 }
 
+class CourseRepository{
+  Future<List<Course>> load(String token) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Course', body: jsonEncode({"token": token}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Course>((data) => Course.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> save(Course obj) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Course', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(obj.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+ 
+  Future<bool> delete(Course obj) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Course', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': obj.token,
+       'id': obj.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+}
+
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../module/functions.dart';
+import 'Course/Course.dart';
 import 'Teacher/Teacher.dart';
 import 'Topic/Topic.dart';
 
@@ -20,16 +21,16 @@ class FmEducation extends StatelessWidget {
                 TabBar(
                   labelColor: Colors.black,
                   tabs: [
+                    Tab(child: Text('دوره ها')),
                     Tab(child: Text('سرفصل ها')),
                     Tab(child: Text('اساتید')),
-                    Tab(child: Text('دوره ها')),
                   ],
                 ),
                 Expanded(
                   child: TabBarView(children: [
+                    FmCourse(),
                     FmTopic(),
                     FmTeacher(),
-                    FmTopic(),
                   ]),
                 )
               ],

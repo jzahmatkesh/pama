@@ -2391,6 +2391,111 @@ class PrcCmpRaste{
     }
 }
 
+class Course{
+    int id;
+    bool active;
+    String title;
+    int kind;
+    int type;
+    int mindegree;
+    int maxdegree;
+    int absent;
+    int valid;
+    double price;
+    double reprice;
+    int noh1;
+    int noh2;
+    int nonh1;
+    int nonh2;
+    String token;
+ 
+    Course({this.id,this.active,this.title,this.kind,this.type,this.mindegree,this.maxdegree,this.absent,this.valid,this.price,this.reprice,this.noh1,this.noh2,this.nonh1,this.nonh2, this.token});
+ 
+    Course.fromJson(Map<String, dynamic> json):
+        id = json['id'],
+        active = json['active'] == 1,
+        title = json['title'],
+        kind = json['kind'],
+        type = json['type'],
+        mindegree = json['mindegree'],
+        maxdegree = json['maxdegree'],
+        absent = json['absent'],
+        valid = json['valid'],
+        price = json['price'],
+        reprice = json['reprice'],
+        noh1 = json['noh1'],
+        noh2 = json['noh2'],
+        nonh1 = json['nonh1'],
+        nonh2 = json['nonh2'];
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['id'] = this.id;
+        data['active'] = this.active ? 1 : 0;
+        data['title'] = this.title;
+        data['kind'] = this.kind;
+        data['type'] = this.type;
+        data['mindegree'] = this.mindegree;
+        data['maxdegree'] = this.maxdegree;
+        data['absent'] = this.absent;
+        data['valid'] = this.valid;
+        data['price'] = this.price;
+        data['reprice'] = this.reprice;
+        data['noh1'] = this.noh1;
+        data['noh2'] = this.noh2;
+        data['nonh1'] = this.nonh1;
+        data['nonh2'] = this.nonh2;
+        data['token'] = this.token;
+        return data;
+    }
+
+    String kindName(){
+      switch (this.kind) {
+        case 1:
+          return 'آزاد';
+        case 2:
+          return 'صدور و تمدید';
+      }
+      return "";
+    }
+
+    String typeName(){
+      switch (this.type) {
+        case 1: return 'حضوری';
+        case 2: return 'غیرحضوری';
+        case 3: return 'حضوری و غیرحضوری';
+      }
+      return "";
+    }
+
+    String minDegreeName(){
+      switch (this.mindegree) {
+        case 1: return 'زیردیپلم';
+        case 2: return 'دیپلم';
+        case 3: return 'دانشجو';
+        case 4: return 'کاردانی';
+        case 5: return 'کارشناسی';
+        case 6: return 'کارشناسی ارشد';
+        case 7: return 'دکتری';
+        case 8: return 'فوق دکتری';
+      }
+      return "";
+    }
+
+    String maxDegreeName(){
+      switch (this.maxdegree) {
+        case 1: return 'زیردیپلم';
+        case 2: return 'دیپلم';
+        case 3: return 'دانشجو';
+        case 4: return 'کاردانی';
+        case 5: return 'کارشناسی';
+        case 6: return 'کارشناسی ارشد';
+        case 7: return 'دکتری';
+        case 8: return 'فوق دکتری';
+      }
+      return "";
+    }
+}
 
 
 
