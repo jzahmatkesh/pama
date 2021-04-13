@@ -17,7 +17,7 @@ class CourseBloc{
   CourseRepository _repository = new CourseRepository();
 
   BehaviorSubject<CourseModel> _courseBloc = BehaviorSubject<CourseModel>.seeded(CourseModel(status: Status.loading));
-  Stream<CourseModel> get CourseblocStream$ => _courseBloc.stream;
+  Stream<CourseModel> get courseblocStream$ => _courseBloc.stream;
 
   loadData(BuildContext context) async{
     try{
@@ -39,6 +39,10 @@ class CourseBloc{
     });
   }
 
+  newCourse(BuildContext context){
+    _courseBloc.value.rows.insert(0, Course(id: 0, edit: true));
+    _courseBloc.add(_courseBloc.value);
+  }
   delCourse(BuildContext context, Course course){
     confirmMessage(context, 'حذف دوره', 'آیا مایل به حذف دوره ${course.title} می باشید؟', yesclick: () async{
       try{
