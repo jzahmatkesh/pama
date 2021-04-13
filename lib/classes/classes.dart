@@ -2409,8 +2409,9 @@ class Course{
     int nonh2;
     String token;
     bool edit;
+    bool showclass;
  
-    Course({this.id,this.active,this.title,this.kind=1,this.type=1,this.mindegree=1,this.maxdegree=1,this.absent,this.valid,this.price,this.reprice,this.noh1,this.noh2,this.nonh1,this.nonh2, this.token, this.edit=false});
+    Course({this.id,this.active=true,this.title,this.kind=1,this.type=1,this.mindegree=1,this.maxdegree=1,this.absent=0,this.valid=0,this.price=0,this.reprice=0,this.noh1=0,this.noh2=0,this.nonh1=0,this.nonh2=0, this.token, this.edit=false, this.showclass = false});
  
     Course.fromJson(Map<String, dynamic> json):
         id = json['id'],
@@ -2428,6 +2429,7 @@ class Course{
         noh2 = json['noh2'],
         nonh1 = json['nonh1'],
         nonh2 = json['nonh2'],
+        showclass=false,
         edit=false;
  
     Map<String, dynamic> toJson(){
@@ -2499,5 +2501,38 @@ class Course{
     }
 }
 
+class Class{
+    int courseid;
+    int id;
+    String title;
+    String begindate;
+    int hozori;
+    int nothozori;
+    String token;
+    bool edit;
+ 
+    Class({this.courseid,this.id=0,this.title='',this.begindate='',this.hozori=0,this.nothozori=0, this.token, this.edit=false});
+ 
+    Class.fromJson(Map<String, dynamic> json):
+        courseid = json['courseid'],
+        id = json['id'],
+        title = json['title'],
+        begindate = json['begindate'],
+        hozori = json['hozori'],
+        nothozori = json['nothozori'],
+        edit=false;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['courseid'] = this.courseid;
+        data['id'] = this.id;
+        data['title'] = this.title;
+        data['begindate'] = this.begindate;
+        data['hozori'] = this.hozori;
+        data['nothozori'] = this.nothozori;
+        data['token'] = this.token;
+        return data;
+    }
+}
 
 
