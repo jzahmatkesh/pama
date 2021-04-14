@@ -46,7 +46,7 @@ class FmCourse extends StatelessWidget {
                           Course _crs = snap.data.rows[idx];
                           if (_crs.showclass)
                             return Container(
-                              height: screenHeight(context) * 0.3,
+                              height: screenHeight(context) * 0.5,
                               padding: EdgeInsets.all(8),
                               child: Column(
                                 children: [
@@ -54,6 +54,7 @@ class FmCourse extends StatelessWidget {
                                   FormHeader(
                                     title: 'لیست کلاس ها', 
                                     btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.newClass(_crs.id)),
+                                    btnLeft: MyIconButton(type: ButtonType.none),
                                   ),
                                   GridCaption(
                                     obj: [
@@ -75,7 +76,8 @@ class FmCourse extends StatelessWidget {
                                             return ListView.builder(
                                               itemCount: snap.data.rows.length,
                                               itemBuilder: (context, idx){
-                                                Class _cls = snap.data.rows[idx];
+                                                Class _cls = snap.data.rows[idx];                                                
+                                                TextEditingController _eddate = TextEditingController(text:_cls.begindate);
                                                 return MyRow(
                                                   onDoubleTap: ()=>_bloc.editClass(_cls),
                                                   children: [
@@ -83,7 +85,7 @@ class FmCourse extends StatelessWidget {
                                                       ? Expanded(child: GridTextField(hint: 'عنوان کلاس', initialValue: _cls.title, onChange: (val)=>_cls.title=val))
                                                       : '${_cls.title}',
                                                     _cls.edit
-                                                      ? Expanded(child: GridTextField(hint: 'تاریخ آغاز', initialValue: _cls.begindate, controller: TextEditingController(), datepicker: true, onChange: (val)=>_cls.begindate=val))
+                                                      ? Expanded(child: GridTextField(hint: 'تاریخ آغاز', controller: _eddate, datepicker: true))
                                                       : '${_cls.begindate}',
                                                     _cls.edit
                                                       ? Expanded(child: GridTextField(hint: 'ظرفیت حضوری', initialValue: '${_cls.hozori}', onChange: (val)=>_cls.hozori=int.tryParse(val)))
@@ -92,7 +94,7 @@ class FmCourse extends StatelessWidget {
                                                       ? Expanded(child: GridTextField(hint: 'ظرفیت غیر حضوری', initialValue: '${_cls.nothozori}', onChange: (val)=>_cls.nothozori=int.tryParse(val)))
                                                       : '${_cls.nothozori}',
                                                     _cls.edit
-                                                      ? MyIconButton(type: ButtonType.save, onPressed: ()=>_bloc.saveClass(context, _cls))
+                                                      ? MyIconButton(type: ButtonType.save, onPressed: (){_cls.begindate=_eddate.text; _bloc.saveClass(context, _cls);})
                                                       : MyIconButton(type: ButtonType.del, onPressed: ()=>_bloc.delClass(context, _cls))
                                                   ]
                                                 );
