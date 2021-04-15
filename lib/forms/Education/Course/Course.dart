@@ -51,59 +51,7 @@ class FmCourse extends StatelessWidget {
                               child: Column(
                                 children: [
                                   CourseRow(bloc: _bloc, course: _crs, odd: idx.isOdd),
-                                  FormHeader(
-                                    title: 'لیست کلاس ها', 
-                                    btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.newClass(_crs.id)),
-                                    btnLeft: MyIconButton(type: ButtonType.none),
-                                  ),
-                                  GridCaption(
-                                    obj: [
-                                      'عنوان کلاس',
-                                      'تاریخ آغاز',
-                                      'ظرفیت حضوری',
-                                      'ظرفیت غیرحضوری',
-                                    ],
-                                    endbuttons: 2,
-                                  ),
-                                  Expanded(
-                                    child: StreamBuilder<ClassModel>(
-                                      stream: _bloc.classblocStream$,
-                                      builder: (context, snap){
-                                        if (snap.hasData)
-                                          if (snap.data.status == Status.error)
-                                            return ErrorInGrid(snap.data.msg);
-                                          else if (snap.data.status == Status.loaded)
-                                            return ListView.builder(
-                                              itemCount: snap.data.rows.length,
-                                              itemBuilder: (context, idx){
-                                                Class _cls = snap.data.rows[idx];                                                
-                                                TextEditingController _eddate = TextEditingController(text:_cls.begindate);
-                                                return MyRow(
-                                                  onDoubleTap: ()=>_bloc.editClass(_cls),
-                                                  children: [
-                                                    _cls.edit
-                                                      ? Expanded(child: GridTextField(hint: 'عنوان کلاس', initialValue: _cls.title, onChange: (val)=>_cls.title=val))
-                                                      : '${_cls.title}',
-                                                    _cls.edit
-                                                      ? Expanded(child: GridTextField(hint: 'تاریخ آغاز', controller: _eddate, datepicker: true))
-                                                      : '${_cls.begindate}',
-                                                    _cls.edit
-                                                      ? Expanded(child: GridTextField(hint: 'ظرفیت حضوری', initialValue: '${_cls.hozori}', onChange: (val)=>_cls.hozori=int.tryParse(val)))
-                                                      : '${_cls.hozori}',
-                                                    _cls.edit
-                                                      ? Expanded(child: GridTextField(hint: 'ظرفیت غیر حضوری', initialValue: '${_cls.nothozori}', onChange: (val)=>_cls.nothozori=int.tryParse(val)))
-                                                      : '${_cls.nothozori}',
-                                                    _cls.edit
-                                                      ? MyIconButton(type: ButtonType.save, onPressed: (){_cls.begindate=_eddate.text; _bloc.saveClass(context, _cls);})
-                                                      : MyIconButton(type: ButtonType.del, onPressed: ()=>_bloc.delClass(context, _cls))
-                                                  ]
-                                                );
-                                              }
-                                            );
-                                        return Center(child: CupertinoActivityIndicator());
-                                      }
-                                    )
-                                  )
+                                  Expanded(child: ClassList(bloc: _bloc, course: _crs))
                                 ],
                               ),
                             );
@@ -151,125 +99,250 @@ class PnEditCourse extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Bloc<Course> _crs = Bloc<Course>()..setValue(this.course);    
-    return Container(
-      width: screenWidth(context) * 0.5,
-      child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: StreamBuilder<Course>(
-          stream: _crs.stream$,
-          builder: (context, snap) {
-            if (!snap.hasData)
-              return Center(child: CupertinoActivityIndicator());
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                FormHeader(
-                  title: 'دوره آموزشی',
-                  btnRight: MyIconButton(type: ButtonType.save, onPressed: ()=>bloc.saveCourse(context, course)),
-                  btnLeft: MyIconButton(type: ButtonType.exit),
-                ),
-                Row(
-                  children: [
-                    Expanded(child: GridTextField(hint: 'عنوان دوره', initialValue: snap.data.title, autofocus: true, onChange: (val)=>snap.data.title=val)),
-                    SizedBox(width: 5),
-                    Expanded(
-                      child: MultiChooseItem(
-                        val: snap.data.kind, 
-                        items: [
-                          {'id': 1, 'title': 'آزاد'},
-                          {'id': 2, 'title': 'صدور و تمدید'},
-                        ], 
-                        hint: 'نوع دوره', 
-                        onChange: (val){snap.data.kind=val;_crs.setValue(_crs.value$);}
+    final _formKey = GlobalKey<FormState>();
+    return Form(
+      key: _formKey,
+      child: Container(
+        width: screenWidth(context) * 0.5,
+        child: Directionality(
+          textDirection: TextDirection.rtl,
+          child: StreamBuilder<Course>(
+            stream: _crs.stream$,
+            builder: (context, snap) {
+              if (!snap.hasData)
+                return Center(child: CupertinoActivityIndicator());
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FormHeader(
+                    title: 'دوره آموزشی',
+                    btnRight: MyIconButton(type: ButtonType.save, onPressed: (){if (_formKey.currentState.validate()) bloc.saveCourse(context, course);}),
+                    btnLeft: MyIconButton(type: ButtonType.exit),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(child: GridTextField(hint: 'عنوان دوره', initialValue: snap.data.title, autofocus: true, notempty: true, onChange: (val)=>snap.data.title=val)),
+                      SizedBox(width: 5),
+                      Expanded(
+                        child: MultiChooseItem(
+                          val: snap.data.kind, 
+                          items: [
+                            {'id': 1, 'title': 'آزاد'},
+                            {'id': 2, 'title': 'صدور و تمدید'},
+                          ], 
+                          hint: 'نوع دوره', 
+                          onChange: (val){snap.data.kind=val;_crs.setValue(_crs.value$);}
+                        )
                       )
-                    )
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: MultiChooseItem(
-                        val: snap.data.type, 
-                        items: [
-                          {'id': 1, 'title': 'حضوری'},
-                          {'id': 2, 'title': 'غیر حضوری'},
-                          {'id': 3, 'title': 'حضوری و غیر حضوری'},
-                        ], 
-                        hint: 'نحوه حضور', 
-                        onChange: (val){snap.data.type=val;_crs.setValue(_crs.value$);}
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: MultiChooseItem(
+                          val: snap.data.type, 
+                          items: [
+                            {'id': 1, 'title': 'حضوری'},
+                            {'id': 2, 'title': 'غیر حضوری'},
+                            {'id': 3, 'title': 'حضوری و غیر حضوری'},
+                          ], 
+                          hint: 'نحوه حضور', 
+                          onChange: (val){snap.data.type=val;_crs.setValue(_crs.value$);}
+                        )
+                      ),
+                      SizedBox(width: 5),
+                      Expanded(
+                        child: MultiChooseItem(
+                          val: snap.data.mindegree, 
+                          items: [
+                            {'id': 1, 'title': 'زیردیپلم'},
+                            {'id': 2, 'title': 'دیپلم'},
+                            {'id': 3, 'title': 'دانشجو'},
+                            {'id': 4, 'title': 'کاردانی'},
+                            {'id': 5, 'title': 'کارشناسی'},
+                            {'id': 6, 'title': 'کارشناسی ارشد'},
+                            {'id': 7, 'title': 'دکتری'},
+                            {'id': 8, 'title': 'فوق دکتری'},
+                          ], 
+                          hint: 'حداقل مدرک', 
+                          onChange: (val){snap.data.mindegree=val;_crs.setValue(_crs.value$);}
+                        )
+                      ),
+                      SizedBox(width: 5),
+                      Expanded(
+                        child: MultiChooseItem(
+                          val: snap.data.maxdegree, 
+                          items: [
+                            {'id': 1, 'title': 'زیردیپلم'},
+                            {'id': 2, 'title': 'دیپلم'},
+                            {'id': 3, 'title': 'دانشجو'},
+                            {'id': 4, 'title': 'کاردانی'},
+                            {'id': 5, 'title': 'کارشناسی'},
+                            {'id': 6, 'title': 'کارشناسی ارشد'},
+                            {'id': 7, 'title': 'دکتری'},
+                            {'id': 8, 'title': 'فوق دکتری'},
+                          ], 
+                          hint: 'حداکثر مدرک', 
+                          onChange: (val){snap.data.maxdegree=val;_crs.setValue(_crs.value$);}
+                        )
                       )
-                    ),
-                    SizedBox(width: 5),
-                    Expanded(
-                      child: MultiChooseItem(
-                        val: snap.data.mindegree, 
-                        items: [
-                          {'id': 1, 'title': 'زیردیپلم'},
-                          {'id': 2, 'title': 'دیپلم'},
-                          {'id': 3, 'title': 'دانشجو'},
-                          {'id': 4, 'title': 'کاردانی'},
-                          {'id': 5, 'title': 'کارشناسی'},
-                          {'id': 6, 'title': 'کارشناسی ارشد'},
-                          {'id': 7, 'title': 'دکتری'},
-                          {'id': 8, 'title': 'فوق دکتری'},
-                        ], 
-                        hint: 'حداقل مدرک', 
-                        onChange: (val){snap.data.mindegree=val;_crs.setValue(_crs.value$);}
-                      )
-                    ),
-                    SizedBox(width: 5),
-                    Expanded(
-                      child: MultiChooseItem(
-                        val: snap.data.maxdegree, 
-                        items: [
-                          {'id': 1, 'title': 'زیردیپلم'},
-                          {'id': 2, 'title': 'دیپلم'},
-                          {'id': 3, 'title': 'دانشجو'},
-                          {'id': 4, 'title': 'کاردانی'},
-                          {'id': 5, 'title': 'کارشناسی'},
-                          {'id': 6, 'title': 'کارشناسی ارشد'},
-                          {'id': 7, 'title': 'دکتری'},
-                          {'id': 8, 'title': 'فوق دکتری'},
-                        ], 
-                        hint: 'حداکثر مدرک', 
-                        onChange: (val){snap.data.maxdegree=val;_crs.setValue(_crs.value$);}
-                      )
-                    )
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(child: GridTextField(hint: 'غیبت مجاز', initialValue: snap.data.absent.toString(), numberonly: true, onChange: (val)=>snap.data.absent=int.tryParse(val))),
-                    SizedBox(width: 5),
-                    Expanded(child: GridTextField(hint: 'اعتبار مدرک', initialValue: snap.data.valid.toString(), numberonly: true, onChange: (val)=>snap.data.valid=int.tryParse(val))),
-                  ]
-                ),
-                Row(
-                  children: [
-                    Expanded(child: GridTextField(hint: 'هزینه اولیه', initialValue: snap.data.price.toString(), money: true, onChange: (val)=>snap.data.price=double.tryParse(val.replaceAll(',', '')))),
-                    SizedBox(width: 5),
-                    Expanded(child: GridTextField(hint: 'هزینه مجدد', initialValue: snap.data.reprice.toString(), money: true, onChange: (val)=>snap.data.reprice=double.tryParse(val.replaceAll(',', '')))),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(child: GridTextField(hint: 'نمره حضوری مرتبه اول', initialValue: snap.data.noh1.toString(), numberonly: true, onChange: (val)=>snap.data.noh1=int.tryParse(val))),
-                    SizedBox(width: 5),
-                    Expanded(child: GridTextField(hint: 'نمره غیر حضوری مرتبه اول', initialValue: snap.data.noh2.toString(), numberonly: true, onChange: (val)=>snap.data.noh2=int.tryParse(val))),
-                  ]
-                ),
-                Row(
-                  children: [
-                    Expanded(child: GridTextField(hint: 'نمره حضوری مرتبه بعد', initialValue: snap.data.nonh1.toString(), numberonly: true, onChange: (val)=>snap.data.nonh1=int.tryParse(val))),
-                    SizedBox(width: 5),
-                    Expanded(child: GridTextField(hint: 'نمره غیر حضوری مرتبه بعد', initialValue: snap.data.nonh2.toString(), numberonly: true, onChange: (val)=>snap.data.nonh2=int.tryParse(val))),
-                  ],
-                )
-              ],
-            );
-          }
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(child: GridTextField(hint: 'غیبت مجاز', initialValue: snap.data.absent.toString(), numberonly: true, notempty: true, onChange: (val)=>snap.data.absent=int.tryParse(val))),
+                      SizedBox(width: 5),
+                      Expanded(child: GridTextField(hint: 'اعتبار مدرک', initialValue: snap.data.valid.toString(), numberonly: true, notempty: true, onChange: (val)=>snap.data.valid=int.tryParse(val))),
+                    ]
+                  ),
+                  Row(
+                    children: [
+                      Expanded(child: GridTextField(hint: 'هزینه اولیه', initialValue: snap.data.price.toString(), money: true, notempty: true, onChange: (val)=>snap.data.price=double.tryParse(val.replaceAll(',', '')))),
+                      SizedBox(width: 5),
+                      Expanded(child: GridTextField(hint: 'هزینه مجدد', initialValue: snap.data.reprice.toString(), money: true, notempty: true, onChange: (val)=>snap.data.reprice=double.tryParse(val.replaceAll(',', '')))),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(child: GridTextField(hint: 'نمره حضوری مرتبه اول', initialValue: snap.data.noh1.toString(), numberonly: true, notempty: true, onChange: (val)=>snap.data.noh1=int.tryParse(val))),
+                      SizedBox(width: 5),
+                      Expanded(child: GridTextField(hint: 'نمره غیر حضوری مرتبه اول', initialValue: snap.data.noh2.toString(), numberonly: true, notempty: true, onChange: (val)=>snap.data.noh2=int.tryParse(val))),
+                    ]
+                  ),
+                  Row(
+                    children: [
+                      Expanded(child: GridTextField(hint: 'نمره حضوری مرتبه بعد', initialValue: snap.data.nonh1.toString(), numberonly: true, notempty: true, onChange: (val)=>snap.data.nonh1=int.tryParse(val))),
+                      SizedBox(width: 5),
+                      Expanded(child: GridTextField(hint: 'نمره غیر حضوری مرتبه بعد', initialValue: snap.data.nonh2.toString(), numberonly: true, notempty: true, onChange: (val)=>snap.data.nonh2=int.tryParse(val))),
+                    ],
+                  )
+                ],
+              );
+            }
+          ),
         ),
       ),
     );
   }
 }
+
+class ClassList extends StatelessWidget {
+  final CourseBloc bloc;
+  final Course course;
+
+  ClassList({@required this.bloc, @required this.course});
+  @override
+  Widget build(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
+    return Column(
+      children: [
+        FormHeader(
+          title: 'لیست کلاس ها', 
+          btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>bloc.newClass(course.id)),
+          btnLeft: MyIconButton(type: ButtonType.none),
+        ),
+        GridCaption(
+          obj: [
+            'عنوان کلاس',
+            'تاریخ آغاز',
+            'ظرفیت حضوری',
+            'ظرفیت غیرحضوری',
+          ],
+          endbuttons: 2,
+        ),
+        Expanded(
+          child: Form(
+            key: _formKey,
+            child: StreamBuilder<ClassModel>(
+              stream: bloc.classblocStream$,
+              builder: (context, snap){
+                if (snap.hasData)
+                  if (snap.data.status == Status.error)
+                    return ErrorInGrid(snap.data.msg);
+                  else if (snap.data.status == Status.loaded)
+                    return ListView.builder(
+                      itemCount: snap.data.rows.length,
+                      itemBuilder: (context, idx)=>ClassRow(bloc: bloc, cls: snap.data.rows[idx], formKey: _formKey)
+                    );
+                return Center(child: CupertinoActivityIndicator());
+              }
+            )
+          )
+        ),
+      ],
+    );
+  }
+}
+
+class ClassRow extends StatelessWidget {
+  final CourseBloc bloc;
+  final Class cls;
+  final GlobalKey<FormState> formKey;
+  ClassRow({@required this.bloc, @required this.formKey, @required this.cls});
+  @override
+  Widget build(BuildContext context) {
+    TextEditingController _eddate = TextEditingController(text:cls.begindate);
+    return MyRow(
+      onDoubleTap: ()=>bloc.editClass(cls),
+      children: [
+        cls.edit
+          ? Expanded(child: GridTextField(hint: 'عنوان کلاس', initialValue: cls.title, notempty: true, onChange: (val)=>cls.title=val))
+          : '${cls.title}',
+        cls.edit
+          ? Expanded(child: GridTextField(hint: 'تاریخ آغاز', controller: _eddate, notempty: true, datepicker: true))
+          : '${cls.begindate}',
+        cls.edit
+          ? Expanded(child: GridTextField(hint: 'ظرفیت حضوری', initialValue: '${cls.hozori}', onChange: (val)=>cls.hozori=int.tryParse(val)))
+          : '${cls.hozori}',
+        cls.edit
+          ? Expanded(child: GridTextField(hint: 'ظرفیت غیر حضوری', initialValue: '${cls.nothozori}', onChange: (val)=>cls.nothozori=int.tryParse(val)))
+          : '${cls.nothozori}',
+        cls.edit
+          ? Container(width: 32)
+          : MyIconButton(type: ButtonType.other, icon: Icon(Icons.category, color: Colors.grey.shade600,), hint: 'تقویم آموزشی', onPressed: ()=>showFormAsDialog(context: context, form: ClassDetail(bloc: bloc, cls: cls))),
+        cls.edit
+          ? MyIconButton(type: ButtonType.save, onPressed: (){cls.begindate=_eddate.text; if (formKey.currentState.validate())bloc.saveClass(context, cls);})
+          : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delClass(context, cls))
+      ]
+    );
+  }
+}
+
+class ClassDetail extends StatelessWidget {
+  final Class cls;
+  final CourseBloc bloc;
+  ClassDetail({@required this.bloc, @required this.cls});
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Container(
+        width: screenWidth(context) * 0.65,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FormHeader(
+              title: 'تقویم آموزشی ${cls.title}',
+              btnRight: MyIconButton(type: ButtonType.add, onPressed: (){}),
+            ),
+            GridCaption(
+              obj: [
+                'تاریخ',
+                'ساعت',
+                'محل برگذاری',
+                'نوع جلسه',
+                'سرفصل',
+                'استاد',
+              ]
+            ),
+            Expanded(
+              child: Center(child: Text('i am the detail'),)
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+

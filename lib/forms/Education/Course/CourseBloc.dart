@@ -72,16 +72,17 @@ class CourseBloc{
       if (_courseBloc.value.rows.where((element) => element.id==course.id).length == 0)
         _courseBloc.value.rows.insert(0, course);
       _courseBloc.add(_courseBloc.value);
-      hideWaiting(context);
       if (pop){
         Navigator.pop(context);
         myAlert(context: context, title: 'موفقیت آمیز', message: 'ذخیره اطلاعات موفقیت آمیز بود', color: Colors.green);
       }
     } 
     catch(e){
-      hideWaiting(context);
       analyzeError(context, '$e');
     } 
+    finally{
+      hideWaiting(context);
+    }
   }  
 
 
@@ -116,21 +117,25 @@ class CourseBloc{
     });
   }
   saveClass(BuildContext context, Class obj) async{
-    showWaiting(context);
-    try{
-      obj.token = readToken(context);
-      obj.id = await _repository.saveClass(obj);
-      obj.edit = false;
-      if (_classBloc.value.rows.where((element) => element.id==obj.id).length == 0)
-        _classBloc.value.rows.insert(0, obj);
-      _classBloc.add(_classBloc.value);
-      hideWaiting(context);
-      myAlert(context: context, title: 'موفقیت آمیز', message: 'ذخیره اطلاعات موفقیت آمیز بود', color: Colors.green);
-    } 
-    catch(e){
-      hideWaiting(context);
-      analyzeError(context, '$e');
-    } 
+    if (obj.hozori == 0 && obj.nothozori == 0)
+      myAlert(context: context, title: 'مقادیر اجباری', message: 'ظرفیت حضوری و یا غیرحضوری می بایست مشخص شود');
+    else 
+      try{
+        showWaiting(context);
+        obj.token = readToken(context);
+        obj.id = await _repository.saveClass(obj);
+        obj.edit = false;
+        if (_classBloc.value.rows.where((element) => element.id==obj.id).length == 0)
+          _classBloc.value.rows.insert(0, obj);
+        _classBloc.add(_classBloc.value);
+        myAlert(context: context, title: 'موفقیت آمیز', message: 'ذخیره اطلاعات موفقیت آمیز بود', color: Colors.green);
+      } 
+      catch(e){
+        analyzeError(context, '$e');
+      } 
+      finally{
+        hideWaiting(context);
+      }
   }  
   newClass(int courseid){
     _classBloc.value.rows.insert(0, Class(courseid: courseid, edit: true));
