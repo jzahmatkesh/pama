@@ -19,6 +19,13 @@ class ClassModel{
 
   ClassModel({this.status, this.rows, this.msg});
 }
+class DClassModel{
+  Status status;
+  List<DClass> rows;
+  String msg;
+
+  DClassModel({this.status, this.rows, this.msg});
+}
 
 class CourseBloc{
   CourseRepository _repository = new CourseRepository();
@@ -28,6 +35,9 @@ class CourseBloc{
 
   BehaviorSubject<ClassModel> _classBloc = BehaviorSubject<ClassModel>.seeded(ClassModel(status: Status.loading));
   Stream<ClassModel> get classblocStream$ => _classBloc.stream;
+
+  BehaviorSubject<DClassModel> _dclassBloc = BehaviorSubject<DClassModel>.seeded(DClassModel(status: Status.loading));
+  Stream<DClassModel> get dclassblocStream$ => _dclassBloc.stream;
 
   loadData(BuildContext context) async{
     try{
@@ -144,5 +154,57 @@ class CourseBloc{
   editClass(Class cls){
     cls.edit = true;
     _classBloc.add(_classBloc.value);
+  }
+
+  loadDClass(BuildContext context, Class cls) async{
+    try{
+      _dclassBloc.add(DClassModel(status: Status.loading));
+      _dclassBloc.add(DClassModel(status: Status.loaded, rows: await _repository.loadDClass(readToken(context), cls.id)));
+    }
+    catch(e){
+      analyzeError(context, '$e', msg: false);
+      _dclassBloc.add(DClassModel(status: Status.error, msg: '$e'));
+    }
+  }
+  saveDClass(BuildContext context, DClass obj) async{
+    try{
+      showWaiting(context);
+      obj.token = readToken(context);
+      obj.id = await _repository.saveDClass(obj);
+      obj.edit = false;
+      if (_dclassBloc.value.rows.where((element) => element.id==obj.id).length == 0)
+        _dclassBloc.value.rows.insert(0, obj);
+      _dclassBloc.add(_dclassBloc.value);
+      myAlert(context: context, title: 'موفقیت آمیز', message: 'ذخیره اطلاعات موفقیت آمیز بود', color: Colors.green);
+    } 
+    catch(e){
+      analyzeError(context, '$e');
+    } 
+    finally{
+      hideWaiting(context);
+    }
+  }  
+  delDClass(BuildContext context, DClass obj){
+    confirmMessage(context, 'حذف ', 'آیا مایل به حذف کلاس ${obj.date} ${obj.time} می باشید؟', yesclick: () async{
+      try{
+        obj.token = readToken(context);
+        await _repository.deleteDClass(obj);
+        _dclassBloc.value.rows.removeWhere((element) => element.id == obj.id);
+        _dclassBloc.add(_dclassBloc.value);
+      }
+      catch(e){
+        analyzeError(context, e.toString());
+      }
+      Navigator.pop(context);
+    });
+  }
+  newDLCass(BuildContext context, int classid){
+    _dclassBloc.value.rows.forEach((element)=>element.edit=false);
+    _dclassBloc.value.rows.insert(0, DClass(classid: classid, id: 0, kind: 1, edit: true));
+    _dclassBloc.add(_dclassBloc.value);
+  }
+  changeDClassKind(DClass cls, int kind){
+    cls.kind = kind;
+    _dclassBloc.add(_dclassBloc.value);
   }
 }

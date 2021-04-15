@@ -1610,6 +1610,37 @@ class CourseRepository{
       return true;
     throw Exception(_data['msg']);
   }
+
+
+  Future<List<DClass>> loadDClass(String token, int cls) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Course/Class/Detail', body: jsonEncode({"token": token, 'classid': cls}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<DClass>((data) => DClass.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> saveDClass(DClass obj) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Course/Class/Detail', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(obj.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+ 
+  Future<bool> deleteDClass(DClass obj) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Course/Class/Detail', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': obj.token,
+       'classid': obj.classid.toString(),
+       'id': obj.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
 }
 
 

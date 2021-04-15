@@ -299,7 +299,7 @@ class ClassRow extends StatelessWidget {
           : '${cls.nothozori}',
         cls.edit
           ? Container(width: 32)
-          : MyIconButton(type: ButtonType.other, icon: Icon(Icons.category, color: Colors.grey.shade600,), hint: 'تقویم آموزشی', onPressed: ()=>showFormAsDialog(context: context, form: ClassDetail(bloc: bloc, cls: cls))),
+          : MyIconButton(type: ButtonType.other, icon: Icon(Icons.category, color: Colors.grey.shade600,), hint: 'تقویم آموزشی', onPressed: (){bloc.loadDClass(context, cls); showFormAsDialog(context: context, form: ClassDetail(bloc: bloc, cls: cls));}),
         cls.edit
           ? MyIconButton(type: ButtonType.save, onPressed: (){cls.begindate=_eddate.text; if (formKey.currentState.validate())bloc.saveClass(context, cls);})
           : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delClass(context, cls))
@@ -315,6 +315,7 @@ class ClassDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _eddate = TextEditingController();
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Container(
@@ -324,7 +325,7 @@ class ClassDetail extends StatelessWidget {
           children: [
             FormHeader(
               title: 'تقویم آموزشی ${cls.title}',
-              btnRight: MyIconButton(type: ButtonType.add, onPressed: (){}),
+              btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>bloc.newDLCass(context, this.cls.id)),
             ),
             GridCaption(
               obj: [
@@ -337,7 +338,49 @@ class ClassDetail extends StatelessWidget {
               ]
             ),
             Expanded(
-              child: Center(child: Text('i am the detail'),)
+              child: StreamBuilder<DClassModel>(
+                stream: bloc.dclassblocStream$,
+                builder: (context, snap){
+                  if (snap.hasData)
+                    if (snap.data.status == Status.error)
+                      return ErrorInGrid(snap.data.msg);
+                    else if (snap.data.status == Status.loaded)
+                      return ListView.builder(
+                        itemCount: snap.data.rows.length,
+                        itemBuilder: (context, idx){
+                          final _dcls = snap.data.rows[idx];
+                          return _dcls.edit
+                            ? MyRow(
+                              children: [
+                                Expanded(child: GridTextField(hint: 'تاریخ', datepicker: true, controller: _eddate, notempty: true)),
+                                Expanded(child: GridTextField(hint: 'ساعت', timeonly: true, notempty: true, onChange: (val)=>_dcls.time=val)),
+                                Expanded(child: GridTextField(hint: 'محل برگذاری', notempty: true, onChange: (val)=>_dcls.place=val)),
+                                Expanded(child: MultiChooseItem(
+                                  val: _dcls.kind, 
+                                  hint: 'نوع جلسه', 
+                                  items: [
+                                    {'id': 1, 'title': 'تدریس'},
+                                    {'id': 2, 'title': 'آزمون'},
+                                    {'id': 3, 'title': 'آزمون حضوری'},
+                                    {'id': 4, 'title': 'آزمون غیرحضوری'},
+                                  ],
+                                  onChange: (val)=>bloc.changeDClassKind(_dcls, val),
+                                )),
+                              ]
+                            )
+                            : MyRow(
+                              children: [
+                                '${_dcls.date}',
+                                '${_dcls.time}',
+                                '${_dcls.place}',
+                                '${_dcls.kindName()}',
+                              ]
+                            );
+                        }
+                      );
+                  return Center(child: CupertinoActivityIndicator());
+                }
+              )
             )
           ],
         ),

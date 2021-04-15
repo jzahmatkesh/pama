@@ -2455,10 +2455,8 @@ class Course{
 
     String kindName(){
       switch (this.kind) {
-        case 1:
-          return 'آزاد';
-        case 2:
-          return 'صدور و تمدید';
+        case 1: return 'آزاد';
+        case 2: return 'صدور و تمدید';
       }
       return "";
     }
@@ -2535,4 +2533,59 @@ class Class{
     }
 }
 
+class DClass{
+    int classid;
+    int id;
+    String date;
+    String time;
+    String place;
+    int kind;
+    int topicid;
+    String topictitle;
+    int peopid;
+    String peopfamily;
+    String token;
+    bool edit;
+ 
+    DClass({this.classid,this.id,this.date,this.time,this.place,this.kind,this.topicid,this.topictitle,this.peopid,this.peopfamily, this.token, this.edit = false});
+ 
+    DClass.fromJson(Map<String, dynamic> json):
+        classid = json['classid'],
+        id = json['id'],
+        date = json['date'],
+        time = json['time'],
+        place = json['place'],
+        kind = json['kind'],
+        topicid = json['topicid'],
+        topictitle = json['topictitle'],
+        peopid = json['peopid'],
+        peopfamily = json['peopfamily'],
+        edit = false;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['classid'] = this.classid;
+        data['id'] = this.id;
+        data['date'] = this.date;
+        data['time'] = this.time;
+        data['place'] = this.place;
+        data['kind'] = this.kind;
+        data['topicid'] = this.topicid;
+        data['topictitle'] = this.topictitle;
+        data['peopid'] = this.peopid;
+        data['peopfamily'] = this.peopfamily;
+        data['token'] = this.token;
+        return data;
+    }
+
+    String kindName(){
+      switch (this.kind) {
+        case 1: return'تدریس';
+        case 2: return'آزمون';
+        case 3: return'آزمون حضوری';
+        case 4: return'آزمون غیرحضوری';
+      }
+      return "";
+    }
+}
 
