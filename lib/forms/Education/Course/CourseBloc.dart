@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../classes/Repository.dart';
 import '../../../classes/classes.dart';
 import '../../../module/functions.dart';
+import '../../../module/theme-Manager.dart';
 
 class CourseModel{
   Status status;
@@ -158,6 +160,8 @@ class CourseBloc{
 
   loadDClass(BuildContext context, Class cls) async{
     try{
+      _classBloc.value.rows.forEach((element)=> element.showdetail = element.id==cls.id && !element.showdetail);
+      _classBloc.add(_classBloc.value);
       _dclassBloc.add(DClassModel(status: Status.loading));
       _dclassBloc.add(DClassModel(status: Status.loaded, rows: await _repository.loadDClass(readToken(context), cls.id)));
     }
@@ -206,5 +210,10 @@ class CourseBloc{
   changeDClassKind(DClass cls, int kind){
     cls.kind = kind;
     _dclassBloc.add(_dclassBloc.value);
+  }
+  editDCLass(BuildContext context, DClass dcls){
+    dcls.edit=true;
+    _dclassBloc.add(_dclassBloc.value);
+    context.read<ThemeManager>().setCompany(dcls.topicid);
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pama/classes/classes.dart';
+import '../../../classes/classes.dart';
+import '../../../module/theme-Manager.dart';
+import 'package:provider/provider.dart';
 
 import '../../../module/Widgets.dart';
 import '../../../module/consts.dart';
@@ -46,7 +48,7 @@ class FmCourse extends StatelessWidget {
                           Course _crs = snap.data.rows[idx];
                           if (_crs.showclass)
                             return Container(
-                              height: screenHeight(context) * 0.5,
+                              height: screenHeight(context) * 0.75,
                               padding: EdgeInsets.all(8),
                               child: Column(
                                 children: [
@@ -237,7 +239,7 @@ class ClassList extends StatelessWidget {
     return Column(
       children: [
         FormHeader(
-          title: 'لیست کلاس ها', 
+          title: 'لیست کلاس های ${course.title}', 
           btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>bloc.newClass(course.id)),
           btnLeft: MyIconButton(type: ButtonType.none),
         ),
@@ -262,7 +264,50 @@ class ClassList extends StatelessWidget {
                   else if (snap.data.status == Status.loaded)
                     return ListView.builder(
                       itemCount: snap.data.rows.length,
-                      itemBuilder: (context, idx)=>ClassRow(bloc: bloc, cls: snap.data.rows[idx], formKey: _formKey)
+                      itemBuilder: (context, idx){
+                        final _cls = snap.data.rows[idx];
+                        if (_cls.showdetail)
+                          return Container(
+                            height: screenHeight(context) * 0.45,
+                            child: Column(
+                              children: [
+                                ClassRow(bloc: bloc, cls: _cls, formKey: _formKey),
+                                FormHeader(
+                                  title: 'تقویم آموزشی ${_cls.title}',
+                                  btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>bloc.newDLCass(context, _cls.id)),
+                                  btnLeft: MyIconButton(type: ButtonType.none),
+                                ),
+                                GridCaption(
+                                  obj: [
+                                    'تاریخ',
+                                    'ساعت',
+                                    'محل برگذاری',
+                                    'نوع جلسه',
+                                    'سرفصل',
+                                    'استاد',
+                                  ]
+                                ),
+                                Expanded(
+                                  child: StreamBuilder<DClassModel>(
+                                    stream: bloc.dclassblocStream$,
+                                    builder: (ctx, snap){
+                                      if (snap.hasData)
+                                        if (snap.data.status == Status.error)
+                                          return ErrorInGrid(snap.data.msg);
+                                        else if (snap.data.status == Status.loaded)
+                                          return ListView.builder(
+                                            itemCount: snap.data.rows.length,
+                                            itemBuilder: (ctx, idx)=>DClassRow(bloc: bloc, dcls: snap.data.rows[idx])
+                                          );
+                                      return Center(child: CupertinoActivityIndicator());
+                                    }
+                                  )
+                                )
+                              ],
+                            ),
+                          );
+                        return ClassRow(bloc: bloc, cls: _cls, formKey: _formKey);
+                      }
                     );
                 return Center(child: CupertinoActivityIndicator());
               }
@@ -299,7 +344,7 @@ class ClassRow extends StatelessWidget {
           : '${cls.nothozori}',
         cls.edit
           ? Container(width: 32)
-          : MyIconButton(type: ButtonType.other, icon: Icon(Icons.category, color: Colors.grey.shade600,), hint: 'تقویم آموزشی', onPressed: (){bloc.loadDClass(context, cls); showFormAsDialog(context: context, form: ClassDetail(bloc: bloc, cls: cls));}),
+          : MyIconButton(type: ButtonType.other, icon: Icon(Icons.category, color: Colors.grey.shade600,), hint: 'تقویم آموزشی', onPressed: ()=>bloc.loadDClass(context, cls)),
         cls.edit
           ? MyIconButton(type: ButtonType.save, onPressed: (){cls.begindate=_eddate.text; if (formKey.currentState.validate())bloc.saveClass(context, cls);})
           : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delClass(context, cls))
@@ -316,6 +361,7 @@ class ClassDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _eddate = TextEditingController();
+    Bloc<int> _topic = Bloc<int>();
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Container(
@@ -340,14 +386,14 @@ class ClassDetail extends StatelessWidget {
             Expanded(
               child: StreamBuilder<DClassModel>(
                 stream: bloc.dclassblocStream$,
-                builder: (context, snap){
+                builder: (ctx, snap){
                   if (snap.hasData)
                     if (snap.data.status == Status.error)
                       return ErrorInGrid(snap.data.msg);
                     else if (snap.data.status == Status.loaded)
                       return ListView.builder(
                         itemCount: snap.data.rows.length,
-                        itemBuilder: (context, idx){
+                        itemBuilder: (ctx, idx){
                           final _dcls = snap.data.rows[idx];
                           return _dcls.edit
                             ? MyRow(
@@ -366,6 +412,20 @@ class ClassDetail extends StatelessWidget {
                                   ],
                                   onChange: (val)=>bloc.changeDClassKind(_dcls, val),
                                 )),
+                                Expanded(child: ForeignKeyField(hint: 'سرفصل', initialValue: {'id': _dcls.topicid, 'name': _dcls.topictitle}, f2key: 'Topic', onChange: (val){
+                                  print('$val');
+                                  _dcls.topicid=val['id'];
+                                  _dcls.topictitle=val['name'];
+                                  context.read<ThemeManager>().setCompany(val['id']);
+                                  _topic.setValue(1);
+                                })),
+                                StreamBuilder<int>(
+                                  stream: _topic.stream$,
+                                  builder: (context, snap){
+                                    return Expanded(child: ForeignKeyField(hint: 'استاد', initialValue: {'id': _dcls.peopid, 'name': _dcls.peopfamily}, f2key: 'TopicTeacher', onChange: (val){_dcls.peopid=val['id'];_dcls.peopfamily=val['name'];}));
+                                  }
+                                ),
+                                MyIconButton(type: ButtonType.save, onPressed: ()=>bloc.saveDClass(context, _dcls)),
                               ]
                             )
                             : MyRow(
@@ -374,6 +434,9 @@ class ClassDetail extends StatelessWidget {
                                 '${_dcls.time}',
                                 '${_dcls.place}',
                                 '${_dcls.kindName()}',
+                                '${_dcls.topictitle}',
+                                '${_dcls.peopfamily}',
+                                MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delDClass(context, _dcls))
                               ]
                             );
                         }
@@ -389,3 +452,66 @@ class ClassDetail extends StatelessWidget {
   }
 }
 
+class DClassRow extends StatelessWidget {
+  
+  final DClass dcls;
+  final CourseBloc bloc;
+
+  DClassRow({@required this.bloc, @required this.dcls});
+  
+  @override
+  Widget build(BuildContext context) {
+    final _eddate = TextEditingController(text: dcls.date);
+    Bloc<int> _topic = Bloc<int>();
+    return Container(
+      width: screenWidth(context) * 0.5,
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Column(
+          children: [
+            FormHeader(title: 'تقویم آموزشی', btnRight: MyIconButton(type: ButtonType.save, onPressed: ()=>bloc.saveDClass(context, dcls))),
+            Row(
+              children: [
+                Expanded(child: GridTextField(hint: 'تاریخ', datepicker: true, controller: _eddate, notempty: true)),
+                Expanded(child: GridTextField(hint: 'ساعت', initialValue: dcls.time, timeonly: true, notempty: true, onChange: (val)=>dcls.time=val)),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(child: GridTextField(hint: 'محل برگذاری', initialValue: dcls.place, notempty: true, onChange: (val)=>dcls.place=val)),
+                Expanded(child: MultiChooseItem(
+                  val: dcls.kind, 
+                  hint: 'نوع جلسه', 
+                  items: [
+                    {'id': 1, 'title': 'تدریس'},
+                    {'id': 2, 'title': 'آزمون'},
+                    {'id': 3, 'title': 'آزمون حضوری'},
+                    {'id': 4, 'title': 'آزمون غیرحضوری'},
+                  ],
+                  onChange: (val)=>bloc.changeDClassKind(dcls, val),
+                )),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(child: ForeignKeyField(hint: 'سرفصل', initialValue: {'id': dcls.topicid, 'name': dcls.topictitle}, f2key: 'Topic', onChange: (val){
+                  print('$val');
+                  dcls.topicid=val['id'];
+                  dcls.topictitle=val['name'];
+                  context.read<ThemeManager>().setCompany(val['id']);
+                  _topic.setValue(1);
+                })),
+                StreamBuilder<int>(
+                  stream: _topic.stream$,
+                  builder: (context, snap){
+                    return Expanded(child: ForeignKeyField(hint: 'استاد', initialValue: {'id': dcls.peopid, 'name': dcls.peopfamily}, f2key: 'TopicTeacher', onChange: (val){dcls.peopid=val['id'];dcls.peopfamily=val['name'];}));
+                  }
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
