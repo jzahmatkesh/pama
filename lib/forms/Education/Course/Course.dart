@@ -467,19 +467,20 @@ class DClassRow extends StatelessWidget {
       width: screenWidth(context) * 0.5,
       child: Directionality(
         textDirection: TextDirection.rtl,
-        child: Column(
+        child: MyRow(
+          onDoubleTap: ()=>bloc.editDCLass(context, dcls),
           children: [
-            FormHeader(title: 'تقویم آموزشی', btnRight: MyIconButton(type: ButtonType.save, onPressed: ()=>bloc.saveDClass(context, dcls))),
-            Row(
-              children: [
-                Expanded(child: GridTextField(hint: 'تاریخ', datepicker: true, controller: _eddate, notempty: true)),
-                Expanded(child: GridTextField(hint: 'ساعت', initialValue: dcls.time, timeonly: true, notempty: true, onChange: (val)=>dcls.time=val)),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(child: GridTextField(hint: 'محل برگذاری', initialValue: dcls.place, notempty: true, onChange: (val)=>dcls.place=val)),
-                Expanded(child: MultiChooseItem(
+            dcls.edit
+              ? Expanded(child: GridTextField(hint: 'تاریخ', datepicker: true, controller: _eddate, notempty: true))
+              : '${dcls.date}',
+            dcls.edit
+              ? Expanded(child: GridTextField(hint: 'ساعت', initialValue: dcls.time, timeonly: true, notempty: true, onChange: (val)=>dcls.time=val))
+              : '${dcls.time}',
+            dcls.edit
+              ? Expanded(child: GridTextField(hint: 'محل برگذاری', initialValue: dcls.place, notempty: true, onChange: (val)=>dcls.place=val))
+              : '${dcls.place}',
+            dcls.edit
+              ? Expanded(child: MultiChooseItem(
                   val: dcls.kind, 
                   hint: 'نوع جلسه', 
                   items: [
@@ -489,29 +490,33 @@ class DClassRow extends StatelessWidget {
                     {'id': 4, 'title': 'آزمون غیرحضوری'},
                   ],
                   onChange: (val)=>bloc.changeDClassKind(dcls, val),
-                )),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(child: ForeignKeyField(hint: 'سرفصل', initialValue: {'id': dcls.topicid, 'name': dcls.topictitle}, f2key: 'Topic', onChange: (val){
-                  print('$val');
+                ))
+              : '${dcls.kindName()}',
+            dcls.edit
+              ? Expanded(child: ForeignKeyField(hint: 'سرفصل', initialValue: {'id': dcls.topicid, 'name': dcls.topictitle}, f2key: 'Topic', onChange: (val){
                   dcls.topicid=val['id'];
                   dcls.topictitle=val['name'];
                   context.read<ThemeManager>().setCompany(val['id']);
                   _topic.setValue(1);
-                })),
-                StreamBuilder<int>(
+                }))
+              : '${dcls.topictitle}',
+            dcls.edit
+              ? StreamBuilder<int>(
                   stream: _topic.stream$,
                   builder: (context, snap){
                     return Expanded(child: ForeignKeyField(hint: 'استاد', initialValue: {'id': dcls.peopid, 'name': dcls.peopfamily}, f2key: 'TopicTeacher', onChange: (val){dcls.peopid=val['id'];dcls.peopfamily=val['name'];}));
                   }
-                ),
-              ],
-            ),
+                )
+              : '${dcls.peopfamily}',
+            dcls.edit
+              ? MyIconButton(type: ButtonType.save, onPressed: (){dcls.date=_eddate.text; bloc.saveDClass(context, dcls);})
+              : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delDClass(context, dcls))
           ],
         ),
       ),
     );
   }
 }
+
+
+
