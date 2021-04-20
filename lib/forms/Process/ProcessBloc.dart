@@ -46,6 +46,13 @@ class PrcCmpRasteModel{
 
   PrcCmpRasteModel({@required this.status, this.rows, this.msg});
 }
+class PrcStepCourseModel{
+  Status status;
+  List<PrcStepCourse> rows;
+  String msg;
+
+  PrcStepCourseModel({@required this.status, this.rows, this.msg});
+}
 
 class ProcessBloc{
   ProcessRepository _repo = new ProcessRepository();
@@ -61,6 +68,9 @@ class ProcessBloc{
 
   BehaviorSubject<PrcStepIncomeModel> _prcStepIncomeBloc = BehaviorSubject<PrcStepIncomeModel>();
   Stream<PrcStepIncomeModel> get prcStepIncomeStream$ => _prcStepIncomeBloc.stream;
+
+  BehaviorSubject<PrcStepCourseModel> _prcStepCourseBloc = BehaviorSubject<PrcStepCourseModel>();
+  Stream<PrcStepCourseModel> get prcStepCourseStream$ => _prcStepCourseBloc.stream;
 
   BehaviorSubject<PrcCompanyModel> _prcCompanyBloc = BehaviorSubject<PrcCompanyModel>();
   Stream<PrcCompanyModel> get prcCompanyStream$ => _prcCompanyBloc.stream;
@@ -562,6 +572,53 @@ class ProcessBloc{
         await _repo.delCmpRaste(obj);
         _prcCmpRasteBloc.value.rows.removeWhere((element)=> element.id==obj.id);
         _prcCmpRasteBloc.add(_prcCmpRasteBloc.value);
+        hideWaiting(context);
+        Navigator.pop(context);
+      }
+      catch(e){
+        hideWaiting(context);
+        analyzeError(context, '$e');
+      }
+    });
+  }
+
+  loadStepCourse(BuildContext context, int processid, int stepid) async{
+    try{
+      _prcStepCourseBloc.add(PrcStepCourseModel(status: Status.loading));
+      _prcStepCourseBloc.add(PrcStepCourseModel(status: Status.loaded, rows: await _repo.loadStepCourse(readToken(context), processid, stepid)));
+    }
+    catch(e){
+      analyzeError(context, '$e');
+      _prcStepCourseBloc.add(PrcStepCourseModel(status: Status.error, msg: '$e'));
+    }
+  }
+  Future<bool> saveStepCourse(BuildContext context, PrcStepCourse obj) async{
+    try{
+      showWaiting(context);
+      obj.token = readToken(context);
+      await _repo.saveStepCourse(obj);
+      _prcStepCourseBloc.add(_prcStepCourseBloc.value);
+      hideWaiting(context);
+      return true;
+    }
+    catch(e){
+      hideWaiting(context);
+      analyzeError(context, '$e');
+      return false;
+    }
+  }
+  insertStepCourse(int processid, int stepid){
+    _prcStepCourseBloc.value.rows.insert(0, PrcStepCourse(processid: processid, stepid: stepid, courseid: 0));
+    _prcStepCourseBloc.add(_prcStepCourseBloc.value);
+  }
+  delStepCourse(BuildContext context, PrcStepCourse obj) async{
+    confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف ${obj.coursetitle} می باشید؟', yesclick: () async{
+      try{
+        showWaiting(context);
+        obj.token = readToken(context);
+        await _repo.delStepCourse(obj);
+        _prcStepCourseBloc.value.rows.removeWhere((element)=> element.courseid == obj.courseid);
+        _prcStepCourseBloc.add(_prcStepCourseBloc.value);
         hideWaiting(context);
         Navigator.pop(context);
       }

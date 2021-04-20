@@ -233,6 +233,10 @@ showStepDetail(BuildContext context, Process proc, Prcstep obj){
     _bloc.loadStepIncome(context, proc.id, obj.id);
     showFormAsDialog(context: context, form: PnIncome(process: proc.title, step: obj));
   }
+  else if (obj.kind == 5){
+    _bloc.loadStepCourse(context, proc.id, obj.id);
+    showFormAsDialog(context: context, form: PnCourse(process: proc.title, step: obj));
+  }
 }
 
 class PnDocument extends StatelessWidget {
@@ -488,3 +492,58 @@ class PnPrcCmpRaste extends StatelessWidget {
     );
   }
 }
+
+class PnCourse extends StatelessWidget {
+  final Prcstep step;
+  final String process;
+  PnCourse({@required this.process, @required this.step});
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Container(
+        width: screenWidth(context) * 0.65,
+        child: Column(
+          children: [
+            FormHeader(title: 'دوره های آموزشی ${step.title} $process', btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.insertStepCourse(step.processid, step.id))),
+            GridCaption(obj: [
+              'عنوان دوره',
+            ]),
+            Expanded(
+              child: StreamBuilder<PrcStepCourseModel>(
+                stream: _bloc.prcStepCourseStream$,
+                builder: (context, snap){
+                  if (snap.hasData)
+                    if (snap.data.status == Status.error)
+                      return ErrorInGrid(snap.data.msg);
+                    else if (snap.data.status == Status.loaded)
+                      return ListView.builder(
+                        itemCount: snap.data.rows.length,
+                        itemBuilder: (context, idx){
+                          PrcStepCourse _course = snap.data.rows[idx];
+                          return MyRow(
+                            children: [
+                              _course.courseid == 0
+                                ? Expanded(child: ForeignKeyField(hint: 'عنوان درآمد', initialValue: {'id': _course.courseid, 'name': _course.coursetitle}, f2key: 'Income', onChange: (val){_course.courseid=val['id'];_course.coursetitle=val['name'];}))
+                                : '${_course.coursetitle}',
+                              _course.courseid == 0
+                                ? MyIconButton(type: ButtonType.save, onPressed: ()=>_bloc.saveStepCourse(context, _course))
+                                : MyIconButton(type: ButtonType.del, onPressed: ()=>_bloc.delStepCourse(context, _course))
+                            ]
+                          );
+                        }
+                      );
+                  return Center(child: CupertinoActivityIndicator());
+                }
+              )
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+

@@ -1549,6 +1549,38 @@ class ProcessRepository{
       return true;
     throw Exception(_data['msg']);
   }
+
+
+  Future<List<PrcStepCourse>> loadStepCourse(String token, int processid, int stepid) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Process/Step/Course', body: jsonEncode({"token": token, "processid": processid, "stepid": stepid}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<PrcStepCourse>((data) => PrcStepCourse.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> saveStepCourse(PrcStepCourse obj) async{
+     Map<String, dynamic> _data = await putToServer(api: 'Process/Step/Course', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(obj.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+
+  Future<bool> delStepCourse(PrcStepCourse obj) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Process/Step/Course', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': obj.token,
+       'processid': obj.processid.toString(),
+       'stepid': obj.stepid.toString(),
+       'courseid': obj.courseid.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
 }
 
 class CourseRepository{

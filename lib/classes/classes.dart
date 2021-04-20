@@ -2307,6 +2307,37 @@ class PrcStepIncome{
     }
 }
 
+class PrcStepCourse{
+    int processid;
+    int stepid;
+    int courseid;
+    String coursetitle;
+    int kind;
+    String token;
+    bool edit;
+ 
+    PrcStepCourse({this.processid,this.stepid,this.courseid,this.coursetitle,this.kind, this.token, this.edit=false});
+ 
+    PrcStepCourse.fromJson(Map<String, dynamic> json):
+        processid = json['processid'],
+        stepid = json['stepid'],
+        courseid = json['courseid'],
+        coursetitle = json['coursetitle'],
+        kind = json['kind'],
+        edit = false;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['processid'] = this.processid;
+        data['stepid'] = this.stepid;
+        data['courseid'] = this.courseid;
+        data['coursetitle'] = this.coursetitle;
+        data['kind'] = this.kind;
+        data['token'] = this.token;
+        return data;
+    }
+}
+
 class PrcCompany{
     int processid;
     int cmpid;
