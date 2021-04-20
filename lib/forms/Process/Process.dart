@@ -508,6 +508,7 @@ class PnCourse extends StatelessWidget {
             FormHeader(title: 'دوره های آموزشی ${step.title} $process', btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.insertStepCourse(step.processid, step.id))),
             GridCaption(obj: [
               'عنوان دوره',
+              ',وابستگی'
             ]),
             Expanded(
               child: StreamBuilder<PrcStepCourseModel>(
@@ -521,12 +522,22 @@ class PnCourse extends StatelessWidget {
                         itemCount: snap.data.rows.length,
                         itemBuilder: (context, idx){
                           PrcStepCourse _course = snap.data.rows[idx];
+                          print('${_course.kind}');
                           return MyRow(
+                            onDoubleTap: ()=>_bloc.editStepCourse(_course),
                             children: [
-                              _course.courseid == 0
-                                ? Expanded(child: ForeignKeyField(hint: 'عنوان درآمد', initialValue: {'id': _course.courseid, 'name': _course.coursetitle}, f2key: 'Income', onChange: (val){_course.courseid=val['id'];_course.coursetitle=val['name'];}))
+                              _course.edit
+                                ? Expanded(child: ForeignKeyField(hint: 'عنوان درآمد', initialValue: {'id': _course.courseid, 'name': _course.coursetitle}, f2key: 'Course', onChange: (val){_course.courseid=val['id'];_course.coursetitle=val['name'];}))
                                 : '${_course.coursetitle}',
-                              _course.courseid == 0
+                              _course.edit
+                                ? Expanded(child: MultiChooseItem(hint: 'وابستگی', val: _course.kind, items: [
+                                  {'id': 1, 'title': 'فرد صنفی'},
+                                  {'id': 2, 'title': 'مباشر'},
+                                  {'id': 3, 'title': 'شریک'},
+                                  {'id': 4, 'title': 'کارکنان'},
+                                ], onChange: (val)=>_bloc.stepCoursechangeKind(_course, val)))
+                                : '${_course.kindName()}',
+                              _course.edit
                                 ? MyIconButton(type: ButtonType.save, onPressed: ()=>_bloc.saveStepCourse(context, _course))
                                 : MyIconButton(type: ButtonType.del, onPressed: ()=>_bloc.delStepCourse(context, _course))
                             ]

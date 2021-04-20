@@ -2316,7 +2316,7 @@ class PrcStepCourse{
     String token;
     bool edit;
  
-    PrcStepCourse({this.processid,this.stepid,this.courseid,this.coursetitle,this.kind, this.token, this.edit=false});
+    PrcStepCourse({this.processid,this.stepid,this.courseid,this.coursetitle,this.kind=1, this.token, this.edit=false});
  
     PrcStepCourse.fromJson(Map<String, dynamic> json):
         processid = json['processid'],
@@ -2335,6 +2335,16 @@ class PrcStepCourse{
         data['kind'] = this.kind;
         data['token'] = this.token;
         return data;
+    }
+    
+    String kindName(){
+      switch (this.kind) {
+        case 1: return 'فرد صنفی';
+        case 2: return 'مباشر';
+        case 3: return 'شریک';
+        case 4: return 'کارکنان';
+      }
+      return "";
     }
 }
 

@@ -597,6 +597,7 @@ class ProcessBloc{
       showWaiting(context);
       obj.token = readToken(context);
       await _repo.saveStepCourse(obj);
+      obj.edit=false;
       _prcStepCourseBloc.add(_prcStepCourseBloc.value);
       hideWaiting(context);
       return true;
@@ -608,7 +609,7 @@ class ProcessBloc{
     }
   }
   insertStepCourse(int processid, int stepid){
-    _prcStepCourseBloc.value.rows.insert(0, PrcStepCourse(processid: processid, stepid: stepid, courseid: 0));
+    _prcStepCourseBloc.value.rows.insert(0, PrcStepCourse(processid: processid, stepid: stepid, courseid: 0, edit: true));
     _prcStepCourseBloc.add(_prcStepCourseBloc.value);
   }
   delStepCourse(BuildContext context, PrcStepCourse obj) async{
@@ -627,5 +628,13 @@ class ProcessBloc{
         analyzeError(context, '$e');
       }
     });
+  }
+  stepCoursechangeKind(PrcStepCourse obj, int kind){
+    obj.kind = kind;
+    _prcStepCourseBloc.add(_prcStepCourseBloc.value);
+  }
+  editStepCourse(PrcStepCourse obj){
+    obj.edit = true;
+    _prcStepCourseBloc.add(_prcStepCourseBloc.value);
   }
 }
