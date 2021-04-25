@@ -121,6 +121,17 @@ class PeopleInfo extends StatelessWidget {
     FocusNode _fpost  = FocusNode();
     FocusNode _faddress  = FocusNode();
     FocusNode _fpassport  = FocusNode();
+    FocusNode _ftakafolcount = FocusNode();
+    FocusNode _fmeliat = FocusNode();
+    FocusNode _fmadrakfani = FocusNode();
+    FocusNode _fbimeyear = FocusNode();
+    FocusNode _fskills = FocusNode();
+    FocusNode _fotherjobhistory = FocusNode();
+    FocusNode _fjobpermit = FocusNode();
+    FocusNode _fshahrdarimantaghe = FocusNode();
+    FocusNode _fsarparast = FocusNode();
+    FocusNode _fjanbazperc = FocusNode();
+    FocusNode _fnote = FocusNode();
 
     TextEditingController _bdatecontroller = TextEditingController();
 
@@ -228,6 +239,57 @@ class PeopleInfo extends StatelessWidget {
                         )
                       ),
                       people.isargari == 1 ? Expanded(child: GridTextField(hint: 'نسبت با ایثارگر', width: double.infinity, focus: _fisargarinesbat, nextfocus: _femail, notempty: true, onChange: (val){people.isargarinesbat = val;}, initialValue: people.isargarinesbat)) : Container(),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(child: GridTextField(hint: 'افراد تحت تکفل', numberonly: true, width: double.infinity, focus: _ftakafolcount, nextfocus: _fmeliat, onChange: (val){people.takafolcount = int.tryParse(val);}, initialValue: people.takafolcount.toString())),
+                      Expanded(child: GridTextField(hint: 'ملیت', width: double.infinity, focus: _fmeliat, nextfocus: _fmadrakfani, onChange: (val){people.meliat= val;}, initialValue: people.meliat)),
+                      Expanded(child: GridTextField(hint: 'مدرک فنی', width: double.infinity, focus: _fmadrakfani, nextfocus: _fbimeyear, onChange: (val){people.madrakfani = val;}, initialValue: people.madrakfani)),
+                      Expanded(child: GridTextField(hint: 'سابقه بیمه', numberonly: true, width: double.infinity, focus: _fbimeyear, nextfocus: _fskills, onChange: (val){people.bimeyear = int.tryParse(val);}, initialValue: people.bimeyear.toString())),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(child: GridTextField(hint: 'مهارت', width: double.infinity, focus: _fskills, nextfocus: _fotherjobhistory, onChange: (val){people.skills= val;}, initialValue: people.skills)),
+                      Expanded(child: GridTextField(hint: 'سایر سوابق کاری', width: double.infinity, focus: _fotherjobhistory, nextfocus: _fjobpermit, onChange: (val){people.otherjobhistory = val;}, initialValue: people.otherjobhistory)),
+                      Expanded(child: GridTextField(hint: 'شماره مجوز کار', numberonly: true, width: double.infinity, focus: _fjobpermit, nextfocus: _fshahrdarimantaghe, onChange: (val){people.jobpermitno = int.tryParse(val);}, initialValue: people.jobpermitno.toString())),
+                      Expanded(child: GridTextField(hint: 'منطقه شهرداری', numberonly: true, width: double.infinity, focus: _fshahrdarimantaghe, nextfocus: _fsarparast, onChange: (val){people.shahrdarimantaghe = int.tryParse(val);}, initialValue: people.shahrdarimantaghe.toString())),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(child: GridTextField(hint: 'سرپرست خانواده', numberonly: true, width: double.infinity, focus: _fsarparast, nextfocus: _fjanbazperc, onChange: (val){people.sarparast = int.tryParse(val);}, initialValue: people.sarparast.toString())),
+                      Expanded(
+                        child: MultiChooseItem(
+                          hint: 'نوع شناسنامه',
+                          val: people.sskind, 
+                          items: [{'id': 1, 'title': 'اصلی'},{'id': 2, 'title': 'المثنی'}],
+                          onChange: peoplebloc.setsskind,
+                        )
+                      ),
+                      Expanded(child: GridTextField(hint: 'درصد جانبازی', numberonly: true, width: double.infinity, focus: _fjanbazperc, nextfocus: _fnote, onChange: (val){people.janbazperc = int.tryParse(val);}, initialValue: people.janbazperc.toString())),
+                      Expanded(
+                        child: MultiChooseItem(
+                          hint: 'گروه خونی',
+                          val: people.blood, 
+                          items: [{'id': 1, 'title': 'AB+'},{'id': 2, 'title': 'AB-'},{'id': 3, 'title': 'O+'},{'id': 4, 'title': 'O-'},{'id': 5, 'title': 'B-'},{'id': 6, 'title': 'B+'},{'id': 7, 'title': 'A-'},{'id': 8, 'title': 'A+'}],
+                          onChange: peoplebloc.setBlood,
+                        )
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: MultiChooseItem(
+                          hint: 'نهاد حمایتی',
+                          val: people.support, 
+                          items: [{'id': 0, 'title': 'ندارد'},{'id': 1, 'title': 'کمیته امداد'},{'id': 2, 'title': 'بهزیستی'}],
+                          onChange: peoplebloc.setSupport,
+                        )
+                      ),
+                      Expanded(child: GridTextField(hint: 'توضیحات', width: double.infinity, focus: _fnote, nextfocus: _femail, onChange: (val){people.note = val;}, initialValue: people.note)),
                     ],
                   ),
                   Row(

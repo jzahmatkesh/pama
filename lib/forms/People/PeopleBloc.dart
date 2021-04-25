@@ -78,6 +78,18 @@ class PeopleBloc{
     _peoplebloc.value.rows[0].isargari = val;
     _peoplebloc.add(PeopleModel(status: Status.loaded, rows: _peoplebloc.value.rows));
   }
+  setsskind(int val){
+    _peoplebloc.value.rows[0].sskind = val;
+    _peoplebloc.add(PeopleModel(status: Status.loaded, rows: _peoplebloc.value.rows));
+  }
+  setBlood(int val){
+    _peoplebloc.value.rows[0].blood = val;
+    _peoplebloc.add(PeopleModel(status: Status.loaded, rows: _peoplebloc.value.rows));
+  }
+  setSupport(int val){
+    _peoplebloc.value.rows[0].support = val;
+    _peoplebloc.add(PeopleModel(status: Status.loaded, rows: _peoplebloc.value.rows));
+  }
 
   savePeople(BuildContext context, People people) async{
     try{

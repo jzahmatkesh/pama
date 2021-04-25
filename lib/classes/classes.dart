@@ -400,9 +400,27 @@ class People{
     int military;
     String token;
 
+    int takafolcount;
+    String meliat;
+    String madrakfani;
+    int bimeyear;
+    String skills;
+    String otherjobhistory;
+    int jobpermitno;
+    String note;
+    int sarparast;
+    int sskind;
+    int janbazperc;
+    int blood;
+    int support;
+    int shahrdarimantaghe;
+
+
   People({this.id,this.name,this.family,this.father,this.nationalid,this.ss,this.birth,this.ssplace,this.birthdate,this.nationality,this.religion,
     this.mazhab,this.reshte,this.english,this.bimeno,this.isargari,this.isargarinesbat,this.email,this.tel,this.mobile,this.post,this.address,this.passport,this.single,
-    this.sex,this.military,this.education,this.token});
+    this.sex,this.military,this.education,this.token,this.takafolcount=0,this.meliat,this.madrakfani,this.bimeyear=0,this.skills,this.otherjobhistory,
+    this.jobpermitno=0,this.note,this.sarparast=0,this.sskind=0,this.janbazperc=0,this.blood=1,this.support=0,this.shahrdarimantaghe=0,
+  });
 
   People.fromJson(Map<String, dynamic> data)
     : id = data['id'],
@@ -431,7 +449,21 @@ class People{
     sex = data['sex'],
     military = data['military'],
     reshte = data['reshte'],
-    education = data['education'];
+    education = data['education'],
+    takafolcount = data['takafolcount'],
+    meliat = data['meliat'],
+    madrakfani = data['madrakfani'],
+    bimeyear = data['bimeyear'],
+    skills = data['skills'],
+    otherjobhistory = data['otherjobhistory'],
+    jobpermitno = data['jobpermitno'],
+    note = data['note'],
+    sarparast = data['sarparast'],
+    sskind = data['sskind'],
+    janbazperc = data['janbazperc'],
+    blood = data['blood'],
+    support = data['support'],
+    shahrdarimantaghe = data['shahrdarimantaghe'];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -463,6 +495,20 @@ class People{
     data['military'] = this.military;
     data['education'] = this.education;
     data['token'] = this.token;
+    data['takafolcount'] = this.takafolcount;
+    data['meliat'] = this.meliat;
+    data['madrakfani'] = this.madrakfani;
+    data['bimeyear'] = this.bimeyear;
+    data['skills'] = this.skills;
+    data['otherjobhistory'] = this.otherjobhistory;
+    data['jobpermitno'] = this.jobpermitno;
+    data['note'] = this.note;
+    data['sarparast'] = this.sarparast;
+    data['sskind'] = this.sskind;
+    data['janbazperc'] = this.janbazperc;
+    data['blood'] = this.blood;
+    data['support'] = this.support;
+    data['shahrdarimantaghe'] = this.shahrdarimantaghe;
     return data;
   }
 }
