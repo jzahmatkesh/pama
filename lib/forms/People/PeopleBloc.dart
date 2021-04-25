@@ -42,7 +42,12 @@ class PeopleBloc{
             children: [
               Text('شخصی با اطلاعات فوق ثبت نشده است'), 
               SizedBox(width: 10.0), 
-              MyOutlineButton(title: 'تعریف بعنوان شخص جدید', onPressed: ()=> _peoplebloc.add(PeopleModel(status: Status.loaded, rows: [People(id: 0, family: data['family'], nationalid: data['nationalid'], mobile: data['mobile'], bimeno: 0, single: 1, sex: 1, education: 1, isargari: 0, military: 1)])), icon: CupertinoIcons.person_badge_plus, color: Colors.white,)
+              MyOutlineButton(
+                title: 'تعریف بعنوان شخص جدید', 
+                onPressed: ()=> _peoplebloc.add(PeopleModel(status: Status.loaded, rows: [People(id: 0, family: data['family'], nationalid: data['nationalid'], mobile: data['mobile'], bimeno: 0, single: 1, sex: 1, education: 1, isargari: 0, military: 1)])), 
+                icon: CupertinoIcons.person_badge_plus, 
+                color: Colors.blueAccent
+              )
             ]
           )
         );

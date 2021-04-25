@@ -524,10 +524,10 @@ class PnCourse extends StatelessWidget {
                           PrcStepCourse _course = snap.data.rows[idx];
                           print('${_course.kind}');
                           return MyRow(
-                            onDoubleTap: ()=>_bloc.editStepCourse(_course),
+                            // onDoubleTap: ()=>_bloc.editStepCourse(_course),
                             children: [
                               _course.edit
-                                ? Expanded(child: ForeignKeyField(hint: 'عنوان درآمد', initialValue: {'id': _course.courseid, 'name': _course.coursetitle}, f2key: 'Course', onChange: (val){_course.courseid=val['id'];_course.coursetitle=val['name'];}))
+                                ? Expanded(child: ForeignKeyField(hint: 'عنوان دوره', initialValue: {'id': _course.courseid, 'name': _course.coursetitle}, f2key: 'Course', onChange: (val){_course.courseid=val['id'];_course.coursetitle=val['name'];}))
                                 : '${_course.coursetitle}',
                               _course.edit
                                 ? Expanded(child: MultiChooseItem(hint: 'وابستگی', val: _course.kind, items: [

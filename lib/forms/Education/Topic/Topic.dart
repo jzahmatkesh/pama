@@ -49,16 +49,18 @@ class FmTopic extends StatelessWidget {
                                   )
                                 ) 
                                 : '${_top.title}',
-                              Expanded(
-                                flex: 2,
-                                child: InkWell(
-                                  onTap: ()=>showFormAsDialog(context: context, form: TeacherManagment(bloc: _bloc, topic: _top)),
-                                  child: Tooltip(
-                                    message: 'جهت مدیریت اساتید کلیک کنید',
-                                    child: TeachersIcons(_top.teachers)
-                                  )
-                                )
-                              ),
+                              _top.teachers == null
+                                ? Container()
+                                : Expanded(
+                                    flex: 2,
+                                    child: InkWell(
+                                      onTap: ()=>showFormAsDialog(context: context, form: TeacherManagment(bloc: _bloc, topic: _top)),
+                                      child: Tooltip(
+                                        message: 'جهت مدیریت اساتید کلیک کنید',
+                                        child: TeachersIcons(_top.teachers)
+                                      )
+                                    )
+                                  ),
                               _top.edit 
                                 ? MyIconButton(type: ButtonType.save, onPressed: ()=>_bloc.saveData(context, _top))
                                 : MyIconButton(type: ButtonType.del, onPressed: ()=>_bloc.delRow(context, _top))

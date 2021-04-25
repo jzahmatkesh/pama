@@ -86,7 +86,7 @@ class CourseRow extends StatelessWidget {
         '${course.title}',
         '${course.kindName()}',
         '${course.typeName()}',
-        '${course.price} - ${course.reprice}',
+        '${moneySeprator(course.price)} - ${moneySeprator(course.reprice)}',
         MyIconButton(type: ButtonType.other, hint: 'لیست کلاسها', icon: Icon(Icons.category, color: Colors.grey.shade600,), onPressed: ()=>bloc.showClass(context, this.course.id)),
         MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delCourse(context, course)),
       ]
@@ -194,26 +194,26 @@ class PnEditCourse extends StatelessWidget {
                     children: [
                       Expanded(child: GridTextField(hint: 'غیبت مجاز', initialValue: snap.data.absent.toString(), numberonly: true, notempty: true, onChange: (val)=>snap.data.absent=int.tryParse(val))),
                       SizedBox(width: 5),
-                      Expanded(child: GridTextField(hint: 'اعتبار مدرک', initialValue: snap.data.valid.toString(), numberonly: true, notempty: true, onChange: (val)=>snap.data.valid=int.tryParse(val))),
+                      Expanded(child: GridTextField(hint: 'اعتبار مدرک (ماه)', initialValue: snap.data.valid.toString(), numberonly: true, notempty: true, onChange: (val)=>snap.data.valid=int.tryParse(val))),
                     ]
                   ),
                   Row(
                     children: [
-                      Expanded(child: GridTextField(hint: 'هزینه اولیه', initialValue: snap.data.price.toString(), money: true, notempty: true, onChange: (val)=>snap.data.price=double.tryParse(val.replaceAll(',', '')))),
+                      Expanded(child: GridTextField(hint: 'هزینه اولیه', initialValue: moneySeprator(snap.data.price), money: true, notempty: true, onChange: (val)=>snap.data.price=double.tryParse(val.replaceAll(',', '')))),
                       SizedBox(width: 5),
-                      Expanded(child: GridTextField(hint: 'هزینه مجدد', initialValue: snap.data.reprice.toString(), money: true, notempty: true, onChange: (val)=>snap.data.reprice=double.tryParse(val.replaceAll(',', '')))),
+                      Expanded(child: GridTextField(hint: 'هزینه مجدد', initialValue: moneySeprator(snap.data.reprice), money: true, notempty: true, onChange: (val)=>snap.data.reprice=double.tryParse(val.replaceAll(',', '')))),
                     ],
                   ),
                   Row(
                     children: [
                       Expanded(child: GridTextField(hint: 'نمره حضوری مرتبه اول', initialValue: snap.data.noh1.toString(), numberonly: true, notempty: true, onChange: (val)=>snap.data.noh1=int.tryParse(val))),
                       SizedBox(width: 5),
-                      Expanded(child: GridTextField(hint: 'نمره غیر حضوری مرتبه اول', initialValue: snap.data.noh2.toString(), numberonly: true, notempty: true, onChange: (val)=>snap.data.noh2=int.tryParse(val))),
+                      Expanded(child: GridTextField(hint: 'نمره غیر حضوری مرتبه اول', initialValue: snap.data.nonh1.toString(), numberonly: true, notempty: true, onChange: (val)=>snap.data.nonh1=int.tryParse(val))),
                     ]
                   ),
                   Row(
                     children: [
-                      Expanded(child: GridTextField(hint: 'نمره حضوری مرتبه بعد', initialValue: snap.data.nonh1.toString(), numberonly: true, notempty: true, onChange: (val)=>snap.data.nonh1=int.tryParse(val))),
+                      Expanded(child: GridTextField(hint: 'نمره حضوری مرتبه بعد', initialValue: snap.data.noh2.toString(), numberonly: true, notempty: true, onChange: (val)=>snap.data.noh2=int.tryParse(val))),
                       SizedBox(width: 5),
                       Expanded(child: GridTextField(hint: 'نمره غیر حضوری مرتبه بعد', initialValue: snap.data.nonh2.toString(), numberonly: true, notempty: true, onChange: (val)=>snap.data.nonh2=int.tryParse(val))),
                     ],
