@@ -419,7 +419,7 @@ class People{
   People({this.id,this.name,this.family,this.father,this.nationalid,this.ss,this.birth,this.ssplace,this.birthdate,this.nationality,this.religion,
     this.mazhab,this.reshte,this.english,this.bimeno,this.isargari,this.isargarinesbat,this.email,this.tel,this.mobile,this.post,this.address,this.passport,this.single,
     this.sex,this.military,this.education,this.token,this.takafolcount=0,this.meliat,this.madrakfani,this.bimeyear=0,this.skills,this.otherjobhistory,
-    this.jobpermitno=0,this.note,this.sarparast=0,this.sskind=0,this.janbazperc=0,this.blood=1,this.support=0,this.shahrdarimantaghe=0,
+    this.jobpermitno=0,this.note,this.sarparast=0,this.sskind=1,this.janbazperc=0,this.blood=1,this.support=0,this.shahrdarimantaghe=0,
   });
 
   People.fromJson(Map<String, dynamic> data)

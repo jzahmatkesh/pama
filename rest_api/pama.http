@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ###
 post http://127.0.0.1:8080/PamaApi/api/Company
-Content-Type: application/json
+Content-Type: application/jsonx
 
 {
     "token": "8F3FAEE6-891D-46A8-8BAE-EA6DE1CD847C"

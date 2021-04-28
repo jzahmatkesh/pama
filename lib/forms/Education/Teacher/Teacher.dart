@@ -116,6 +116,7 @@ class TeacherEdit extends StatelessWidget {
               MyRow(children: [
                 'نام و نام خانوادگی',
                 '${teacher.name} ${teacher.family}',
+                MyIconButton(type: ButtonType.info, hint: 'اطلاعات فردی', onPressed: () => showFormAsDialog(context: context, form: FmPeople(justcheck: false, nationalid: teacher.nationalid,))),
               ]),
               MyRow(children: [
                 'تحصیلات',
