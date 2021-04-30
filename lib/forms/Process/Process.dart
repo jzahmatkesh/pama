@@ -508,7 +508,7 @@ class PnCourse extends StatelessWidget {
             FormHeader(title: 'دوره های آموزشی ${step.title} $process', btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.insertStepCourse(step.processid, step.id))),
             GridCaption(obj: [
               'عنوان دوره',
-              ',وابستگی'
+              'وابستگی'
             ]),
             Expanded(
               child: StreamBuilder<PrcStepCourseModel>(
