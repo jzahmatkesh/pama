@@ -618,7 +618,7 @@ class ProcessBloc{
         showWaiting(context);
         obj.token = readToken(context);
         await _repo.delStepCourse(obj);
-        _prcStepCourseBloc.value.rows.removeWhere((element)=> element.courseid == obj.courseid);
+        _prcStepCourseBloc.value.rows.removeWhere((element)=> element.courseid == obj.courseid && element.kind==obj.kind);
         _prcStepCourseBloc.add(_prcStepCourseBloc.value);
         hideWaiting(context);
         Navigator.pop(context);

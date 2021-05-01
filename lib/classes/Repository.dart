@@ -1574,7 +1574,8 @@ class ProcessRepository{
        'token': obj.token,
        'processid': obj.processid.toString(),
        'stepid': obj.stepid.toString(),
-       'courseid': obj.courseid.toString()
+       'courseid': obj.courseid.toString(),
+       'kind': obj.kind.toString()
       }, 
     );
     if (_data['msg'] == "Success")
