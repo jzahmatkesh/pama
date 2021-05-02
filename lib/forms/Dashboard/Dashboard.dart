@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pama/forms/Education/Education.dart';
+import 'package:pama/forms/GUnit/GUnit.dart';
 import 'package:pama/forms/Process/Process.dart';
 import '../Income/Income.dart';
 import '../NoLicense/NoLicense.dart';
@@ -61,6 +62,7 @@ class Dashboard extends StatelessWidget {
                      :context.watch<ThemeManager>().menuitem == 9 ? FmIncome() 
                      :context.watch<ThemeManager>().menuitem == 10 ? FmEducation() 
                      :context.watch<ThemeManager>().menuitem == 11 ? FmProcess() 
+                     :context.watch<ThemeManager>().menuitem == 12 ? FmGUnit(justcheck: false, nosazicode: '48812') 
                      :Text('در دست طراحی می باشد', textAlign: TextAlign.center, style: titleStyle(),)
               )
             ],
@@ -99,6 +101,7 @@ class Dashboard extends StatelessWidget {
 
                   this.user.admin ? ListTile(title: Text('آموزش'), onTap: (){context.read<ThemeManager>().setMenuItem(10); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 10,) : Container(),
                   this.user.admin ? ListTile(title: Text('فرآیند ها'), onTap: (){context.read<ThemeManager>().setMenuItem(11); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 11,) : Container(),
+                  this.user.admin ? ListTile(title: Text('واحدهای صنفی'), onTap: (){context.read<ThemeManager>().setMenuItem(12); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 12,) : Container(),
 
                   this.user.admin ? ListTile(title: Text('گروه های کاربری'), onTap: (){context.read<ThemeManager>().setMenuItem(7); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 7,) : Container(),
                   this.user.admin ? ListTile(title: Text('تنظیمات'), onTap: (){context.read<ThemeManager>().setMenuItem(16); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 16,) : Container(),

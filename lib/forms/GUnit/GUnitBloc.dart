@@ -6,24 +6,33 @@ import 'package:rxdart/rxdart.dart';
 
 class GUnitModel{
   Status status;
-  List<GUnit> rows;
+  GUnit gunit;
   String msg;
 
-  GUnitModel({this.status, this.rows, this.msg});
+  GUnitModel({this.status, this.gunit, this.msg});
 }
 
-class PeopleBloc{
+class GUnitBloc{
   GUnitRepository _repository = GUnitRepository();
 
-  BehaviorSubject<GUnitModel> _peoplebloc = BehaviorSubject<GUnitModel>.seeded(GUnitModel(status: Status.initial));
+  BehaviorSubject<GUnitModel> _gunitbloc = BehaviorSubject<GUnitModel>.seeded(GUnitModel(status: Status.initial));
 
-  Stream<GUnitModel> get peopleStream$ => _peoplebloc.stream;
-  List<GUnit> get peopleInfo$ => _peoplebloc.stream.value.rows;
+  Stream<GUnitModel> get peopleStream$ => _gunitbloc.stream;
+  GUnit get peopleInfo$ => _gunitbloc.stream.value.gunit;
 
   backtogetNationalID(){
-    _peoplebloc.add(GUnitModel(status: Status.initial));
+    _gunitbloc.add(GUnitModel(status: Status.initial));
   }
 
-  checkNosaziCode(BuildContext context, Map<String, dynamic> data, bool justcheck, {int cmpid=0}) async{
+  checkNosaziCode(BuildContext context, String code, bool justcheck) async{
+    try{
+      _gunitbloc.add(GUnitModel(status: Status.loading));
+      _gunitbloc.add(GUnitModel(gunit: await _repository.findByNosaziCode(readToken(context), code), status: Status.loaded));
+      if (justcheck)
+        Navigator.of(context).pop(_gunitbloc.value.gunit);
+    }
+    catch(e){
+      _gunitbloc.add(GUnitModel(status: Status.error, msg: compileErrorMessage('$e')));
+    }    
   }
 }

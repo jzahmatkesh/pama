@@ -1705,6 +1705,11 @@ class GUnitRepository{
       return true;
     throw Exception(_data['msg']);
   }
+
+  Future<GUnit> findByNosaziCode(String token, String code) async{
+    List<Map<String, dynamic>> _data = await postMethod(api: 'GUnit/FindByNosaziCode', body: jsonEncode({"token": token, "nosazicode": code}));
+    return _data.map<GUnit>((data) => GUnit.fromJson(data)).toList().first;
+  }
 }
 
 
