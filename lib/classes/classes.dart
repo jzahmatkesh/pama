@@ -2678,3 +2678,40 @@ class DClass{
     }
 }
 
+class GUnit{
+    int id;
+    String nosazicode;
+    String hozeentezami;
+    String markazbehdasht;
+    int zaminmasahat;
+    String pelak;
+    int shahrdari;
+    String address;
+    String token;
+ 
+    GUnit({this.id,this.nosazicode,this.hozeentezami,this.markazbehdasht,this.zaminmasahat,this.pelak,this.shahrdari,this.address, this.token});
+ 
+    GUnit.fromJson(Map<String, dynamic> json):
+        id = json['id'],
+        nosazicode = json['nosazicode'],
+        hozeentezami = json['hozeentezami'],
+        markazbehdasht = json['markazbehdasht'],
+        zaminmasahat = json['zaminmasahat'],
+        pelak = json['pelak'],
+        shahrdari = json['shahrdari'],
+        address = json['address'];
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['id'] = this.id;
+        data['nosazicode'] = this.nosazicode;
+        data['hozeentezami'] = this.hozeentezami;
+        data['markazbehdasht'] = this.markazbehdasht;
+        data['zaminmasahat'] = this.zaminmasahat;
+        data['pelak'] = this.pelak;
+        data['shahrdari'] = this.shahrdari;
+        data['address'] = this.address;
+        data['token'] = this.token;
+        return data;
+    }
+}

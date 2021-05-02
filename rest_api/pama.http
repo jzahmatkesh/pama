@@ -8,11 +8,11 @@ Content-Type: application/json
 
 
 ###
-post http://127.0.0.1:8080/PamaApi/api/Company
-Content-Type: application/jsonx
+post http://127.0.0.1:8080/PamaApi/api/GUnit
+Content-Type: application/json
 
 {
-    "token": "8F3FAEE6-891D-46A8-8BAE-EA6DE1CD847C"
+    "token": "8D1540E0-CD15-4286-B5B3-3449C1011478"
 }
 
 
@@ -21,7 +21,7 @@ POST http://127.0.0.1:8080/PamaApi/api/F2Key/Bank
 Content-Type: application/json
 
 {
-    "token": "289D8725-561A-4A09-AC29-C5FFAEFE2AD7"
+    "token": "76B5B773-0F71-4510-B455-39B153776A18"
 }
 
 

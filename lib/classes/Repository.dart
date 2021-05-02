@@ -1676,4 +1676,36 @@ class CourseRepository{
   }
 }
 
+class GUnitRepository{
+  Future<List<GUnit>> load(String token) async{
+    Map<String, dynamic> _data = await postToServer(api: 'GUnit', body: jsonEncode({"token": token}));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<GUnit>((data) => GUnit.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
+
+  Future<int> save(GUnit obj) async{
+     Map<String, dynamic> _data = await putToServer(api: 'GUnit', header: {'Content-Type': 'application/json'}, 
+      body: jsonEncode(obj.toJson())
+    );
+    if (_data['msg'] == "Success")
+      return _data['body']['id'];
+    throw Exception(_data['msg']);
+  }
+ 
+  Future<bool> delete(GUnit obj) async{
+     Map<String, dynamic> _data = await delToServer(api: 'GUnit', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': obj.token,
+       'id': obj.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+}
+
+
 
