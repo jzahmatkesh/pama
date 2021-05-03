@@ -32,7 +32,10 @@ class GUnitBloc{
         Navigator.of(context).pop(_gunitbloc.value.gunit);
     }
     catch(e){
-      _gunitbloc.add(GUnitModel(status: Status.error, msg: compileErrorMessage('$e')));
+      if (justcheck)
+        Navigator.of(context).pop('${compileErrorMessage('$e')}');
+      else
+        _gunitbloc.add(GUnitModel(status: Status.error, msg: compileErrorMessage('$e')));
     }    
   }
 }

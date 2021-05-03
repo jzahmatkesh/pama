@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:pama/forms/Education/Education.dart';
 import 'package:pama/forms/GUnit/GUnit.dart';
 import 'package:pama/forms/Process/Process.dart';
+import 'package:pama/module/Widgets.dart';
 import '../Income/Income.dart';
 import '../NoLicense/NoLicense.dart';
 import 'package:provider/provider.dart';
@@ -62,7 +63,17 @@ class Dashboard extends StatelessWidget {
                      :context.watch<ThemeManager>().menuitem == 9 ? FmIncome() 
                      :context.watch<ThemeManager>().menuitem == 10 ? FmEducation() 
                      :context.watch<ThemeManager>().menuitem == 11 ? FmProcess() 
-                     :context.watch<ThemeManager>().menuitem == 12 ? FmGUnit(justcheck: false, nosazicode: '48812') 
+                     :context.watch<ThemeManager>().menuitem == 12 ? Container(
+                       child: MyOutlineButton(
+                         title: 'check nosazi code', 
+                         icon: Icons.settings,
+                         onPressed: ()=>showFormAsDialog(
+                           context: context, 
+                           form: FmGUnit(justcheck: false, nosazicode: '48812',), 
+                           done: (data)=>print('$data')
+                         )
+                       ),
+                     )
                      :Text('در دست طراحی می باشد', textAlign: TextAlign.center, style: titleStyle(),)
               )
             ],
