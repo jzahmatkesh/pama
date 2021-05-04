@@ -2715,3 +2715,161 @@ class GUnit{
         return data;
     }
 }
+
+class Parvane{
+    int cmpid;
+    int id;
+    int iranianasnaf;
+    String reqdate;
+    int peopid;
+    int gunitid;
+    String guname;
+    String gubegindate;
+    String gutoolsinfo;
+    String guensheabat;
+    int gubimemakan;
+    String gubimeshobe;
+    int gukargahno;
+    int guzirbana;
+    int gutabaghat;
+    double gurent;
+    int gudaraeicode;
+    String guvahedmaliati;
+    int guparvandemaliat;
+    int gustatus;
+    String gutel;
+    String gufax;
+    String guesteghrarplace;
+    String gusigntitle;
+    String gunote;
+    int kind;
+    int parvandekind;
+    int ecoid;
+    int bank;
+    String hesabno;
+    int hesabkind;
+    int hisic;
+    int isic;
+    int hoghoghikind;
+    String hoghoghiname;
+    String hoghoghishenasemeli;
+    int hoghoghisabtno;
+    String hoghoghisabtdate;
+    int parvanekind;
+    String datesodor;
+    String datetahvil;
+    int etebarlen;
+    int eparvaneno;
+    String note;
+    int shenasesenfi;
+    int accept;
+    String acceptdate;
+    String token;
+ 
+    Parvane({this.cmpid,this.id,this.iranianasnaf,this.reqdate,this.peopid,this.gunitid,this.guname,this.gubegindate,this.gutoolsinfo,this.guensheabat,this.gubimemakan,this.gubimeshobe,this.gukargahno,this.guzirbana,this.gutabaghat,this.gurent,this.gudaraeicode,this.guvahedmaliati,this.guparvandemaliat,this.gustatus,this.gutel,this.gufax,this.guesteghrarplace,this.gusigntitle,this.gunote,this.kind,this.parvandekind,this.ecoid,this.bank,this.hesabno,this.hesabkind,this.hisic,this.isic,this.hoghoghikind,this.hoghoghiname,this.hoghoghishenasemeli,this.hoghoghisabtno,this.hoghoghisabtdate,this.parvanekind,this.datesodor,this.datetahvil,this.etebarlen,this.eparvaneno,this.note,this.shenasesenfi,this.accept,this.acceptdate, this.token});
+ 
+    Parvane.fromJson(Map<String, dynamic> json):
+        cmpid = json['cmpid'],
+        id = json['id'],
+        iranianasnaf = json['iranianasnaf'],
+        reqdate = json['reqdate'],
+        peopid = json['peopid'],
+        gunitid = json['gunitid'],
+        guname = json['guname'],
+        gubegindate = json['gubegindate'],
+        gutoolsinfo = json['gutoolsinfo'],
+        guensheabat = json['guensheabat'],
+        gubimemakan = json['gubimemakan'],
+        gubimeshobe = json['gubimeshobe'],
+        gukargahno = json['gukargahno'],
+        guzirbana = json['guzirbana'],
+        gutabaghat = json['gutabaghat'],
+        gurent = json['gurent'],
+        gudaraeicode = json['gudaraeicode'],
+        guvahedmaliati = json['guvahedmaliati'],
+        guparvandemaliat = json['guparvandemaliat'],
+        gustatus = json['gustatus'],
+        gutel = json['gutel'],
+        gufax = json['gufax'],
+        guesteghrarplace = json['guesteghrarplace'],
+        gusigntitle = json['gusigntitle'],
+        gunote = json['gunote'],
+        kind = json['kind'],
+        parvandekind = json['parvandekind'],
+        ecoid = json['ecoid'],
+        bank = json['bank'],
+        hesabno = json['hesabno'],
+        hesabkind = json['hesabkind'],
+        hisic = json['hisic'],
+        isic = json['isic'],
+        hoghoghikind = json['hoghoghikind'],
+        hoghoghiname = json['hoghoghi_name'],
+        hoghoghishenasemeli = json['hoghoghi_shenasemeli'],
+        hoghoghisabtno = json['hoghoghi_sabtno'],
+        hoghoghisabtdate = json['hoghoghi_sabtdate'],
+        parvanekind = json['parvanekind'],
+        datesodor = json['datesodor'],
+        datetahvil = json['datetahvil'],
+        etebarlen = json['etebarlen'],
+        eparvaneno = json['eparvaneno'],
+        note = json['note'],
+        shenasesenfi = json['shenasesenfi'],
+        accept = json['accept'],
+        acceptdate = json['acceptdate'];
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['cmpid'] = this.cmpid;
+        data['id'] = this.id;
+        data['iranianasnaf'] = this.iranianasnaf;
+        data['reqdate'] = this.reqdate;
+        data['peopid'] = this.peopid;
+        data['gunitid'] = this.gunitid;
+        data['guname'] = this.guname;
+        data['gubegindate'] = this.gubegindate;
+        data['gutoolsinfo'] = this.gutoolsinfo;
+        data['guensheabat'] = this.guensheabat;
+        data['gubimemakan'] = this.gubimemakan;
+        data['gubimeshobe'] = this.gubimeshobe;
+        data['gukargahno'] = this.gukargahno;
+        data['guzirbana'] = this.guzirbana;
+        data['gutabaghat'] = this.gutabaghat;
+        data['gurent'] = this.gurent;
+        data['gudaraeicode'] = this.gudaraeicode;
+        data['guvahedmaliati'] = this.guvahedmaliati;
+        data['guparvandemaliat'] = this.guparvandemaliat;
+        data['gustatus'] = this.gustatus;
+        data['gutel'] = this.gutel;
+        data['gufax'] = this.gufax;
+        data['guesteghrarplace'] = this.guesteghrarplace;
+        data['gusigntitle'] = this.gusigntitle;
+        data['gunote'] = this.gunote;
+        data['kind'] = this.kind;
+        data['parvandekind'] = this.parvandekind;
+        data['ecoid'] = this.ecoid;
+        data['bank'] = this.bank;
+        data['hesabno'] = this.hesabno;
+        data['hesabkind'] = this.hesabkind;
+        data['hisic'] = this.hisic;
+        data['isic'] = this.isic;
+        data['hoghoghikind'] = this.hoghoghikind;
+        data['hoghoghi_name'] = this.hoghoghiname;
+        data['hoghoghi_shenasemeli'] = this.hoghoghishenasemeli;
+        data['hoghoghi_sabtno'] = this.hoghoghisabtno;
+        data['hoghoghi_sabtdate'] = this.hoghoghisabtdate;
+        data['parvanekind'] = this.parvanekind;
+        data['datesodor'] = this.datesodor;
+        data['datetahvil'] = this.datetahvil;
+        data['etebarlen'] = this.etebarlen;
+        data['eparvaneno'] = this.eparvaneno;
+        data['note'] = this.note;
+        data['shenasesenfi'] = this.shenasesenfi;
+        data['accept'] = this.accept;
+        data['acceptdate'] = this.acceptdate;
+        data['token'] = this.token;
+        return data;
+    }
+}
+
+
+

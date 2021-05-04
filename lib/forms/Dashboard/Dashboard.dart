@@ -3,9 +3,8 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pama/forms/Education/Education.dart';
-import 'package:pama/forms/GUnit/GUnit.dart';
+import 'package:pama/forms/Parvane/Parvane.dart';
 import 'package:pama/forms/Process/Process.dart';
-import 'package:pama/module/Widgets.dart';
 import '../Income/Income.dart';
 import '../NoLicense/NoLicense.dart';
 import 'package:provider/provider.dart';
@@ -51,30 +50,31 @@ class Dashboard extends StatelessWidget {
             children: [
               SideBar(user: this.user),
               Expanded(
-                child: context.watch<ThemeManager>().menuitem == 0 ? FmCompany(user: this.user,) 
-                     :context.watch<ThemeManager>().menuitem == 1 ? FMRaste() 
-                     :context.watch<ThemeManager>().menuitem == 2 ? FmBank() 
-                     :context.watch<ThemeManager>().menuitem == 3 ? FmViolation() 
-                     :context.watch<ThemeManager>().menuitem == 4 ? FmDocument() 
-                     :context.watch<ThemeManager>().menuitem == 5 ? FmGov() 
-                     :context.watch<ThemeManager>().menuitem == 6 ? FmAddInfo() 
-                     :context.watch<ThemeManager>().menuitem == 7 ? FmUserGroup() 
-                     :context.watch<ThemeManager>().menuitem == 8 ? FmNoLicense(cmp: Company(id: 0)) 
-                     :context.watch<ThemeManager>().menuitem == 9 ? FmIncome() 
-                     :context.watch<ThemeManager>().menuitem == 10 ? FmEducation() 
-                     :context.watch<ThemeManager>().menuitem == 11 ? FmProcess() 
-                     :context.watch<ThemeManager>().menuitem == 12 ? Container(
-                       child: MyOutlineButton(
-                         title: 'check nosazi code', 
-                         icon: Icons.settings,
-                         onPressed: ()=>showFormAsDialog(
-                           context: context, 
-                           form: FmGUnit(justcheck: false, nosazicode: '48812',), 
-                           done: (data)=>print('$data')
-                         )
-                       ),
-                     )
-                     :Text('در دست طراحی می باشد', textAlign: TextAlign.center, style: titleStyle(),)
+                child: 
+                   context.watch<ThemeManager>().menuitem == 0 ? FmCompany(user: this.user,) 
+                  :context.watch<ThemeManager>().menuitem == 1 ? FMRaste() 
+                  :context.watch<ThemeManager>().menuitem == 2 ? FmBank() 
+                  :context.watch<ThemeManager>().menuitem == 3 ? FmViolation() 
+                  :context.watch<ThemeManager>().menuitem == 4 ? FmDocument() 
+                  :context.watch<ThemeManager>().menuitem == 5 ? FmGov() 
+                  :context.watch<ThemeManager>().menuitem == 6 ? FmAddInfo() 
+                  :context.watch<ThemeManager>().menuitem == 7 ? FmUserGroup() 
+                  :context.watch<ThemeManager>().menuitem == 8 ? FmNoLicense(cmp: Company(id: 0)) 
+                  :context.watch<ThemeManager>().menuitem == 9 ? FmIncome() 
+                  :context.watch<ThemeManager>().menuitem == 10 ? FmEducation() 
+                  :context.watch<ThemeManager>().menuitem == 11 ? FmProcess() 
+                  :context.watch<ThemeManager>().menuitem == 12 ? FmParvane(user: this.user)
+                //    child: MyOutlineButton(
+                //      title: 'check nosazi code', 
+                //      icon: Icons.settings,
+                //      onPressed: ()=>showFormAsDialog(
+                //        context: context, 
+                //        form: FmGUnit(justcheck: false, nosazicode: '48812',), 
+                //        done: (data)=>print('$data')
+                //      )
+                //    ),
+                //  )
+                  :Text('در دست طراحی می باشد', textAlign: TextAlign.center, style: titleStyle(),)
               )
             ],
           ),
@@ -112,7 +112,7 @@ class Dashboard extends StatelessWidget {
 
                   this.user.admin ? ListTile(title: Text('آموزش'), onTap: (){context.read<ThemeManager>().setMenuItem(10); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 10,) : Container(),
                   this.user.admin ? ListTile(title: Text('فرآیند ها'), onTap: (){context.read<ThemeManager>().setMenuItem(11); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 11,) : Container(),
-                  this.user.admin ? ListTile(title: Text('واحدهای صنفی'), onTap: (){context.read<ThemeManager>().setMenuItem(12); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 12,) : Container(),
+                  this.user.admin ? ListTile(title: Text('اعضاء / متقاضیان'), onTap: (){context.read<ThemeManager>().setMenuItem(12); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 12,) : Container(),
 
                   this.user.admin ? ListTile(title: Text('گروه های کاربری'), onTap: (){context.read<ThemeManager>().setMenuItem(7); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 7,) : Container(),
                   this.user.admin ? ListTile(title: Text('تنظیمات'), onTap: (){context.read<ThemeManager>().setMenuItem(16); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 16,) : Container(),

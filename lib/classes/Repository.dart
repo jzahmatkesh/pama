@@ -1688,5 +1688,27 @@ class GUnitRepository{
   }
 }
 
+class ParvaneRepository{
+  Future<List<Parvane>> loadData(Parvane obj) async{
+    List<Map<String, dynamic>> _data = await postMethod(api: 'Parvane', body: jsonEncode({'token': obj.token, 'cmpid': obj.cmpid, 'accept': obj.accept}));
+    return _data.map<Parvane>((data) => Parvane.fromJson(data)).toList();
+  }
+ 
+  Future<int> saveData(Parvane obj) async{
+    Map<String, dynamic> _data = await putMethod(api: 'Parvane', body: jsonEncode(obj.toJson()));
+    return _data['id'];
+  }
+
+  Future<bool> delData(Parvane obj) async{
+    return await delMethod(
+      api: 'Parvane', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': obj.token,
+       'id': obj.id.toString()
+      }, 
+    );
+  }
+}
 
 
