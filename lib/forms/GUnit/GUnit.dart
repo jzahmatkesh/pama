@@ -25,7 +25,7 @@ class FmGUnit extends StatelessWidget {
         builder: (context, snap) {
           if (snap.hasData){
             if (snap.data.status == Status.loaded)
-              return GUnitInfo(snap.data.gunit);
+              return GUnitInfo(_bloc, snap.data.gunit);
             return Container(
               width: screenWidth(context) * 0.3,
               child: Column(
@@ -65,8 +65,9 @@ class FmGUnit extends StatelessWidget {
 
 class GUnitInfo extends StatelessWidget {
   final GUnit gunit;
+  final GUnitBloc bloc;
   
-  GUnitInfo(this.gunit);
+  GUnitInfo(this.bloc, this.gunit);
 
   @override
   Widget build(BuildContext context) {
@@ -80,25 +81,28 @@ class GUnitInfo extends StatelessWidget {
           children: [
             FormHeader(
               title: 'اطلاعات واحد صنفی',
-              btnRight: MyIconButton(type: ButtonType.save, onPressed: (){if (_formKey.currentState.validate()) print('eyvak');}),
+              btnRight: MyIconButton(type: ButtonType.save, onPressed: (){
+                if (_formKey.currentState.validate()) 
+                  bloc.saveGUnit(context);
+              }),
             ),
             Row(
               children: [
                 GridTextField(hint: 'کد نوسازی', initialValue: this.gunit.nosazicode, onChange: (val)=>this.gunit.nosazicode=val).expand(),
-                GridTextField(hint: 'حوزه انتظامی', notempty: true,initialValue: this.gunit.hozeentezami, onChange: (val)=>this.gunit.hozeentezami=val).expand(),
-                GridTextField(hint: 'مرکز بهداشت', notempty: true,initialValue: this.gunit.markazbehdasht, onChange: (val)=>this.gunit.markazbehdasht=val).expand(),
+                GridTextField(hint: 'حوزه انتظامی', notempty: true, initialValue: this.gunit.hozeentezami, onChange: (val)=>this.gunit.hozeentezami=val).expand(),
+                GridTextField(hint: 'مرکز بهداشت', notempty: true, initialValue: this.gunit.markazbehdasht, onChange: (val)=>this.gunit.markazbehdasht=val).expand(),
               ]
             ),
             Row(
               children: [
                 GridTextField(hint: 'مساحت زمین', initialValue: '${this.gunit.zaminmasahat}', numberonly: true, onChange: (val)=>this.gunit.zaminmasahat=int.tryParse(val)).expand(),
                 GridTextField(hint: 'پلاک ثبتی', initialValue: this.gunit.pelak, onChange: (val)=>this.gunit.pelak=val).expand(),
-                GridTextField(hint: 'منطقه شهرداری', notempty: true,initialValue: '${this.gunit.shahrdari}', numberonly: true, onChange: (val)=>this.gunit.shahrdari=int.tryParse(val)).expand(),
+                GridTextField(hint: 'منطقه شهرداری', notempty: true, initialValue: '${this.gunit.shahrdari}', numberonly: true, onChange: (val)=>this.gunit.shahrdari=int.tryParse(val)).expand(),
               ]
             ),
             Row(
               children: [
-                GridTextField(hint: 'آدرس', notempty: true,initialValue: this.gunit.address, onChange: (val)=>this.gunit.address=val).expand(),
+                GridTextField(hint: 'آدرس', notempty: true, initialValue: this.gunit.address, onChange: (val)=>this.gunit.address=val).expand(),
               ]
             ),
           ],

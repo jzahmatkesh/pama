@@ -38,4 +38,18 @@ class GUnitBloc{
         _gunitbloc.add(GUnitModel(status: Status.error, msg: compileErrorMessage('$e')));
     }    
   }
+
+  saveGUnit(BuildContext context) async{
+    try{
+      _gunitbloc.value.gunit.token = readToken(context);
+      int _id = await _repository.save(_gunitbloc.value.gunit);
+      _gunitbloc.value.gunit.id = _id;
+      _gunitbloc.add(_gunitbloc.value);
+      Navigator.of(context).pop(_gunitbloc.value.gunit);
+      myAlert(context: context, title: 'ذخیره', message: 'با موفقیت انجام گردید', color: Colors.green);
+    }
+    catch(e){
+      analyzeError(context, '$e');
+    }
+  }
 }

@@ -17,7 +17,7 @@ Begin
 		@SFld NVarChar(max), 
 		@UFld NVarChar(max), 
 		@DeclareFields NVarChar(max), 
-		@InsertFld NVarChar(max)
+		@InsertFld NVarChar(max), @OutputFields NVarChar(max)
 	Declare @Res Table(ID Int Identity(1,1), note NVarChar(max))
 
 	--Creating Foreign Key Exists
@@ -100,6 +100,7 @@ Begin
 		Begin
 			Set @SFld = '['+@FieldName+']'
 			Set @InsertFld = '@'+@FieldName
+			set @OutputFields = '@'+@FieldName+' '+@FieldName
 			Set @UFld = @FieldName+' = @'+@FieldName
 			Set @DeclareFields = '@'+@FieldName+' '+@TypeName
 			if @type = 231
@@ -109,6 +110,7 @@ Begin
 		Begin
 			Set @SFld = @SFld+', '+'['+@FieldName+']'
 			Set @InsertFld = @InsertFld+', @'+@FieldName
+			set @OutputFields = @OutputFields+', @'+@FieldName+' '+@FieldName
 			Set @UFld = @UFld+', '+@FieldName+' = @'+@FieldName
 			Set @DeclareFields = @DeclareFields+', @'+@FieldName+' '+@TypeName
 			if @type = 231
@@ -157,11 +159,11 @@ Begin
 	Insert Into @Res Select '	if Exists(Select * From '+@Schema+'.'+@TBName+' Where '+@PKUpdate+')'
 	Insert Into @Res Select '		Update '+@schema+'.'+@TBName
 	Insert Into @Res Select '		Set '+@UFld
-	Insert Into @Res Select '		OutPut '+@InsertFld
+	Insert Into @Res Select '		OutPut '+@OutputFields
 	Insert Into @Res Select '		Where '+@PKUpdate
 	Insert Into @Res Select '	Else '
 	Insert Into @Res Select '		Insert Into '+@schema+'.'+@TBName+'('+@SFld+')'
-	Insert Into @Res Select '		OutPut '+@InsertFld
+	Insert Into @Res Select '		OutPut '+@OutputFields
 	Insert Into @Res Select '		Values('+@InsertFld+')'
 	Insert Into @Res Select 'End'
 	Insert Into @Res Select 'Go'
