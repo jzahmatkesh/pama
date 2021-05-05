@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pama/classes/Repository.dart';
-import 'package:pama/classes/classes.dart';
-import 'package:pama/module/functions.dart';
+import '../../classes/Repository.dart';
+import '../../classes/classes.dart';
+import '../../module/functions.dart';
 import 'package:rxdart/subjects.dart';
 
 class ParvaneModel{
@@ -28,5 +28,9 @@ class ParvaneBloc{
       analyzeError(context, '$e', msg: false);
       _parvane.add(ParvaneModel(status: Status.error, msg: compileErrorMessage('$e')));
     }
+  }
+
+  saveData(BuildContext context, Parvane parvane) async{
+    print('${parvane.toJson()}');
   }
 }

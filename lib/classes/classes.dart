@@ -2766,7 +2766,7 @@ class Parvane{
     String acceptdate;
     String token;
  
-    Parvane({this.cmpid,this.id,this.iranianasnaf,this.reqdate,this.peopid,this.gunitid,this.guname,this.gubegindate,this.gutoolsinfo,this.guensheabat,this.gubimemakan,this.gubimeshobe,this.gukargahno,this.guzirbana,this.gutabaghat,this.gurent,this.gudaraeicode,this.guvahedmaliati,this.guparvandemaliat,this.gustatus,this.gutel,this.gufax,this.guesteghrarplace,this.gusigntitle,this.gunote,this.kind,this.parvandekind,this.ecoid,this.bank,this.hesabno,this.hesabkind,this.hisic,this.isic,this.hoghoghikind,this.hoghoghiname,this.hoghoghishenasemeli,this.hoghoghisabtno,this.hoghoghisabtdate,this.parvanekind,this.datesodor,this.datetahvil,this.etebarlen,this.eparvaneno,this.note,this.shenasesenfi,this.accept,this.acceptdate, this.token});
+    Parvane({this.cmpid,this.id,this.iranianasnaf=0,this.reqdate,this.peopid,this.gunitid,this.guname,this.gubegindate,this.gutoolsinfo,this.guensheabat,this.gubimemakan,this.gubimeshobe,this.gukargahno,this.guzirbana,this.gutabaghat,this.gurent,this.gudaraeicode,this.guvahedmaliati,this.guparvandemaliat,this.gustatus,this.gutel,this.gufax,this.guesteghrarplace,this.gusigntitle,this.gunote,this.kind,this.parvandekind,this.ecoid=0,this.bank,this.hesabno,this.hesabkind,this.hisic,this.isic,this.hoghoghikind,this.hoghoghiname,this.hoghoghishenasemeli,this.hoghoghisabtno=0,this.hoghoghisabtdate,this.parvanekind,this.datesodor,this.datetahvil,this.etebarlen,this.eparvaneno,this.note,this.shenasesenfi,this.accept,this.acceptdate, this.token});
  
     Parvane.fromJson(Map<String, dynamic> json):
         cmpid = json['cmpid'],
