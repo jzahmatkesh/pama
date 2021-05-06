@@ -8,12 +8,12 @@ Content-Type: application/json
 
 
 ###
-post http://127.0.0.1:8080/PamaApi/api/GUnit
+put http://127.0.0.1:8080/PamaApi/api/Parvane
 Content-Type: application/json
 
-{
-    "token": "8D1540E0-CD15-4286-B5B3-3449C1011478"
+{"cmpid":0,"id":null,"iranianasnaf":null,"reqdate":null,"peopid":0,"gunitid":0,"guname":null,"gubegindate":null,"gutoolsinfo":null,"guensheabat":null,"gubimemakan":0,"gubimeshobe":null,"gukargahno":0,"guzirbana":0,"gutabaghat":0,"gurent":0,"gudaraeicode":0,"guvahedmaliati":null,"guparvandemaliat":0,"gustatus":0,"gutel":null,"gufax":null,"guesteghrarplace":null,"gusigntitle":null,"gunote":null,"kind":1,"parvandekind":1,"ecoid":null,"bank":3,"hesabno":"۴۴","hesabkind":1,"hisic":151915,"isic":0,"hoghoghikind":1,"hoghoghiname":"۵۵","hoghoghishenasemeli":"۶۶","hoghoghisabtno":null,"hoghoghisabtdate":null,"parvanekind":1,"datesodor":null,"datetahvil":null,"etebarlen":0,"eparvaneno":0,"note":null,"shenasesenfi":0,"accept":0,"acceptdate":null,"bankname":"بانک تجارت","isicname":"منجمد و خشک و بسته بندی  و سورتینگ میوه جات","token":"76B5B773-0F71-4510-B455-39B153776A18"
 }
+
 
 
 ###

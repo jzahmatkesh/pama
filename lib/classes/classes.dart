@@ -2764,9 +2764,11 @@ class Parvane{
     int shenasesenfi;
     int accept;
     String acceptdate;
+    String bankname;
+    String isicname;
     String token;
  
-    Parvane({this.cmpid,this.id,this.iranianasnaf=0,this.reqdate,this.peopid,this.gunitid,this.guname,this.gubegindate,this.gutoolsinfo,this.guensheabat,this.gubimemakan,this.gubimeshobe,this.gukargahno,this.guzirbana,this.gutabaghat,this.gurent,this.gudaraeicode,this.guvahedmaliati,this.guparvandemaliat,this.gustatus,this.gutel,this.gufax,this.guesteghrarplace,this.gusigntitle,this.gunote,this.kind,this.parvandekind,this.ecoid=0,this.bank,this.hesabno,this.hesabkind,this.hisic,this.isic,this.hoghoghikind,this.hoghoghiname,this.hoghoghishenasemeli,this.hoghoghisabtno=0,this.hoghoghisabtdate,this.parvanekind,this.datesodor,this.datetahvil,this.etebarlen,this.eparvaneno,this.note,this.shenasesenfi,this.accept,this.acceptdate, this.token});
+    Parvane({this.cmpid = 0 ,this.id = 0 ,this.iranianasnaf = 0 ,this.reqdate ,this.peopid = 0 ,this.gunitid = 0 ,this.guname ,this.gubegindate ,this.gutoolsinfo ,this.guensheabat ,this.gubimemakan = 0 ,this.gubimeshobe ,this.gukargahno = 0 ,this.guzirbana = 0 ,this.gutabaghat = 0 ,this.gurent=0,this.gudaraeicode = 0 ,this.guvahedmaliati ,this.guparvandemaliat = 0 ,this.gustatus = 0 ,this.gutel ,this.gufax ,this.guesteghrarplace ,this.gusigntitle ,this.gunote ,this.kind = 1 ,this.parvandekind = 1 ,this.ecoid = 0 ,this.bank = 0 ,this.hesabno ,this.hesabkind = 1 ,this.hisic = 0 ,this.isic = 0 ,this.hoghoghikind = 1 ,this.hoghoghiname ,this.hoghoghishenasemeli ,this.hoghoghisabtno = 0 ,this.hoghoghisabtdate ,this.parvanekind = 1 ,this.datesodor ,this.datetahvil ,this.etebarlen = 0 ,this.eparvaneno = 0 ,this.note ,this.shenasesenfi = 0 ,this.accept = 0 ,this.acceptdate ,this.bankname ,this.isicname, this.token});
  
     Parvane.fromJson(Map<String, dynamic> json):
         cmpid = json['cmpid'],
@@ -2803,10 +2805,10 @@ class Parvane{
         hisic = json['hisic'],
         isic = json['isic'],
         hoghoghikind = json['hoghoghikind'],
-        hoghoghiname = json['hoghoghi_name'],
-        hoghoghishenasemeli = json['hoghoghi_shenasemeli'],
-        hoghoghisabtno = json['hoghoghi_sabtno'],
-        hoghoghisabtdate = json['hoghoghi_sabtdate'],
+        hoghoghiname = json['hoghoghiname'],
+        hoghoghishenasemeli = json['hoghoghishenasemeli'],
+        hoghoghisabtno = json['hoghoghisabtno'],
+        hoghoghisabtdate = json['hoghoghisabtdate'],
         parvanekind = json['parvanekind'],
         datesodor = json['datesodor'],
         datetahvil = json['datetahvil'],
@@ -2815,7 +2817,9 @@ class Parvane{
         note = json['note'],
         shenasesenfi = json['shenasesenfi'],
         accept = json['accept'],
-        acceptdate = json['acceptdate'];
+        acceptdate = json['acceptdate'],
+        bankname = json['bankname'],
+        isicname = json['isicname'];
  
     Map<String, dynamic> toJson(){
         final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -2853,10 +2857,10 @@ class Parvane{
         data['hisic'] = this.hisic;
         data['isic'] = this.isic;
         data['hoghoghikind'] = this.hoghoghikind;
-        data['hoghoghi_name'] = this.hoghoghiname;
-        data['hoghoghi_shenasemeli'] = this.hoghoghishenasemeli;
-        data['hoghoghi_sabtno'] = this.hoghoghisabtno;
-        data['hoghoghi_sabtdate'] = this.hoghoghisabtdate;
+        data['hoghoghiname'] = this.hoghoghiname;
+        data['hoghoghishenasemeli'] = this.hoghoghishenasemeli;
+        data['hoghoghisabtno'] = this.hoghoghisabtno;
+        data['hoghoghisabtdate'] = this.hoghoghisabtdate;
         data['parvanekind'] = this.parvanekind;
         data['datesodor'] = this.datesodor;
         data['datetahvil'] = this.datetahvil;
@@ -2866,10 +2870,9 @@ class Parvane{
         data['shenasesenfi'] = this.shenasesenfi;
         data['accept'] = this.accept;
         data['acceptdate'] = this.acceptdate;
+        data['bankname'] = this.bankname;
+        data['isicname'] = this.isicname;
         data['token'] = this.token;
         return data;
     }
 }
-
-
-

@@ -1695,6 +1695,7 @@ class ParvaneRepository{
   }
  
   Future<int> saveData(Parvane obj) async{
+print('${jsonEncode(obj.toJson())}');
     Map<String, dynamic> _data = await putMethod(api: 'Parvane', body: jsonEncode(obj.toJson()));
     return _data['id'];
   }

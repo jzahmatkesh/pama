@@ -109,9 +109,9 @@ BEGIN
             Insert Into @Res 
             Values('    '+IsNull(@JT, @Type)+' '+LOWER(@FieldName)+';')
             if @FlutterCreator Is Null
-                Set @FlutterCreator = 'this.'+LOWER(@FieldName)
+                Set @FlutterCreator = 'this.'+LOWER(@FieldName)+Case When @JT='int' then ' = 0' Else '' End
             Else
-                Set @FlutterCreator = @FlutterCreator+',this.'+LOWER(@FieldName)
+                Set @FlutterCreator = @FlutterCreator+' ,this.'+LOWER(@FieldName)+Case When @JT='int' then ' = 0' Else '' End
             Insert Into @fromjosn
             Values('        '+LOWER(@FieldName)+' = json['''+LOWER(@FieldName)+'''],')
             Insert into @tojosn
@@ -180,131 +180,131 @@ END
 
 if @ExportType=1
 Begin
-Insert Into @Res Values('package api;');
-Insert Into @Res Values('');
-Insert Into @Res Values('');
-Insert Into @Res Values('import java.sql.Connection;');
-Insert Into @Res Values('import java.sql.PreparedStatement;');
-Insert Into @Res Values('import javax.servlet.http.HttpServletRequest;');
-Insert Into @Res Values('import javax.ws.rs.DELETE;');
-Insert Into @Res Values('import javax.ws.rs.GET;');
-Insert Into @Res Values('import javax.ws.rs.HeaderParam;');
-Insert Into @Res Values('import javax.ws.rs.POST;');
-Insert Into @Res Values('import javax.ws.rs.PUT;');
-Insert Into @Res Values('import javax.ws.rs.Path;');
-Insert Into @Res Values('import javax.ws.rs.Produces;');
-Insert Into @Res Values('import javax.ws.rs.core.Context;');
-Insert Into @Res Values('import javax.ws.rs.core.MediaType;');
-Insert Into @Res Values('import javax.ws.rs.core.Response;');
-Insert Into @Res Values('');
-Insert Into @Res Values('import org.json.JSONArray;');
-Insert Into @Res Values('');
-Insert Into @Res Values('import objects.'+@TB+';');
-Insert Into @Res Values('import objects.TBUser;');
-Insert Into @Res Values('');
-Insert Into @Res Values('@Path("/'+REPLACE(@TB, 'TB', '')+'")');
-Insert Into @Res Values('public class '+REPLACE(@TB, 'TB', '')+' {');
-Insert Into @Res Values('	private ResultSetToJson tojson = new ResultSetToJson();');
-Insert Into @Res Values('	@GET');
-Insert Into @Res Values('	@Produces(MediaType.TEXT_HTML+"; charset=UTF-8")');
-Insert Into @Res Values('	public Response sayHello()');
-Insert Into @Res Values('	{');
-Insert Into @Res Values('		return Response.status(405).entity("<img src=''../img/403.png'' style=''position: fixed;top: 50%;left: 50%;margin-top: -170px;margin-left: -310px;''>").build();');
-Insert Into @Res Values('	}');
-Insert Into @Res Values('');
-Insert Into @Res Values('	@POST');
-Insert Into @Res Values('	@Produces(MediaType.APPLICATION_JSON+"; charset=UTF-8")');
-Insert Into @Res Values('	public Response loaddata(TBUser obj, @Context HttpServletRequest request)');
-Insert Into @Res Values('	{');
-Insert Into @Res Values('		JSONArray data = new JSONArray();');
-Insert Into @Res Values('		try {');
-Insert Into @Res Values('			DataBase db = new DataBase();');
-Insert Into @Res Values('			Connection con = db.getConnection();');
-Insert Into @Res Values('			PreparedStatement p = con.prepareStatement("Exec Pama.PrcView_'+REPLACE(@TB, 'TB', '')+' ?,?,?");');
-Insert Into @Res Values('	 		p.setString(1, obj.getToken());');
-Insert Into @Res Values('	 		p.setString(2, db.GetIPAddress(request));');
-Insert Into @Res Values('	 		p.setString(3, db.BrowserInfo(request));');
-Insert Into @Res Values('			java.sql.ResultSet rs = p.executeQuery();');
-Insert Into @Res Values('			if (rs != null){');
-Insert Into @Res Values('				while(rs.next())');
-Insert Into @Res Values('					data.put(tojson.ResultsetToJson(rs));');
-Insert Into @Res Values('			}');
-Insert Into @Res Values('			return Response.ok(data.toString(), MediaType.APPLICATION_JSON).build();');
-Insert Into @Res Values('		}');
-Insert Into @Res Values('		catch(Exception e) {');
-Insert Into @Res Values('			return Response');
-Insert Into @Res Values('					.status(Response.Status.UNAUTHORIZED)');
-Insert Into @Res Values('					.entity(e.getMessage())');
-Insert Into @Res Values('					.build();');
-Insert Into @Res Values('		}');
-Insert Into @Res Values('	}	');
-Insert Into @Res Values('');
-Insert Into @Res Values('	@PUT');
-Insert Into @Res Values('	@Produces(MediaType.APPLICATION_JSON+"; charset=UTF-8")');
-Insert Into @Res Values('	public Response savedata('+@TB+' obj, @Context HttpServletRequest request)');
-Insert Into @Res Values('	{');
-Insert Into @Res Values('		try {');
-Insert Into @Res Values('			DataBase db = new DataBase();');
-Insert Into @Res Values('			Connection con = db.getConnection();');
-Insert Into @Res Values('			PreparedStatement p = con.prepareStatement("Exec Pama.PrcSave_'+REPLACE(@TB, 'TB', '')+' ?,?,?'+@questionMark+'");');
-Insert Into @Res Values('	 		p.setString(1, obj.getToken());');
-Insert Into @Res Values('	 		p.setString(2, db.GetIPAddress(request));');
-Insert Into @Res Values('	 		p.setString(3, db.BrowserInfo(request));');
+    Insert Into @Res Values('package api;');
+    Insert Into @Res Values('');
+    Insert Into @Res Values('');
+    Insert Into @Res Values('import java.sql.Connection;');
+    Insert Into @Res Values('import java.sql.PreparedStatement;');
+    Insert Into @Res Values('import javax.servlet.http.HttpServletRequest;');
+    Insert Into @Res Values('import javax.ws.rs.DELETE;');
+    Insert Into @Res Values('import javax.ws.rs.GET;');
+    Insert Into @Res Values('import javax.ws.rs.HeaderParam;');
+    Insert Into @Res Values('import javax.ws.rs.POST;');
+    Insert Into @Res Values('import javax.ws.rs.PUT;');
+    Insert Into @Res Values('import javax.ws.rs.Path;');
+    Insert Into @Res Values('import javax.ws.rs.Produces;');
+    Insert Into @Res Values('import javax.ws.rs.core.Context;');
+    Insert Into @Res Values('import javax.ws.rs.core.MediaType;');
+    Insert Into @Res Values('import javax.ws.rs.core.Response;');
+    Insert Into @Res Values('');
+    Insert Into @Res Values('import org.json.JSONArray;');
+    Insert Into @Res Values('');
+    Insert Into @Res Values('import objects.'+@TB+';');
+    Insert Into @Res Values('import objects.TBUser;');
+    Insert Into @Res Values('');
+    Insert Into @Res Values('@Path("/'+REPLACE(@TB, 'TB', '')+'")');
+    Insert Into @Res Values('public class '+REPLACE(@TB, 'TB', '')+' {');
+    Insert Into @Res Values('	private ResultSetToJson tojson = new ResultSetToJson();');
+    Insert Into @Res Values('	@GET');
+    Insert Into @Res Values('	@Produces(MediaType.TEXT_HTML+"; charset=UTF-8")');
+    Insert Into @Res Values('	public Response sayHello()');
+    Insert Into @Res Values('	{');
+    Insert Into @Res Values('		return Response.status(405).entity("<img src=''../img/403.png'' style=''position: fixed;top: 50%;left: 50%;margin-top: -170px;margin-left: -310px;''>").build();');
+    Insert Into @Res Values('	}');
+    Insert Into @Res Values('');
+    Insert Into @Res Values('	@POST');
+    Insert Into @Res Values('	@Produces(MediaType.APPLICATION_JSON+"; charset=UTF-8")');
+    Insert Into @Res Values('	public Response loaddata(TBUser obj, @Context HttpServletRequest request)');
+    Insert Into @Res Values('	{');
+    Insert Into @Res Values('		JSONArray data = new JSONArray();');
+    Insert Into @Res Values('		try {');
+    Insert Into @Res Values('			DataBase db = new DataBase();');
+    Insert Into @Res Values('			Connection con = db.getConnection();');
+    Insert Into @Res Values('			PreparedStatement p = con.prepareStatement("Exec Pama.PrcView_'+REPLACE(@TB, 'TB', '')+' ?,?,?");');
+    Insert Into @Res Values('	 		p.setString(1, obj.getToken());');
+    Insert Into @Res Values('	 		p.setString(2, db.GetIPAddress(request));');
+    Insert Into @Res Values('	 		p.setString(3, db.BrowserInfo(request));');
+    Insert Into @Res Values('			java.sql.ResultSet rs = p.executeQuery();');
+    Insert Into @Res Values('			if (rs != null){');
+    Insert Into @Res Values('				while(rs.next())');
+    Insert Into @Res Values('					data.put(tojson.ResultsetToJson(rs));');
+    Insert Into @Res Values('			}');
+    Insert Into @Res Values('			return Response.ok(data.toString(), MediaType.APPLICATION_JSON).build();');
+    Insert Into @Res Values('		}');
+    Insert Into @Res Values('		catch(Exception e) {');
+    Insert Into @Res Values('			return Response');
+    Insert Into @Res Values('					.status(Response.Status.UNAUTHORIZED)');
+    Insert Into @Res Values('					.entity(e.getMessage())');
+    Insert Into @Res Values('					.build();');
+    Insert Into @Res Values('		}');
+    Insert Into @Res Values('	}	');
+    Insert Into @Res Values('');
+    Insert Into @Res Values('	@PUT');
+    Insert Into @Res Values('	@Produces(MediaType.APPLICATION_JSON+"; charset=UTF-8")');
+    Insert Into @Res Values('	public Response savedata('+@TB+' obj, @Context HttpServletRequest request)');
+    Insert Into @Res Values('	{');
+    Insert Into @Res Values('		try {');
+    Insert Into @Res Values('			DataBase db = new DataBase();');
+    Insert Into @Res Values('			Connection con = db.getConnection();');
+    Insert Into @Res Values('			PreparedStatement p = con.prepareStatement("Exec Pama.PrcSave_'+REPLACE(@TB, 'TB', '')+' ?,?,?'+@questionMark+'");');
+    Insert Into @Res Values('	 		p.setString(1, obj.getToken());');
+    Insert Into @Res Values('	 		p.setString(2, db.GetIPAddress(request));');
+    Insert Into @Res Values('	 		p.setString(3, db.BrowserInfo(request));');
 
-Insert Into @Res 
-Select '			'+[value]
-From string_split(@classJavaSaveFields, '&')
-where Trim([value]) <> ''
+    Insert Into @Res 
+    Select '			'+[value]
+    From string_split(@classJavaSaveFields, '&')
+    where Trim([value]) <> ''
 
-Insert Into @Res Values('			java.sql.ResultSet rs = p.executeQuery();');
-Insert Into @Res Values('			if (rs != null && rs.next())');
-Insert Into @Res Values('				return Response.ok(tojson.ResultsetToJson(rs), MediaType.APPLICATION_JSON).build();');
-Insert Into @Res Values('			return Response');
-Insert Into @Res Values('					.status(Response.Status.UNAUTHORIZED)');
-Insert Into @Res Values('					.entity("جوابی از سرور دریافت نشد")');
-Insert Into @Res Values('					.build();');
-Insert Into @Res Values('		}');
-Insert Into @Res Values('		catch(Exception e) {');
-Insert Into @Res Values('			return Response');
-Insert Into @Res Values('					.status(Response.Status.UNAUTHORIZED)');
-Insert Into @Res Values('					.entity(e.getMessage())');
-Insert Into @Res Values('					.build();');
-Insert Into @Res Values('		}');
-Insert Into @Res Values('	}	');
-Insert Into @Res Values('');
-Insert Into @Res Values('	@DELETE');
-Insert Into @Res Values('	@Produces(MediaType.APPLICATION_JSON+"; charset=UTF-8")');
-Insert Into @Res Values('	public Response delprocess(@Context HttpServletRequest request, @HeaderParam("token") String token'+@JavaPk1+')');
-Insert Into @Res Values('	{');
-Insert Into @Res Values('		try {');
-Insert Into @Res Values('			DataBase db = new DataBase();');
-Insert Into @Res Values('			Connection con = db.getConnection();');
-Insert Into @Res Values('			PreparedStatement p = con.prepareStatement("Exec Pama.PrcDel_'+REPLACE(@TB, 'TB', '')+' ?,?,?,?");');
-Insert Into @Res Values('			p.setString(1, token);');
-Insert Into @Res Values('	 		p.setString(2, db.GetIPAddress(request));');
-Insert Into @Res Values('	 		p.setString(3, db.BrowserInfo(request));');
+    Insert Into @Res Values('			java.sql.ResultSet rs = p.executeQuery();');
+    Insert Into @Res Values('			if (rs != null && rs.next())');
+    Insert Into @Res Values('				return Response.ok(tojson.ResultsetToJson(rs), MediaType.APPLICATION_JSON).build();');
+    Insert Into @Res Values('			return Response');
+    Insert Into @Res Values('					.status(Response.Status.UNAUTHORIZED)');
+    Insert Into @Res Values('					.entity("جوابی از سرور دریافت نشد")');
+    Insert Into @Res Values('					.build();');
+    Insert Into @Res Values('		}');
+    Insert Into @Res Values('		catch(Exception e) {');
+    Insert Into @Res Values('			return Response');
+    Insert Into @Res Values('					.status(Response.Status.UNAUTHORIZED)');
+    Insert Into @Res Values('					.entity(e.getMessage())');
+    Insert Into @Res Values('					.build();');
+    Insert Into @Res Values('		}');
+    Insert Into @Res Values('	}	');
+    Insert Into @Res Values('');
+    Insert Into @Res Values('	@DELETE');
+    Insert Into @Res Values('	@Produces(MediaType.APPLICATION_JSON+"; charset=UTF-8")');
+    Insert Into @Res Values('	public Response delprocess(@Context HttpServletRequest request, @HeaderParam("token") String token'+@JavaPk1+')');
+    Insert Into @Res Values('	{');
+    Insert Into @Res Values('		try {');
+    Insert Into @Res Values('			DataBase db = new DataBase();');
+    Insert Into @Res Values('			Connection con = db.getConnection();');
+    Insert Into @Res Values('			PreparedStatement p = con.prepareStatement("Exec Pama.PrcDel_'+REPLACE(@TB, 'TB', '')+' ?,?,?,?");');
+    Insert Into @Res Values('			p.setString(1, token);');
+    Insert Into @Res Values('	 		p.setString(2, db.GetIPAddress(request));');
+    Insert Into @Res Values('	 		p.setString(3, db.BrowserInfo(request));');
 
-Insert Into @Res 
-Select [value]
-From string_split(@JavaPk2, '&')
-where Trim([value]) <> ''
+    Insert Into @Res 
+    Select [value]
+    From string_split(@JavaPk2, '&')
+    where Trim([value]) <> ''
 
-Insert Into @Res Values('			java.sql.ResultSet rs = p.executeQuery();');
-Insert Into @Res Values('			if (rs != null && rs.next())');
-Insert Into @Res Values('				return Response.ok(tojson.ResultsetToJson(rs), MediaType.APPLICATION_JSON).build();');
-Insert Into @Res Values('			return Response');
-Insert Into @Res Values('					.status(Response.Status.UNAUTHORIZED)');
-Insert Into @Res Values('					.entity("جوابی از سرور دریافت نشد")');
-Insert Into @Res Values('					.build();');
-Insert Into @Res Values('		}');
-Insert Into @Res Values('		catch(Exception e) {');
-Insert Into @Res Values('			return Response');
-Insert Into @Res Values('					.status(Response.Status.UNAUTHORIZED)');
-Insert Into @Res Values('					.entity(e.getMessage())');
-Insert Into @Res Values('					.build();');
-Insert Into @Res Values('		}');
-Insert Into @Res Values('	}	');
-Insert Into @Res Values('}');
+    Insert Into @Res Values('			java.sql.ResultSet rs = p.executeQuery();');
+    Insert Into @Res Values('			if (rs != null && rs.next())');
+    Insert Into @Res Values('				return Response.ok(tojson.ResultsetToJson(rs), MediaType.APPLICATION_JSON).build();');
+    Insert Into @Res Values('			return Response');
+    Insert Into @Res Values('					.status(Response.Status.UNAUTHORIZED)');
+    Insert Into @Res Values('					.entity("جوابی از سرور دریافت نشد")');
+    Insert Into @Res Values('					.build();');
+    Insert Into @Res Values('		}');
+    Insert Into @Res Values('		catch(Exception e) {');
+    Insert Into @Res Values('			return Response');
+    Insert Into @Res Values('					.status(Response.Status.UNAUTHORIZED)');
+    Insert Into @Res Values('					.entity(e.getMessage())');
+    Insert Into @Res Values('					.build();');
+    Insert Into @Res Values('		}');
+    Insert Into @Res Values('	}	');
+    Insert Into @Res Values('}');
 END
 
 Select *
