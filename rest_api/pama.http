@@ -6,6 +6,10 @@ Content-Type: application/json
     "password": "c4ca4238a0b923820dcc509a6f75849b"
 }
 
+###
+GET http://127.0.0.1:8080/HomeCleaningRest/api/v1/user
+
+
 
 ###
 put http://127.0.0.1:8080/PamaApi/api/Parvane
