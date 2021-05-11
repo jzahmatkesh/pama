@@ -189,25 +189,70 @@ class ParvaneInfo extends StatelessWidget {
     Widget stepTwo(){
       return Column(
         children: [
-          GridTextField(
-            hint: 'واحد صنفی',
-            readonly: true,
-            controller: _nosazicode,
-            notempty: true,
-            icon: MyIconButton(type: ButtonType.none, hint: 'انتخاب واحد صنفی', icon: Icon(Icons.more_horiz), onPressed: ()=>showFormAsDialog(
-              context: context, 
-              form: FmGUnit(
-                nosazicode: "", 
-                justcheck: true
-              ), 
-              done: (dynamic data){
-                if (data is GUnit){
-                  parvane.gunitid = data.id;
-                  _nosazicode.text = data.nosazicode;
-                }
-              }
-            ))
-          ).expand(),              
+          Row(
+            children: [
+              GridTextField(
+                hint: 'واحد صنفی',
+                readonly: true,
+                controller: _nosazicode,
+                notempty: true,
+                icon: MyIconButton(type: ButtonType.none, hint: 'انتخاب واحد صنفی', icon: Icon(Icons.more_horiz), onPressed: ()=>showFormAsDialog(
+                  context: context, 
+                  form: FmGUnit(
+                    nosazicode: "", 
+                    justcheck: true
+                  ), 
+                  done: (dynamic data){
+                    if (data is GUnit){
+                      parvane.gunitid = data.id;
+                      _nosazicode.text = data.nosazicode;
+                    }
+                  }
+                ))
+              ).expand(),        
+              GridTextField(hint: 'نام واحد صنفی', notempty: true, initialValue: '${parvane.guname}', onChange: (val)=>parvane.guname=val).expand(),      
+              GridTextField(hint: 'تاریخ شروه فعالیت', notempty: true, datepicker: true, initialValue: '${parvane.gubegindate}', onChange: (val)=>parvane.gubegindate=val).expand(),      
+            ],
+          ),
+          Row(
+            children: [
+              GridTextField(hint: 'ابزار و امکانات و تجهیزات', notempty: true, initialValue: '${parvane.gutoolsinfo}', onChange: (val)=>parvane.gutoolsinfo=val).expand(),      
+              GridTextField(hint: 'انشعابات', notempty: true, initialValue: '${parvane.guensheabat}', onChange: (val)=>parvane.guensheabat=val).expand(),      
+              RadioButton(val: parvane.gubimemakan, hint: 'بیمه مکان', onChange: (val)=>parvane.gubimemakan=val),
+              'بیمه مکان'.toLabel(),
+              SizedBox(width: 10),
+              GridTextField(hint: 'شعبه تامین اجتماعی', notempty: true, initialValue: '${parvane.gubimeshobe}', onChange: (val)=>parvane.gubimeshobe=val).expand(),      
+            ]
+          ),
+          Row(
+            children: [
+              GridTextField(hint: 'شماره کارگاه', notempty: true, initialValue: '${parvane.gukargahno}', onChange: (val)=>parvane.gukargahno=int.tryParse(val)).expand(),      
+              GridTextField(hint: 'زیربنا', initialValue: '${parvane.guzirbana}', onChange: (val)=>parvane.guzirbana=int.tryParse(val)).expand(),      
+              GridTextField(hint: 'تعداد طبقات', initialValue: '${parvane.gutabaghat}', onChange: (val)=>parvane.gutabaghat=int.tryParse(val)).expand(),      
+              GridTextField(hint: 'میزان اجاره', initialValue: '${parvane.gurent}', onChange: (val)=>parvane.gurent=double.tryParse(val)).expand(),      
+            ]
+          ),
+          Row(
+            children: [
+              GridTextField(hint: 'کد رهگیری ثبت نام دارایی', notempty: true, initialValue: '${parvane.gudaraeicode}', onChange: (val)=>parvane.gudaraeicode=int.tryParse(val)).expand(),      
+              GridTextField(hint: 'واحد مالیاتی', initialValue: '${parvane.guvahedmaliati}', onChange: (val)=>parvane.guvahedmaliati=val).expand(),      
+              GridTextField(hint: 'شماره پرونده مالیاتی', notempty: true, initialValue: '${parvane.guparvandemaliat}', onChange: (val)=>parvane.guparvandemaliat=int.tryParse(val)).expand(),      
+              MultiChooseItem(val: parvane.gustatus, items: [{'id': 1, 'title': 'مالکیت'},{'id': 2,  'title': 'سرقفلی'}], hint: 'وضعیت مالکیت', onChange: (val)=>parvane.gustatus=val['id']).expand(),
+            ]
+          ),
+          Row(
+            children: [
+              GridTextField(hint: 'تلفن', notempty: true, initialValue: '${parvane.gutel}', onChange: (val)=>parvane.gutel=val).expand(),      
+              GridTextField(hint: 'فکس', notempty: true, initialValue: '${parvane.gufax}', onChange: (val)=>parvane.gufax=val).expand(),      
+              GridTextField(hint: 'محل استقرار', notempty: true, initialValue: '${parvane.guesteghrarplace}', onChange: (val)=>parvane.guesteghrarplace=val).expand(),      
+            ],
+          ),
+          Row(
+            children: [
+              GridTextField(hint: 'عنوان تابلو', notempty: true, initialValue: '${parvane.gusigntitle}', onChange: (val)=>parvane.gusigntitle=val).expand(),      
+              GridTextField(hint: 'توضیحات', initialValue: '${parvane.gunote}', onChange: (val)=>parvane.gunote=val).expand(),      
+            ]
+          ),
         ],
       );
     }
