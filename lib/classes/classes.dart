@@ -2689,7 +2689,7 @@ class GUnit{
     String address;
     String token;
  
-    GUnit({this.id,this.nosazicode,this.hozeentezami,this.markazbehdasht,this.zaminmasahat,this.pelak,this.shahrdari,this.address, this.token});
+    GUnit({this.id,this.nosazicode,this.hozeentezami,this.markazbehdasht,this.zaminmasahat = 0,this.pelak,this.shahrdari = 0,this.address, this.token});
  
     GUnit.fromJson(Map<String, dynamic> json):
         id = json['id'],
@@ -2724,6 +2724,7 @@ class Parvane{
     int peopid;
     String peopname;
     int gunitid;
+    String nosazicode;
     String guname;
     String gubegindate;
     String gutoolsinfo;
@@ -2769,7 +2770,7 @@ class Parvane{
     String isicname;
     String token;
  
-    Parvane({this.cmpid = 0 ,this.id = 0 ,this.iranianasnaf = 0 ,this.reqdate ,this.peopid = 0, this.peopname = "" ,this.gunitid = 0 ,this.guname ,this.gubegindate ,this.gutoolsinfo ,this.guensheabat ,this.gubimemakan = 0 ,this.gubimeshobe ,this.gukargahno = 0 ,this.guzirbana = 0 ,this.gutabaghat = 0 ,this.gurent=0,this.gudaraeicode = 0 ,this.guvahedmaliati ,this.guparvandemaliat = 0 ,this.gustatus = 0 ,this.gutel ,this.gufax ,this.guesteghrarplace ,this.gusigntitle ,this.gunote ,this.kind = 1 ,this.parvandekind = 1 ,this.ecoid = 0 ,this.bank = 0 ,this.hesabno ,this.hesabkind = 1 ,this.hisic = 0 ,this.isic = 0 ,this.hoghoghikind = 1 ,this.hoghoghiname ,this.hoghoghishenasemeli ,this.hoghoghisabtno = 0 ,this.hoghoghisabtdate ,this.parvanekind = 1 ,this.datesodor ,this.datetahvil ,this.etebarlen = 0 ,this.eparvaneno = 0 ,this.note ,this.shenasesenfi = 0 ,this.accept = 0 ,this.acceptdate ,this.bankname ,this.isicname, this.token});
+    Parvane({this.cmpid = 0 ,this.id = 0 ,this.iranianasnaf = 0 ,this.reqdate ,this.peopid = 0, this.peopname = "" ,this.gunitid = 0, this.nosazicode = "" ,this.guname ,this.gubegindate ,this.gutoolsinfo ,this.guensheabat ,this.gubimemakan = 0 ,this.gubimeshobe ,this.gukargahno = 0 ,this.guzirbana = 0 ,this.gutabaghat = 0 ,this.gurent=0,this.gudaraeicode = 0 ,this.guvahedmaliati ,this.guparvandemaliat = 0 ,this.gustatus = 0 ,this.gutel ,this.gufax ,this.guesteghrarplace ,this.gusigntitle ,this.gunote ,this.kind = 1 ,this.parvandekind = 1 ,this.ecoid = 0 ,this.bank = 0 ,this.hesabno ,this.hesabkind = 1 ,this.hisic = 0 ,this.isic = 0 ,this.hoghoghikind = 1 ,this.hoghoghiname ,this.hoghoghishenasemeli ,this.hoghoghisabtno = 0 ,this.hoghoghisabtdate ,this.parvanekind = 1 ,this.datesodor ,this.datetahvil ,this.etebarlen = 0 ,this.eparvaneno = 0 ,this.note ,this.shenasesenfi = 0 ,this.accept = 0 ,this.acceptdate ,this.bankname ,this.isicname, this.token});
  
     Parvane.fromJson(Map<String, dynamic> json):
         cmpid = json['cmpid'],
@@ -2779,6 +2780,7 @@ class Parvane{
         peopid = json['peopid'],
         peopname = json['peopname'],
         gunitid = json['gunitid'],
+        nosazicode = json['nosazicode'],
         guname = json['guname'],
         gubegindate = json['gubegindate'],
         gutoolsinfo = json['gutoolsinfo'],

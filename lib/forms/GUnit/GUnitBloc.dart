@@ -27,15 +27,19 @@ class GUnitBloc{
   checkNosaziCode(BuildContext context, String code, bool justcheck) async{
     try{
       _gunitbloc.add(GUnitModel(status: Status.loading));
-      _gunitbloc.add(GUnitModel(gunit: await _repository.findByNosaziCode(readToken(context), code), status: Status.loaded));
+      GUnit gun = await _repository.findByNosaziCode(readToken(context), code);
+      if (gun == null)
+        print("asasa34253455");
+      _gunitbloc.add(GUnitModel(gunit: gun, status: Status.loaded));
       if (justcheck)
         Navigator.of(context).pop(_gunitbloc.value.gunit);
     }
     catch(e){
-      if (justcheck)
-        Navigator.of(context).pop('${compileErrorMessage('$e')}');
-      else
-        _gunitbloc.add(GUnitModel(status: Status.error, msg: compileErrorMessage('$e')));
+      myAlert(context: context, title: 'خطا', message: '$e');
+      // if (!justcheck)
+      _gunitbloc.add(GUnitModel(gunit: GUnit(id: 0, nosazicode: code), status: Status.loaded));
+      // else
+      // Navigator.of(context).pop('${compileErrorMessage('$e')}');
     }    
   }
 

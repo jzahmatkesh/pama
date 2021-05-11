@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pama/forms/GUnit/GUnit.dart';
 import 'ParvaneBloc.dart';
 import '../People/People.dart';
 import '../../module/consts.dart';
@@ -107,6 +108,7 @@ class ParvaneInfo extends StatelessWidget {
     final _edreqdate = TextEditingController(text: this.parvane.reqdate);
     final _edhoghoghisabtdate = TextEditingController(text: this.parvane.reqdate);
     final _peopname = TextEditingController(text: this.parvane.peopname);
+    final _nosazicode = TextEditingController(text: this.parvane.nosazicode);
     
 
     Bloc<int> _tabidx = Bloc<int>()..setValue(1);
@@ -187,6 +189,25 @@ class ParvaneInfo extends StatelessWidget {
     Widget stepTwo(){
       return Column(
         children: [
+          GridTextField(
+            hint: 'واحد صنفی',
+            readonly: true,
+            controller: _nosazicode,
+            notempty: true,
+            icon: MyIconButton(type: ButtonType.none, hint: 'انتخاب واحد صنفی', icon: Icon(Icons.more_horiz), onPressed: ()=>showFormAsDialog(
+              context: context, 
+              form: FmGUnit(
+                nosazicode: "", 
+                justcheck: true
+              ), 
+              done: (dynamic data){
+                if (data is GUnit){
+                  parvane.gunitid = data.id;
+                  _nosazicode.text = data.nosazicode;
+                }
+              }
+            ))
+          ).expand(),              
         ],
       );
     }

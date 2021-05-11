@@ -27,7 +27,7 @@ class FmGUnit extends StatelessWidget {
             if (snap.data.status == Status.loaded)
               return GUnitInfo(_bloc, snap.data.gunit);
             return Container(
-              width: screenWidth(context) * 0.3,
+              // width: screenWidth(context) * 0.3,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -35,23 +35,7 @@ class FmGUnit extends StatelessWidget {
                   SizedBox(height: 25),
                   snap.data.status==Status.loading
                     ? CupertinoActivityIndicator()
-                    : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        MyOutlineButton(color: Colors.blue, title: 'بررسی', icon: Icons.search, onPressed: ()=>_bloc.checkNosaziCode(context, _data, this.justcheck)),
-                        snap.data.status==Status.error
-                          ? Container(
-                              margin: EdgeInsets.only(right: 15),
-                              padding: EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Colors.red.shade100
-                              ),
-                              child: snap.data.msg.toLabel()
-                            )
-                          : Container()
-                      ],
-                    ),
+                    : MyOutlineButton(color: Colors.blue, title: 'بررسی', icon: Icons.search, onPressed: ()=>_bloc.checkNosaziCode(context, _data, this.justcheck)),
                 ],
               ),
             );
@@ -89,7 +73,7 @@ class GUnitInfo extends StatelessWidget {
             Row(
               children: [
                 GridTextField(hint: 'کد نوسازی', initialValue: this.gunit.nosazicode, onChange: (val)=>this.gunit.nosazicode=val).expand(),
-                GridTextField(hint: 'حوزه انتظامی', notempty: true, initialValue: this.gunit.hozeentezami, onChange: (val)=>this.gunit.hozeentezami=val).expand(),
+                GridTextField(hint: 'حوزه انتظامی', notempty: true, autofocus: true, initialValue: this.gunit.hozeentezami, onChange: (val)=>this.gunit.hozeentezami=val).expand(),
                 GridTextField(hint: 'مرکز بهداشت', notempty: true, initialValue: this.gunit.markazbehdasht, onChange: (val)=>this.gunit.markazbehdasht=val).expand(),
               ]
             ),
