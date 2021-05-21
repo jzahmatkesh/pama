@@ -71,6 +71,16 @@ class FmParvane extends StatelessWidget {
               );
             }
           ),
+          GridCaption(obj: [
+              'شماره عضویت',
+              'نام و نام خانوادگی',
+              'کد ملی',
+              'شماره همراه',
+              'آخرین فرآیند',
+              'وضعیت فرآیند'
+            ],
+            endbuttons: 2,
+          ),
           Expanded(
             child: StreamBuilder<ParvaneModel>(
               stream: _bloc.stream$,
@@ -82,7 +92,19 @@ class FmParvane extends StatelessWidget {
                     return ListView.builder(
                       itemCount: snap.data.rows.length,
                       itemBuilder: (context, idx){
-                        return Card(child: Text('$idx'));
+                        return Row(
+                          children: [
+                            SizedBox(width: 8),
+                            snap.data.rows[idx].nosazicode.toLabel().expand(),
+                            snap.data.rows[idx].peopname.toLabel().expand(),
+                            snap.data.rows[idx].nationalid.toLabel().expand(),
+                            snap.data.rows[idx].mobile.toLabel().expand(),
+                            snap.data.rows[idx].lastprocess.toLabel().expand(),
+                            snap.data.rows[idx].lastprocessstatus.toLabel().expand(),
+                            IconButton(tooltip: 'فرآیند جدید', icon: Icon(Icons.add_box_outlined, color: Colors.blue), onPressed: (){}),
+                            IconButton(tooltip: 'سایر اطلاعات شخصی', icon: Icon(Icons.info, color: Colors.blue), onPressed: ()=>showFormAsDialog(context: context, form: ParvaneInfo(bloc: _bloc, parvane: snap.data.rows[idx]))),
+                          ],
+                        ).card();
                       }
                     );
                 }
@@ -104,6 +126,55 @@ class ParvaneInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var _id = TextEditingController(text: '${this.parvane.id}');
+    var _iranianasnaf = TextEditingController(text: '${this.parvane.iranianasnaf}');
+    var _guname = TextEditingController(text: '${this.parvane.guname}');
+    var _gubegindate = TextEditingController(text: '${this.parvane.gubegindate}');
+    var _gutoolsinfo = TextEditingController(text: '${this.parvane.gutoolsinfo}');
+    var _guensheabat = TextEditingController(text: '${this.parvane.guensheabat}');
+    var _gubimeshobe = TextEditingController(text: '${this.parvane.gubimeshobe}');
+    var _gukargahno = TextEditingController(text: '${this.parvane.gukargahno}');
+    var _guzirbana = TextEditingController(text: '${this.parvane.guzirbana}');
+    var _gutabaghat = TextEditingController(text: '${this.parvane.gutabaghat}');
+    var _gurent = TextEditingController(text: '${this.parvane.gurent}');
+    var _gudaraeicode = TextEditingController(text: '${this.parvane.gudaraeicode}');
+    var _guvahedmaliati = TextEditingController(text: '${this.parvane.guvahedmaliati}');
+    var _guparvandemaliat = TextEditingController(text: '${this.parvane.guparvandemaliat}');
+    var _gutel = TextEditingController(text: '${this.parvane.gutel}');
+    var _gufax = TextEditingController(text: '${this.parvane.gufax}');
+    var _guesteghrarplace = TextEditingController(text: '${this.parvane.guesteghrarplace}');
+    var _gusigntitle = TextEditingController(text: '${this.parvane.gusigntitle}');
+    var _gunote = TextEditingController(text: '${this.parvane.gunote}');
+    var _ecoid = TextEditingController(text: '${this.parvane.ecoid}');
+    var _hoghoghiname = TextEditingController(text: '${this.parvane.hoghoghiname}');
+    var _hoghoghishenasemeli = TextEditingController(text: '${this.parvane.hoghoghishenasemeli}');
+    var _hoghoghisabtno = TextEditingController(text: '${this.parvane.hoghoghisabtno}');
+    var _hesabno = TextEditingController(text: '${this.parvane.hesabno}');
+    // var _reqdate = TextEditingController(text: '${this.parvane.reqdate}');
+    // var _peopid = TextEditingController(text: '${this.parvane.peopid}');
+    // var _gunitid = TextEditingController(text: '${this.parvane.gunitid}');
+    // var _gubimemakan = TextEditingController(text: '${this.parvane.gubimemakan}');
+    // var _gustatus = TextEditingController(text: '${this.parvane.gustatus}');
+    // var _kind = TextEditingController(text: '${this.parvane.kind}');
+    // var _parvandekind = TextEditingController(text: '${this.parvane.parvandekind}');
+    // var _bank = TextEditingController(text: '${this.parvane.bank}');
+    // var _hesabkind = TextEditingController(text: '${this.parvane.hesabkind}');
+    // var _hisic = TextEditingController(text: '${this.parvane.hisic}');
+    // var _isic = TextEditingController(text: '${this.parvane.isic}');
+    // var _hoghoghikind = TextEditingController(text: '${this.parvane.hoghoghikind}');
+    // var _hoghoghisabtdate = TextEditingController(text: '${this.parvane.hoghoghisabtdate}');
+    // var _parvanekind = TextEditingController(text: '${this.parvane.parvanekind}');
+    // var _datesodor = TextEditingController(text: '${this.parvane.datesodor}');
+    // var _datetahvil = TextEditingController(text: '${this.parvane.datetahvil}');
+    // var _etebarlen = TextEditingController(text: '${this.parvane.etebarlen}');
+    // var _eparvaneno = TextEditingController(text: '${this.parvane.eparvaneno}');
+    // var _note = TextEditingController(text: '${this.parvane.note}');
+    // var _shenasesenfi = TextEditingController(text: '${this.parvane.shenasesenfi}');
+    // var _accept = TextEditingController(text: '${this.parvane.accept}');
+    // var _acceptdate = TextEditingController(text: '${this.parvane.acceptdate}');
+    // var _bankname = TextEditingController(text: '${this.parvane.bankname}');
+    // var _isicname = TextEditingController(text: '${this.parvane.isicname}');
+
     final _form = GlobalKey<FormState>();
     final _edreqdate = TextEditingController(text: this.parvane.reqdate);
     final _edhoghoghisabtdate = TextEditingController(text: this.parvane.reqdate);
@@ -111,7 +182,7 @@ class ParvaneInfo extends StatelessWidget {
     final _nosazicode = TextEditingController(text: this.parvane.nosazicode);
     
 
-    Bloc<int> _tabidx = Bloc<int>()..setValue(1);
+    // Bloc<int> _tabidx = Bloc<int>()..setValue(1);
 
     Widget stepOne(){
       return Column(
@@ -140,22 +211,22 @@ class ParvaneInfo extends StatelessWidget {
                   }
                 ))
               ).expand(),              
-              GridTextField(hint: 'شماره ایرانیان اصناف', notempty: true, initialValue: '${parvane.iranianasnaf}', autofocus: true, onChange: (val)=>parvane.iranianasnaf=int.tryParse(val)).expand(),
-              GridTextField(hint: 'تاریخ تقاضا', notempty: true, initialValue: this.parvane.reqdate, controller: _edreqdate, onChange: (val)=>parvane.reqdate=val, datepicker: true).expand(),
-              GridTextField(hint: 'شماره درخواست', notempty: true, initialValue: '${this.parvane.id}', onChange: (val)=>parvane.id=int.tryParse(val)).expand(),
+              GridTextField(hint: 'شماره ایرانیان اصناف', notempty: true, controller: _iranianasnaf, autofocus: true).expand(),
+              GridTextField(hint: 'تاریخ تقاضا', notempty: true, controller: _edreqdate, datepicker: true).expand(),
+              GridTextField(hint: 'شماره درخواست', notempty: true, controller: _id).expand(),
             ]
           ),
           Row(
             children: [
               DropDownItems(val: parvane.kind, items: [{'id': 1, 'title': 'حقیقی'},{'id': 2, 'title': 'مشارکت مدنی'},{'id': 3, 'title': 'مشارکت حقوقی'}], hint: 'نوع متقاضی', onChange: (val)=>parvane.kind=val).expand(),
               DropDownItems(val: parvane.parvandekind, items: [{'id': 1, 'title': 'عادی'},{'id': 2, 'title': 'ایثارگران'}], hint: 'نوع پرونده', onChange: (val)=>parvane.parvandekind=val).expand(),
-              GridTextField(hint: 'کد اقتصادی', notempty: true, initialValue: '${this.parvane.ecoid}', onChange: (val)=>parvane.ecoid=int.tryParse(val)).expand(),
+              GridTextField(hint: 'کد اقتصادی', notempty: true, controller: _ecoid).expand(),
             ]
           ),
           Row(
             children: [
               ForeignKeyField(hint: 'عنوان بانک', initialValue: {'id': this.parvane.bank, 'name': this.parvane.bankname}, f2key: 'Bank', onChange: (val){this.parvane.bank = val['id'];this.parvane.bankname = val['name'];},).expand(),
-              GridTextField(hint: 'شماره حساب', notempty: true, initialValue: this.parvane.hesabno, onChange: (val)=>parvane.hesabno=val).expand(),
+              GridTextField(hint: 'شماره حساب', notempty: true, controller: _hesabno).expand(),
               DropDownItems(val: parvane.hesabkind, items: [{'id': 1, 'title': 'جاری'},{'id': 2, 'title': 'سپرده'},{'id': 3, 'title': 'قرض الحسنه'}], hint: 'نوع حساب', onChange: (val)=>parvane.hesabkind=val).expand(),
             ]
           ),
@@ -171,14 +242,14 @@ class ParvaneInfo extends StatelessWidget {
                 {'id': 5, 'title': 'مسولیت محدود'},
                 {'id': 6, 'title': 'غیره'}
               ], hint: 'نوع شخصیت حقوقی', onChange: (val)=>parvane.hoghoghikind=val).expand(),
-              GridTextField(hint: 'عنوان شخصیت حقوقی', notempty: true, initialValue: this.parvane.hoghoghiname, onChange: (val)=>parvane.hoghoghiname=val).expand(),
+              GridTextField(hint: 'عنوان شخصیت حقوقی', notempty: true, controller: _hoghoghiname).expand(),
             ]
           ),
           Row(
             children: [
-              GridTextField(hint: 'شناسه ملی', notempty: true, initialValue: this.parvane.hoghoghishenasemeli, onChange: (val)=>parvane.hoghoghishenasemeli=val).expand(),
-              GridTextField(hint: 'شماره ثبت', notempty: true, initialValue: '${this.parvane.hoghoghisabtno}', onChange: (val)=>parvane.hoghoghisabtno=int.tryParse(val)).expand(),
-              GridTextField(hint: 'تاریخ ثبت', notempty: true, initialValue: this.parvane.hoghoghisabtdate, controller: _edhoghoghisabtdate, onChange: (val)=>parvane.hoghoghisabtdate=val, datepicker: true).expand(),
+              GridTextField(hint: 'شناسه ملی', notempty: true, controller: _hoghoghishenasemeli).expand(),
+              GridTextField(hint: 'شماره ثبت', notempty: true, controller: _hoghoghisabtno).expand(),
+              GridTextField(hint: 'تاریخ ثبت', notempty: true, controller: _edhoghoghisabtdate, datepicker: true).expand(),
               DropDownItems(val: parvane.parvanekind, items: [{'id': 1, 'title': 'موقت'},{'id': 2, 'title': 'دایم'}], hint: 'نوع پروانه', onChange: (val)=>parvane.parvanekind=val).expand(),
             ]
           ),
@@ -210,49 +281,95 @@ class ParvaneInfo extends StatelessWidget {
                   }
                 ))
               ).expand(),        
-              GridTextField(hint: 'نام واحد صنفی', notempty: true, initialValue: '${parvane.guname}', onChange: (val)=>parvane.guname=val).expand(),      
-              GridTextField(hint: 'تاریخ شروه فعالیت', notempty: true, datepicker: true, initialValue: '${parvane.gubegindate}', onChange: (val)=>parvane.gubegindate=val).expand(),      
+              GridTextField(hint: 'نام واحد صنفی', notempty: true, controller: _guname).expand(),      
+              GridTextField(hint: 'تاریخ شروه فعالیت', notempty: true, datepicker: true, controller: _gubegindate).expand(),      
             ],
           ),
           Row(
             children: [
-              GridTextField(hint: 'ابزار و امکانات و تجهیزات', notempty: true, initialValue: '${parvane.gutoolsinfo}', onChange: (val)=>parvane.gutoolsinfo=val).expand(),      
-              GridTextField(hint: 'انشعابات', notempty: true, initialValue: '${parvane.guensheabat}', onChange: (val)=>parvane.guensheabat=val).expand(),      
+              GridTextField(hint: 'ابزار و امکانات و تجهیزات', notempty: true, controller: _gutoolsinfo).expand(),      
+              GridTextField(hint: 'انشعابات', notempty: true, controller: _guensheabat).expand(),      
               RadioButton(val: parvane.gubimemakan, hint: 'بیمه مکان', onChange: (val)=>parvane.gubimemakan=val),
               'بیمه مکان'.toLabel(),
               SizedBox(width: 10),
-              GridTextField(hint: 'شعبه تامین اجتماعی', notempty: true, initialValue: '${parvane.gubimeshobe}', onChange: (val)=>parvane.gubimeshobe=val).expand(),      
+              GridTextField(hint: 'شعبه تامین اجتماعی', notempty: true, controller: _gubimeshobe).expand(),      
             ]
           ),
           Row(
             children: [
-              GridTextField(hint: 'شماره کارگاه', notempty: true, initialValue: '${parvane.gukargahno}', onChange: (val)=>parvane.gukargahno=int.tryParse(val)).expand(),      
-              GridTextField(hint: 'زیربنا', initialValue: '${parvane.guzirbana}', onChange: (val)=>parvane.guzirbana=int.tryParse(val)).expand(),      
-              GridTextField(hint: 'تعداد طبقات', initialValue: '${parvane.gutabaghat}', onChange: (val)=>parvane.gutabaghat=int.tryParse(val)).expand(),      
-              GridTextField(hint: 'میزان اجاره', initialValue: '${parvane.gurent}', onChange: (val)=>parvane.gurent=double.tryParse(val)).expand(),      
+              GridTextField(hint: 'شماره کارگاه', notempty: true, controller: _gukargahno).expand(),      
+              GridTextField(hint: 'زیربنا', controller: _guzirbana).expand(),      
+              GridTextField(hint: 'تعداد طبقات', controller: _gutabaghat).expand(),      
+              GridTextField(hint: 'میزان اجاره', controller: _gurent).expand(),      
             ]
           ),
           Row(
             children: [
-              GridTextField(hint: 'کد رهگیری ثبت نام دارایی', notempty: true, initialValue: '${parvane.gudaraeicode}', onChange: (val)=>parvane.gudaraeicode=int.tryParse(val)).expand(),      
-              GridTextField(hint: 'واحد مالیاتی', initialValue: '${parvane.guvahedmaliati}', onChange: (val)=>parvane.guvahedmaliati=val).expand(),      
-              GridTextField(hint: 'شماره پرونده مالیاتی', notempty: true, initialValue: '${parvane.guparvandemaliat}', onChange: (val)=>parvane.guparvandemaliat=int.tryParse(val)).expand(),      
+              GridTextField(hint: 'کد رهگیری ثبت نام دارایی', notempty: true, controller: _gudaraeicode).expand(),      
+              GridTextField(hint: 'واحد مالیاتی', controller: _guvahedmaliati).expand(),      
+              GridTextField(hint: 'شماره پرونده مالیاتی', notempty: true, controller: _guparvandemaliat).expand(),      
               MultiChooseItem(val: parvane.gustatus, items: [{'id': 1, 'title': 'مالکیت'},{'id': 2,  'title': 'سرقفلی'}], hint: 'وضعیت مالکیت', onChange: (val)=>parvane.gustatus=val['id']).expand(),
             ]
           ),
           Row(
             children: [
-              GridTextField(hint: 'تلفن', notempty: true, initialValue: '${parvane.gutel}', onChange: (val)=>parvane.gutel=val).expand(),      
-              GridTextField(hint: 'فکس', notempty: true, initialValue: '${parvane.gufax}', onChange: (val)=>parvane.gufax=val).expand(),      
-              GridTextField(hint: 'محل استقرار', notempty: true, initialValue: '${parvane.guesteghrarplace}', onChange: (val)=>parvane.guesteghrarplace=val).expand(),      
+              GridTextField(hint: 'تلفن', notempty: true, controller: _gutel).expand(),      
+              GridTextField(hint: 'فکس', notempty: true, controller: _gufax).expand(),      
+              GridTextField(hint: 'محل استقرار', notempty: true, controller: _guesteghrarplace).expand(),      
             ],
           ),
           Row(
             children: [
-              GridTextField(hint: 'عنوان تابلو', notempty: true, initialValue: '${parvane.gusigntitle}', onChange: (val)=>parvane.gusigntitle=val).expand(),      
-              GridTextField(hint: 'توضیحات', initialValue: '${parvane.gunote}', onChange: (val)=>parvane.gunote=val).expand(),      
+              GridTextField(hint: 'عنوان تابلو', notempty: true, controller: _gusigntitle).expand(),      
+              GridTextField(hint: 'توضیحات', controller: _gunote).expand(),      
             ]
           ),
+        ],
+      );
+    }
+
+    Widget stepThree(){
+      if (bloc.mobashervalue$.status != Status.loaded)
+        bloc.loadMobasher(context, parvane.id);
+      return Column(
+        children: [
+          GridCaption(
+            obj: [
+              IconButton(icon: Icon(Icons.add_box_outlined, color: Colors.blue), onPressed: (){}),
+              'کد ملی',
+              'نام',
+              'نام خانوادگی',
+              'نام پدر',
+              'شماره شناسنامه',
+              'تاریخ تولد',
+              'مدرک فنی',
+              'زبان انگلیسی',
+            ],
+            endbuttons: 1,
+          ),
+          StreamBuilder<ParvaneMobasherModel>(
+            stream: bloc.mobasherstream$,
+            builder: (context, snap){
+              if (snap.hasData)
+                if (snap.data.status == Status.loaded)
+                  return ListView.builder(
+                    itemCount: snap.data.rows.length,
+                    itemBuilder: (context, idx)=>MyRow(
+                      children: [
+                        snap.data.rows[idx].nationalid,
+                        snap.data.rows[idx].name,
+                        snap.data.rows[idx].family,
+                        snap.data.rows[idx].father,
+                        snap.data.rows[idx].ss,
+                        snap.data.rows[idx].birthdate,
+                        snap.data.rows[idx].madrakfani,
+                        snap.data.rows[idx].english
+                      ]
+                    )
+                  );
+              return Center(child: CupertinoActivityIndicator());
+            }
+          ).expand()
         ],
       );
     }
@@ -263,94 +380,73 @@ class ParvaneInfo extends StatelessWidget {
         key: _form,
         child: Container(
           width: screenWidth(context) * 0.85,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              FormHeader(title: 'اطلاعات اعضاء / متقاضیان', btnRight: MyIconButton(type: ButtonType.other, icon: Icon(Icons.check_box_outlined, color: Colors.green,), hint: 'بعدی', onPressed: (){
-                this.parvane.reqdate = _edreqdate.text;
-                this.parvane.hoghoghisabtdate = _edhoghoghisabtdate.text;
-                if (_form.currentState.validate())
-                  if (this.parvane.bank == 0)
-                    myAlert(context: context, title: 'مقادیر اجباری', message: 'بانک انتخاب نشده است');
-                  else if (this.parvane.hisic == 0)
-                    myAlert(context: context, title: 'مقادیر اجباری', message: 'رسته انتخاب نشده است');
-                  else
-                    bloc.saveData(context, parvane);
-              })),
-              TabBar(tabs: [
-                {'id': 1, 'title': 'ثبت درخواست'},
-                {'id': 2, 'title': 'واحد صنفی'},
-                {'id': 3, 'title': 'معرفی مباشر'},
-                {'id': 4, 'title': 'معرفی شریک'},
-                {'id': 5, 'title': 'معرفی پرسنل'},
-              ], tabsel: _tabidx,).vMargin(),
-              StreamBuilder<int>(
-                stream: _tabidx.stream$,
-                builder: (context, snap){
-                  if (snap.hasData)
-                    if (snap.data == 1)
-                      return stepOne();
-                    else if (snap.data == 2)
-                      return stepTwo();
-                  return Center(child: 'مرحله انتخاب نشده است'.toLabel());
-                }
-              ).expand()
-            ],
+          child: DefaultTabController(
+            length: 5,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FormHeader(title: 'اطلاعات اعضاء / متقاضیان', btnRight: MyIconButton(type: ButtonType.other, icon: Icon(Icons.check_box_outlined, color: Colors.green,), hint: 'بعدی', onPressed: (){
+                  this.parvane.reqdate = _edreqdate.text;
+                  this.parvane.hoghoghisabtdate = _edhoghoghisabtdate.text;
+                  this.parvane.id = _id.text.toInt();
+                  this.parvane.iranianasnaf = _iranianasnaf.text.toInt();
+                  this.parvane.guname = _guname.text;
+                  this.parvane.gubegindate = _gubegindate.text;
+                  this.parvane.gutoolsinfo = _gutoolsinfo.text;
+                  this.parvane.guensheabat = _guensheabat.text;
+                  this.parvane.gubimeshobe = _gubimeshobe.text;
+                  this.parvane.gukargahno = _gukargahno.text.toInt();
+                  this.parvane.guzirbana = _guzirbana.text.toInt();
+                  this.parvane.gutabaghat = _gutabaghat.text.toInt();
+                  this.parvane.gurent = _gurent.text.toDouble();
+                  this.parvane.gudaraeicode = _gudaraeicode.text.toInt();
+                  this.parvane.guvahedmaliati = _guvahedmaliati.text;
+                  this.parvane.guparvandemaliat = _guparvandemaliat.text.toInt();
+                  this.parvane.gutel = _gutel.text;
+                  this.parvane.gufax = _gufax.text;
+                  this.parvane.guesteghrarplace = _guesteghrarplace.text;
+                  this.parvane.gusigntitle = _gusigntitle.text;
+                  this.parvane.gunote = _gunote.text;
+                  this.parvane.ecoid = _ecoid.text.toInt();
+                  this.parvane.hoghoghiname = _hoghoghiname.text;
+                  this.parvane.hoghoghishenasemeli = _hoghoghishenasemeli.text;
+                  this.parvane.hoghoghisabtno = _hoghoghisabtno.text.toInt();
+                  this.parvane.hesabno = _hesabno.text;
+
+                  if (_form.currentState.validate())
+                    if (this.parvane.bank == 0)
+                      myAlert(context: context, title: 'مقادیر اجباری', message: 'بانک انتخاب نشده است');
+                    else if (this.parvane.hisic == 0)
+                      myAlert(context: context, title: 'مقادیر اجباری', message: 'رسته انتخاب نشده است');
+                    else
+                      bloc.saveData(context, parvane);
+                })),
+                TabBar(
+                  labelColor: Colors.blue,
+                  unselectedLabelColor: Colors.grey.shade400,
+                  tabs: [
+                    Tab(text: 'ثبت درخواست'),
+                    Tab(text: 'واحد صنفی'),
+                    Tab(text: 'معرفی مباشر'),
+                    Tab(text: 'معرفی شریک'),
+                    Tab(text: 'معرفی پرسنل'),
+                  ], 
+                  // tabsel: _tabidx,
+                  // validate: ()=>_form.currentState.validate(),
+                ).vMargin(),
+                TabBarView(
+                  children: [
+                    stepOne(),
+                    stepTwo(),
+                    stepThree(),
+                    Center(child: Text('معرفی شریک')),
+                    Center(child: Text('معرفی پرسنل')),
+                  ]
+                ).expand()
+              ],
+            ),
           ),
         ).setPadding(),
-      ),
-    );
-  }
-}
-
-class TabBar extends StatelessWidget {
-  final List<Map<String, dynamic>> tabs;
-  final Bloc<int> tabsel;
-
-  TabBar({@required this.tabs, @required this.tabsel});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: accentcolor(context).withOpacity(0.15),
-      child: StreamBuilder<int>(
-        stream: tabsel.stream$,
-        builder: (context, snap) {
-          if (snap.hasData)
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ...tabs.map((e) => Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    InkWell(
-                      hoverColor: snap.data == e['id'] ? Colors.green : Colors.grey.shade100,
-                      onTap: ()=>tabsel.setValue(e['id']),
-                      child: Ink(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: snap.data == e['id'] ? Colors.green : Colors.grey.shade100,
-                        ),
-                        child: Container(
-                          padding: EdgeInsets.all(16),
-                          child: Center(child: Text('${e['title']}', textAlign: TextAlign.center, style: TextStyle(color: snap.data == e['id'] ? Colors.white : Colors.grey),)),
-                        ),
-                      ),
-                    ),
-                    e['id'] < 5 
-                      ? Container(
-                          height: 2,
-                          width: 50,
-                          color: appbarColor(context),
-                        )
-                      : Container()
-                  ],
-                )),
-              ],
-            ).setPadding();
-          return Center(child: CupertinoActivityIndicator());
-        }
       ),
     );
   }

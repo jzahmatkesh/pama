@@ -2723,6 +2723,10 @@ class Parvane{
     String reqdate;
     int peopid;
     String peopname;
+    String nationalid;
+    String mobile;
+    String lastprocess;
+    String lastprocessstatus;
     int gunitid;
     String nosazicode;
     String guname;
@@ -2770,7 +2774,7 @@ class Parvane{
     String isicname;
     String token;
  
-    Parvane({this.cmpid = 0 ,this.id = 0 ,this.iranianasnaf = 0 ,this.reqdate ,this.peopid = 0, this.peopname = "" ,this.gunitid = 0, this.nosazicode = "" ,this.guname ,this.gubegindate ,this.gutoolsinfo = '',this.guensheabat = '' ,this.gubimemakan = false ,this.gubimeshobe = '' ,this.gukargahno = 0 ,this.guzirbana = 0 ,this.gutabaghat = 0 ,this.gurent=0,this.gudaraeicode = 0 ,this.guvahedmaliati = '',this.guparvandemaliat = 0 ,this.gustatus = 1 ,this.gutel = '',this.gufax ,this.guesteghrarplace = '',this.gusigntitle ='',this.gunote ='',this.kind = 1 ,this.parvandekind = 1 ,this.ecoid = 0 ,this.bank = 0 ,this.hesabno ,this.hesabkind = 1 ,this.hisic = 0 ,this.isic = 0 ,this.hoghoghikind = 1 ,this.hoghoghiname ,this.hoghoghishenasemeli ,this.hoghoghisabtno = 0 ,this.hoghoghisabtdate ,this.parvanekind = 1 ,this.datesodor ,this.datetahvil ,this.etebarlen = 0 ,this.eparvaneno = 0 ,this.note ,this.shenasesenfi = 0 ,this.accept = 0 ,this.acceptdate ,this.bankname ,this.isicname, this.token});
+    Parvane({this.cmpid = 0 ,this.id = 0 ,this.iranianasnaf = 0 ,this.reqdate ,this.peopid = 0, this.peopname = "" ,this.gunitid = 0, this.nosazicode = "" ,this.guname = "",this.gubegindate = "",this.gutoolsinfo = '',this.guensheabat = '' ,this.gubimemakan = false ,this.gubimeshobe = '' ,this.gukargahno = 0 ,this.guzirbana = 0 ,this.gutabaghat = 0 ,this.gurent=0,this.gudaraeicode = 0 ,this.guvahedmaliati = '',this.guparvandemaliat = 0 ,this.gustatus = 1 ,this.gutel = '',this.gufax = "",this.guesteghrarplace = '',this.gusigntitle ='',this.gunote ='',this.kind = 1 ,this.parvandekind = 1 ,this.ecoid = 0 ,this.bank = 0 ,this.hesabno ,this.hesabkind = 1 ,this.hisic = 0 ,this.isic = 0 ,this.hoghoghikind = 1 ,this.hoghoghiname ,this.hoghoghishenasemeli ,this.hoghoghisabtno = 0 ,this.hoghoghisabtdate ,this.parvanekind = 1 ,this.datesodor ,this.datetahvil ,this.etebarlen = 0 ,this.eparvaneno = 0 ,this.note ,this.shenasesenfi = 0 ,this.accept = 0, this.nationalid = "", this.mobile = "", this.lastprocess = "", this.lastprocessstatus = "",this.acceptdate ,this.bankname ,this.isicname, this.token});
  
     Parvane.fromJson(Map<String, dynamic> json):
         cmpid = json['cmpid'],
@@ -2779,6 +2783,10 @@ class Parvane{
         reqdate = json['reqdate'],
         peopid = json['peopid'],
         peopname = json['peopname'],
+        nationalid = json['nationalid'],
+        mobile = json['mobile'],
+        lastprocess = json['lastprocess'],
+        lastprocessstatus = json['lastprocessstatus'],
         gunitid = json['gunitid'],
         nosazicode = json['nosazicode'],
         guname = json['guname'],
@@ -2880,3 +2888,63 @@ class Parvane{
         return data;
     }
 }
+
+class ParvaneMobasher{
+    int parvaneid;
+    int id;
+    int peopid;
+    int cartid;
+    String cartdate;
+    String deliverdate;
+    String note;
+    String name;
+    String family;
+    String nationalid;
+    String father;
+    String ss;
+    String birthdate;
+    String madrakfani;
+    String english;
+    String token;
+ 
+    ParvaneMobasher({this.parvaneid = 0 ,this.id = 0 ,this.peopid = 0 ,this.cartid = 0 ,this.cartdate ,this.deliverdate ,this.note ,this.name ,this.family ,this.nationalid ,this.father ,this.ss ,this.birthdate ,this.madrakfani ,this.english, this.token});
+ 
+    ParvaneMobasher.fromJson(Map<String, dynamic> json):
+        parvaneid = json['parvaneid'],
+        id = json['id'],
+        peopid = json['peopid'],
+        cartid = json['cartid'],
+        cartdate = json['cartdate'],
+        deliverdate = json['deliverdate'],
+        note = json['note'],
+        name = json['name'],
+        family = json['family'],
+        nationalid = json['nationalid'],
+        father = json['father'],
+        ss = json['ss'],
+        birthdate = json['birthdate'],
+        madrakfani = json['madrakfani'],
+        english = json['english'];
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['parvaneid'] = this.parvaneid;
+        data['id'] = this.id;
+        data['peopid'] = this.peopid;
+        data['cartid'] = this.cartid;
+        data['cartdate'] = this.cartdate;
+        data['deliverdate'] = this.deliverdate;
+        data['note'] = this.note;
+        data['name'] = this.name;
+        data['family'] = this.family;
+        data['nationalid'] = this.nationalid;
+        data['father'] = this.father;
+        data['ss'] = this.ss;
+        data['birthdate'] = this.birthdate;
+        data['madrakfani'] = this.madrakfani;
+        data['english'] = this.english;
+        data['token'] = this.token;
+        return data;
+    }
+}
+

@@ -1696,7 +1696,6 @@ class ParvaneRepository{
   }
  
   Future<int> saveData(Parvane obj) async{
-print('${jsonEncode(obj.toJson())}');
     Map<String, dynamic> _data = await putMethod(api: 'Parvane', body: jsonEncode(obj.toJson()));
     return _data['id'];
   }
@@ -1711,6 +1710,12 @@ print('${jsonEncode(obj.toJson())}');
       }, 
     );
   }
+
+  Future<List<ParvaneMobasher>> loadMObasher(ParvaneMobasher obj) async{
+    List<Map<String, dynamic>> _data = await postMethod(api: 'Parvane/Mobasher', body: jsonEncode({'token': obj.token, 'parvaneid': obj.parvaneid}));
+    return _data.map<ParvaneMobasher>((data) => ParvaneMobasher.fromJson(data)).toList();
+  }
+
 }
 
 
