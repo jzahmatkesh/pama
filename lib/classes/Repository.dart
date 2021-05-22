@@ -1710,6 +1710,7 @@ class ParvaneRepository{
     );
   }
 
+
   Future<List<ParvaneMobasher>> loadMObasher(ParvaneMobasher obj) async{
     List<Map<String, dynamic>> _data = await postMethod(api: 'Parvane/Mobasher', body: jsonEncode({'token': obj.token, 'parvaneid': obj.parvaneid}));
     return _data.map<ParvaneMobasher>((data) => ParvaneMobasher.fromJson(data)).toList();
@@ -1722,6 +1723,56 @@ class ParvaneRepository{
 
   Future<bool> delMobasher(ParvaneMobasher obj) async{
      Map<String, dynamic> _data = await delToServer(api: 'Parvane/Mobasher', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': obj.token,
+       'parvaneid': obj.parvaneid.toString(),
+       'id': obj.id.toString(),
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+
+  Future<List<ParvanePartner>> loadPartner(ParvanePartner obj) async{
+    List<Map<String, dynamic>> _data = await postMethod(api: 'Parvane/Partner', body: jsonEncode({'token': obj.token, 'parvaneid': obj.parvaneid}));
+    return _data.map<ParvanePartner>((data) => ParvanePartner.fromJson(data)).toList();
+  }
+
+  Future<int> addPartner(ParvanePartner obj) async{
+    Map<String, dynamic> _data = await putMethod(api: 'Parvane/Partner', body: jsonEncode(obj.toJson()));
+    return _data['id'];
+  }
+
+  Future<bool> delPartner(ParvanePartner obj) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Parvane/Partner', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': obj.token,
+       'parvaneid': obj.parvaneid.toString(),
+       'id': obj.id.toString(),
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+
+  Future<List<ParvanePersonel>> loadPersonel(ParvanePersonel obj) async{
+    List<Map<String, dynamic>> _data = await postMethod(api: 'Parvane/Personel', body: jsonEncode({'token': obj.token, 'parvaneid': obj.parvaneid}));
+    return _data.map<ParvanePersonel>((data) => ParvanePersonel.fromJson(data)).toList();
+  }
+
+  Future<int> addPersonel(ParvanePersonel obj) async{
+    Map<String, dynamic> _data = await putMethod(api: 'Parvane/Personel', body: jsonEncode(obj.toJson()));
+    return _data['id'];
+  }
+
+  Future<bool> delPersonel(ParvanePersonel obj) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Parvane/Personel', 
       header: {
        'Content-Type': 'application/json',
        'token': obj.token,

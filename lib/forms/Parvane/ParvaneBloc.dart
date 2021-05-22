@@ -20,6 +20,20 @@ class ParvaneMobasherModel{
 
   ParvaneMobasherModel({@required this.status, this.rows, this.msg});
 }
+class ParvanePartnerModel{
+  Status status;
+  List<ParvanePartner> rows;
+  String msg;
+
+  ParvanePartnerModel({@required this.status, this.rows, this.msg});
+}
+class ParvanePersonelModel{
+  Status status;
+  List<ParvanePersonel> rows;
+  String msg;
+
+  ParvanePersonelModel({@required this.status, this.rows, this.msg});
+}
 
 class ParvaneBloc{
   ParvaneRepository _repository = ParvaneRepository();
@@ -31,6 +45,14 @@ class ParvaneBloc{
   BehaviorSubject<ParvaneMobasherModel> _parvaneMobasher = BehaviorSubject<ParvaneMobasherModel>()..add(ParvaneMobasherModel(status: Status.initial));
   Stream<ParvaneMobasherModel> get mobasherstream$ => _parvaneMobasher.stream;
   ParvaneMobasherModel get mobashervalue$ => _parvaneMobasher.stream.value;
+
+  BehaviorSubject<ParvanePartnerModel> _parvanePartner = BehaviorSubject<ParvanePartnerModel>()..add(ParvanePartnerModel(status: Status.initial));
+  Stream<ParvanePartnerModel> get partnerstream$ => _parvanePartner.stream;
+  ParvanePartnerModel get partnervalue$ => _parvanePartner.stream.value;
+
+  BehaviorSubject<ParvanePersonelModel> _parvanePersonel = BehaviorSubject<ParvanePersonelModel>()..add(ParvanePersonelModel(status: Status.initial));
+  Stream<ParvanePersonelModel> get personelstream$ => _parvanePersonel.stream;
+  ParvanePersonelModel get personelvalue$ => _parvanePersonel.stream.value;
 
   loadData(BuildContext context, User user, int accept) async{
     try{
@@ -48,12 +70,11 @@ class ParvaneBloc{
       showWaiting(context);
       parvane.token = readToken(context);
       parvane.cmpid = context.read<ThemeManager>().cmpid;
-      
       int _id = await _repository.saveData(parvane);
-      if (parvane.id == 0){
-        parvane.id = _id;
+      parvane.id = _id;
+      parvane.old = _id;
+      if (parvane.old == 0)
         _parvane.value.rows.insert(0, parvane);
-      }
       else
         _parvane.add(_parvane.value);
     }
@@ -92,6 +113,99 @@ class ParvaneBloc{
         await _repository.delMobasher(mobasher);
         _parvaneMobasher.value.rows.removeWhere((element) => element.id==mobasher.id);
         _parvaneMobasher.add(_parvaneMobasher.value);
+        Navigator.pop(context);
+      }
+      catch(e){
+        analyzeError(context, '$e', msg: true);
+      }
+    });
+  }
+
+  loadPartner(BuildContext context, int parvaneid) async{
+    try{
+      _parvanePartner.add(ParvanePartnerModel(status: Status.loading));
+      _parvanePartner.add(ParvanePartnerModel(status: Status.loaded, rows: await _repository.loadPartner(ParvanePartner(parvaneid: parvaneid, token: readToken(context)))));
+    }
+    catch(e){
+      analyzeError(context, '$e', msg: false);
+      _parvanePartner.add(ParvanePartnerModel(status: Status.error, msg: compileErrorMessage('$e')));
+    }
+  }
+  addPartner(BuildContext context, ParvanePartner partner){
+    if (_parvanePartner.value.rows.where((element) => element.peopid==partner.peopid).length == 0)
+      _parvanePartner.value.rows.insert(0, partner);
+    _parvanePartner.add(_parvanePartner.value);
+  }
+  savePartner(BuildContext context, ParvanePartner partner) async{
+    if (partner.perc == 0)
+      myAlert(context: context, title: 'فیلد اجباری', message: 'درصد شراکت مشخص نشده است');
+    else
+      try{
+        partner.token = readToken(context);
+        partner.id = await _repository.addPartner(partner);
+        partner.edit = false;
+        _parvanePartner.add(_parvanePartner.value);
+      }
+      catch(e){
+        analyzeError(context, '$e', msg: true);
+      }
+  }
+  editPartner(ParvanePartner partner){
+    partner.edit = true;
+    _parvanePartner.add(_parvanePartner.value);
+  }
+  delPartner(BuildContext context, ParvanePartner partner) async{
+    confirmMessage(context, 'حذف شریک', 'آیا مایل به حذف ${partner.name} ${partner.family} می باشید؟', yesclick: () async{
+      try{
+        partner.token = readToken(context);
+        await _repository.delPartner(partner);
+        _parvanePartner.value.rows.removeWhere((element) => element.peopid==partner.peopid);
+        _parvanePartner.add(_parvanePartner.value);
+        Navigator.pop(context);
+      }
+      catch(e){
+        analyzeError(context, '$e', msg: true);
+      }
+    });
+  }
+
+  loadPersonel(BuildContext context, int parvaneid) async{
+    try{
+      _parvanePersonel.add(ParvanePersonelModel(status: Status.loading));
+      _parvanePersonel.add(ParvanePersonelModel(status: Status.loaded, rows: await _repository.loadPersonel(ParvanePersonel(parvaneid: parvaneid, token: readToken(context)))));
+    }
+    catch(e){
+      analyzeError(context, '$e', msg: false);
+      _parvanePersonel.add(ParvanePersonelModel(status: Status.error, msg: compileErrorMessage('$e')));
+    }
+  }
+  addPersonel(BuildContext context, ParvanePersonel personel){
+    if (_parvanePersonel.value.rows.where((element) => element.id==personel.id).length == 0)
+      _parvanePersonel.value.rows.insert(0, personel);
+    _parvanePersonel.add(_parvanePersonel.value);
+  }
+  savePersonel(BuildContext context, ParvanePersonel personel) async{
+    try{
+      personel.token = readToken(context);
+      personel.id = await _repository.addPersonel(personel);
+      personel.edit = false;
+      _parvanePersonel.add(_parvanePersonel.value);
+    }
+    catch(e){
+      analyzeError(context, '$e', msg: true);
+    }
+  }
+  editPersonel(ParvanePersonel personel){
+    personel.edit = true;
+    _parvanePersonel.add(_parvanePersonel.value);
+  }
+  delPersonel(BuildContext context, ParvanePersonel personel) async{
+    confirmMessage(context, 'حذف پرسنل', 'آیا مایل به حذف ${personel.name} ${personel.family} می باشید؟', yesclick: () async{
+      try{
+        personel.token = readToken(context);
+        await _repository.delPersonel(personel);
+        _parvanePersonel.value.rows.removeWhere((element) => element.id==personel.id);
+        _parvanePersonel.add(_parvanePersonel.value);
         Navigator.pop(context);
       }
       catch(e){
