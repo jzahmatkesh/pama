@@ -1684,7 +1684,6 @@ class GUnitRepository{
  
   Future<GUnit> findByNosaziCode(String token, String code) async{
     List<Map<String, dynamic>> _data = await postMethod(api: 'GUnit/FindByNosaziCode', body: jsonEncode({"token": token, "nosazicode": code}));
-print("$_data");
     return _data.map<GUnit>((data) => GUnit.fromJson(data)).toList().first;
   }
 }
@@ -1714,6 +1713,25 @@ class ParvaneRepository{
   Future<List<ParvaneMobasher>> loadMObasher(ParvaneMobasher obj) async{
     List<Map<String, dynamic>> _data = await postMethod(api: 'Parvane/Mobasher', body: jsonEncode({'token': obj.token, 'parvaneid': obj.parvaneid}));
     return _data.map<ParvaneMobasher>((data) => ParvaneMobasher.fromJson(data)).toList();
+  }
+
+  Future<int> addMobasher(ParvaneMobasher obj) async{
+    Map<String, dynamic> _data = await putMethod(api: 'Parvane/Mobasher', body: jsonEncode(obj.toJson()));
+    return _data['id'];
+  }
+
+  Future<bool> delMobasher(ParvaneMobasher obj) async{
+     Map<String, dynamic> _data = await delToServer(api: 'Parvane/Mobasher', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': obj.token,
+       'parvaneid': obj.parvaneid.toString(),
+       'id': obj.id.toString(),
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
   }
 
 }

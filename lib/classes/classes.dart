@@ -2907,15 +2907,15 @@ class ParvaneMobasher{
     String english;
     String token;
  
-    ParvaneMobasher({this.parvaneid = 0 ,this.id = 0 ,this.peopid = 0 ,this.cartid = 0 ,this.cartdate ,this.deliverdate ,this.note ,this.name ,this.family ,this.nationalid ,this.father ,this.ss ,this.birthdate ,this.madrakfani ,this.english, this.token});
+    ParvaneMobasher({this.parvaneid = 0 ,this.id = 0 ,this.peopid = 0 ,this.cartid = 0 ,this.cartdate="",this.deliverdate="",this.note ,this.name ,this.family ,this.nationalid ,this.father ,this.ss ,this.birthdate ,this.madrakfani ,this.english, this.token});
  
     ParvaneMobasher.fromJson(Map<String, dynamic> json):
         parvaneid = json['parvaneid'],
         id = json['id'],
         peopid = json['peopid'],
         cartid = json['cartid'],
-        cartdate = json['cartdate'],
-        deliverdate = json['deliverdate'],
+        cartdate = json['cartdate'] ?? '',
+        deliverdate = json['deliverdate'] ?? '',
         note = json['note'],
         name = json['name'],
         family = json['family'],

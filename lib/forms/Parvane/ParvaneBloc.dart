@@ -68,14 +68,35 @@ class ParvaneBloc{
   loadMobasher(BuildContext context, int parvaneid) async{
     try{
       _parvaneMobasher.add(ParvaneMobasherModel(status: Status.loading));
-print("loading");
       _parvaneMobasher.add(ParvaneMobasherModel(status: Status.loaded, rows: await _repository.loadMObasher(ParvaneMobasher(parvaneid: parvaneid, token: readToken(context)))));
-print("loaded");
     }
     catch(e){
-print("error: $e");
       analyzeError(context, '$e', msg: false);
       _parvaneMobasher.add(ParvaneMobasherModel(status: Status.error, msg: compileErrorMessage('$e')));
     }
+  }
+  addMobasher(BuildContext context, int parvane, People peop) async{
+    try{
+      int _id = await _repository.addMobasher(ParvaneMobasher(id: 0, peopid: peop.id, parvaneid: parvane, token: readToken(context)));
+      _parvaneMobasher.value.rows.insert(0, ParvaneMobasher(id: _id, parvaneid: parvane, peopid: peop.id, nationalid: peop.nationalid, name: peop.name, family: peop.family, father: peop.father, ss: peop.ss));
+      _parvaneMobasher.add(_parvaneMobasher.value);
+    }
+    catch(e){
+      analyzeError(context, '$e', msg: true);
+    }
+  }
+  delMobasher(BuildContext context, ParvaneMobasher mobasher) async{
+    confirmMessage(context, 'حذف مباشر', 'آیا مایل به حذف ${mobasher.name} ${mobasher.family} می باشید؟', yesclick: () async{
+      try{
+        mobasher.token = readToken(context);
+        await _repository.delMobasher(mobasher);
+        _parvaneMobasher.value.rows.removeWhere((element) => element.id==mobasher.id);
+        _parvaneMobasher.add(_parvaneMobasher.value);
+        Navigator.pop(context);
+      }
+      catch(e){
+        analyzeError(context, '$e', msg: true);
+      }
+    });
   }
 }

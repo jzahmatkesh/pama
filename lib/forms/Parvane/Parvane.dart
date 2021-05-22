@@ -101,8 +101,8 @@ class FmParvane extends StatelessWidget {
                             snap.data.rows[idx].mobile.toLabel().expand(),
                             snap.data.rows[idx].lastprocess.toLabel().expand(),
                             snap.data.rows[idx].lastprocessstatus.toLabel().expand(),
-                            IconButton(tooltip: 'فرآیند جدید', icon: Icon(Icons.add_box_outlined, color: Colors.blue), onPressed: (){}),
-                            IconButton(tooltip: 'سایر اطلاعات شخصی', icon: Icon(Icons.info, color: Colors.blue), onPressed: ()=>showFormAsDialog(context: context, form: ParvaneInfo(bloc: _bloc, parvane: snap.data.rows[idx]))),
+                            MyIconButton(type: ButtonType.add, hint: 'فرآیند جدید', onPressed: (){}),
+                            MyIconButton(type: ButtonType.info, hint: 'سایر اطلاعات شخصی', onPressed: ()=>showFormAsDialog(context: context, form: ParvaneInfo(bloc: _bloc, parvane: snap.data.rows[idx]))),
                           ],
                         ).card();
                       }
@@ -335,15 +335,16 @@ class ParvaneInfo extends StatelessWidget {
         children: [
           GridCaption(
             obj: [
-              IconButton(icon: Icon(Icons.add_box_outlined, color: Colors.blue), onPressed: (){}),
+              MyIconButton(type: ButtonType.add, onPressed: ()=>showFormAsDialog(context: context, form: FmPeople(justcheck: true), done: (val)=>bloc.addMobasher(context, parvane.id, val))),
               'کد ملی',
               'نام',
               'نام خانوادگی',
               'نام پدر',
               'شماره شناسنامه',
-              'تاریخ تولد',
-              'مدرک فنی',
-              'زبان انگلیسی',
+              'شماره کارت',
+              'تاریخ کارت',
+              'تاریخ تحویل',
+              'توضیحات'
             ],
             endbuttons: 1,
           ),
@@ -356,14 +357,17 @@ class ParvaneInfo extends StatelessWidget {
                     itemCount: snap.data.rows.length,
                     itemBuilder: (context, idx)=>MyRow(
                       children: [
-                        snap.data.rows[idx].nationalid,
-                        snap.data.rows[idx].name,
-                        snap.data.rows[idx].family,
-                        snap.data.rows[idx].father,
-                        snap.data.rows[idx].ss,
-                        snap.data.rows[idx].birthdate,
-                        snap.data.rows[idx].madrakfani,
-                        snap.data.rows[idx].english
+                        SizedBox(width: 35),
+                        '${snap.data.rows[idx].nationalid}',
+                        '${snap.data.rows[idx].name}',
+                        '${snap.data.rows[idx].family}',
+                        '${snap.data.rows[idx].father}',
+                        '${snap.data.rows[idx].ss}',
+                        '${snap.data.rows[idx].cartid}',
+                        '${snap.data.rows[idx].cartdate}',
+                        '${snap.data.rows[idx].deliverdate}',
+                        '${snap.data.rows[idx].note}',
+                        MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delMobasher(context, snap.data.rows[idx]))
                       ]
                     )
                   );
