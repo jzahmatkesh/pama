@@ -376,8 +376,7 @@ class ParvaneInfo extends StatelessWidget {
     }
 
     Widget parvaneMObasher(){
-      if (bloc.mobashervalue$.status != Status.loaded)
-        bloc.loadMobasher(context, parvane.id);
+      bloc.loadMobasher(context, parvane.id);
       return StreamBuilder<ParvaneMobasherModel>(
         stream: bloc.mobasherstream$,
         builder: (context, snap){
@@ -430,8 +429,7 @@ class ParvaneInfo extends StatelessWidget {
     }
 
     Widget parvanePartner(){
-      if (bloc.partnervalue$.status != Status.loaded)
-        bloc.loadPartner(context, parvane.id);
+      bloc.loadPartner(context, parvane.id);
       return Column(
         children: [
           GridCaption(
@@ -485,7 +483,6 @@ class ParvaneInfo extends StatelessWidget {
     }
 
     Widget parvanePersonel(){
-      // if (bloc.partnervalue$.status != Status.loaded)
       bloc.loadPersonel(context, parvane.id);
       return Column(
         children: [
@@ -571,7 +568,7 @@ class ParvaneInfo extends StatelessWidget {
                     falsetxt: 'ثبت نشده', 
                     truecolor: Colors.green, 
                     falsecolor: Colors.red.shade300,
-                    onChange: (val){}, 
+                    onChange: (val) async {if (await bloc.register(context, parvane)){print("yes"); _tabidx.setValue(_tabidx.value$);}}, 
                     selected: this.parvane.register
                   ),
                 ),

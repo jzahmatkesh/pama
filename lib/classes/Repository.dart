@@ -1785,6 +1785,10 @@ class ParvaneRepository{
     throw Exception(_data['msg']);
   }
 
+  Future<bool> registerParvane(Parvane obj) async{
+    await putMethod(api: 'Parvane/Regiser', body: jsonEncode({'token': obj.token, 'id': obj.id, 'register': obj.register ? 1 : 0}));
+    return true;
+  }
 }
 
 

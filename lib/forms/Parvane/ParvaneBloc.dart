@@ -65,6 +65,24 @@ class ParvaneBloc{
     }
   }
 
+  Future<bool> register(BuildContext context, Parvane parvane) async{
+    try{
+      showWaiting(context);
+      parvane.register = !parvane.register;
+      await _repository.registerParvane(parvane);
+      _parvane.add(_parvane.value);
+      return true;
+    }
+    catch(e){
+      parvane.register = !parvane.register;
+      analyzeError(context, '$e', msg: true);
+      return false;
+    }
+    finally{
+      hideWaiting(context);
+    }
+  }
+
   saveData(BuildContext context, Parvane parvane) async{
     try{
       showWaiting(context);
