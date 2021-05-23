@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:pama/forms/GUnit/GUnit.dart';
 import 'ParvaneBloc.dart';
 import '../People/People.dart';
@@ -214,7 +215,7 @@ class ParvaneInfo extends StatelessWidget {
       this.parvane.hoghoghisabtno = _hoghoghisabtno.text.toInt();
       this.parvane.hesabno = _hesabno.text;
 
-      if (_form.currentState.validate())
+      if (_form.currentState == null || _form.currentState.validate())
         if (this.parvane.bank == 0){
           myAlert(context: context, title: 'مقادیر اجباری', message: 'بانک انتخاب نشده است');
         } 
@@ -222,7 +223,8 @@ class ParvaneInfo extends StatelessWidget {
           myAlert(context: context, title: 'مقادیر اجباری', message: 'رسته انتخاب نشده است');
         }
         else{
-          bloc.saveData(context, parvane);
+          if (!this.parvane.register)
+            bloc.saveData(context, parvane);
           return true;
         }
       myAlert(context: context, title: 'مقادیر اجباری', message: 'مقادیر بخشهای ثبت درخواست و واحد صنفی می بایست مشخص گردند');
@@ -256,22 +258,22 @@ class ParvaneInfo extends StatelessWidget {
                   }
                 ))
               ).expand(),              
-              GridTextField(hint: 'شماره ایرانیان اصناف', notempty: true, controller: _iranianasnaf, autofocus: true).expand(),
-              GridTextField(hint: 'تاریخ تقاضا', notempty: true, controller: _edreqdate, datepicker: true).expand(),
-              GridTextField(hint: 'شماره درخواست', notempty: true, controller: _id).expand(),
+              GridTextField(hint: 'شماره ایرانیان اصناف', notempty: true, controller: _iranianasnaf, autofocus: !this.parvane.register, readonly: this.parvane.register).expand(),
+              GridTextField(hint: 'تاریخ تقاضا', notempty: true, controller: _edreqdate, datepicker: true, readonly: this.parvane.register).expand(),
+              GridTextField(hint: 'شماره درخواست', notempty: true, controller: _id, readonly: this.parvane.register).expand(),
             ]
           ),
           Row(
             children: [
               DropDownItems(val: parvane.kind, items: [{'id': 1, 'title': 'حقیقی'},{'id': 2, 'title': 'مشارکت مدنی'},{'id': 3, 'title': 'مشارکت حقوقی'}], hint: 'نوع متقاضی', onChange: (val)=>parvane.kind=val).expand(),
               DropDownItems(val: parvane.parvandekind, items: [{'id': 1, 'title': 'عادی'},{'id': 2, 'title': 'ایثارگران'}], hint: 'نوع پرونده', onChange: (val)=>parvane.parvandekind=val).expand(),
-              GridTextField(hint: 'کد اقتصادی', notempty: true, controller: _ecoid).expand(),
+              GridTextField(hint: 'کد اقتصادی', notempty: true, controller: _ecoid, readonly: this.parvane.register).expand(),
             ]
           ),
           Row(
             children: [
-              ForeignKeyField(hint: 'عنوان بانک', initialValue: {'id': this.parvane.bank, 'name': this.parvane.bankname}, f2key: 'Bank', onChange: (val){this.parvane.bank = val['id'];this.parvane.bankname = val['name'];},).expand(),
-              GridTextField(hint: 'شماره حساب', notempty: true, controller: _hesabno).expand(),
+              ForeignKeyField(hint: 'عنوان بانک', initialValue: {'id': this.parvane.bank, 'name': this.parvane.bankname}, f2key: 'Bank', onChange: (val){this.parvane.bank = val['id'];this.parvane.bankname = val['name'];}).expand(),
+              GridTextField(hint: 'شماره حساب', notempty: true, controller: _hesabno, readonly: this.parvane.register).expand(),
               DropDownItems(val: parvane.hesabkind, items: [{'id': 1, 'title': 'جاری'},{'id': 2, 'title': 'سپرده'},{'id': 3, 'title': 'قرض الحسنه'}], hint: 'نوع حساب', onChange: (val)=>parvane.hesabkind=val).expand(),
             ]
           ),
@@ -287,14 +289,14 @@ class ParvaneInfo extends StatelessWidget {
                 {'id': 5, 'title': 'مسولیت محدود'},
                 {'id': 6, 'title': 'غیره'}
               ], hint: 'نوع شخصیت حقوقی', onChange: (val)=>parvane.hoghoghikind=val).expand(),
-              GridTextField(hint: 'عنوان شخصیت حقوقی', notempty: true, controller: _hoghoghiname).expand(),
+              GridTextField(hint: 'عنوان شخصیت حقوقی', notempty: true, controller: _hoghoghiname, readonly: this.parvane.register).expand(),
             ]
           ),
           Row(
             children: [
-              GridTextField(hint: 'شناسه ملی', notempty: true, controller: _hoghoghishenasemeli).expand(),
-              GridTextField(hint: 'شماره ثبت', notempty: true, controller: _hoghoghisabtno).expand(),
-              GridTextField(hint: 'تاریخ ثبت', notempty: true, controller: _edhoghoghisabtdate, datepicker: true).expand(),
+              GridTextField(hint: 'شناسه ملی', notempty: true, controller: _hoghoghishenasemeli, readonly: this.parvane.register).expand(),
+              GridTextField(hint: 'شماره ثبت', notempty: true, controller: _hoghoghisabtno, readonly: this.parvane.register).expand(),
+              GridTextField(hint: 'تاریخ ثبت', notempty: true, controller: _edhoghoghisabtdate, datepicker: true, readonly: this.parvane.register).expand(),
               DropDownItems(val: parvane.parvanekind, items: [{'id': 1, 'title': 'موقت'},{'id': 2, 'title': 'دایم'}], hint: 'نوع پروانه', onChange: (val)=>parvane.parvanekind=val).expand(),
             ]
           ),
@@ -326,47 +328,47 @@ class ParvaneInfo extends StatelessWidget {
                   }
                 ))
               ).expand(),        
-              GridTextField(hint: 'نام واحد صنفی', notempty: true, controller: _guname).expand(),      
-              GridTextField(hint: 'تاریخ شروه فعالیت', notempty: true, datepicker: true, controller: _gubegindate).expand(),      
+              GridTextField(hint: 'نام واحد صنفی', notempty: true, controller: _guname, readonly: this.parvane.register).expand(),      
+              GridTextField(hint: 'تاریخ شروه فعالیت', notempty: true, datepicker: true, controller: _gubegindate, readonly: this.parvane.register).expand(),      
             ],
           ),
           Row(
             children: [
-              GridTextField(hint: 'ابزار و امکانات و تجهیزات', notempty: true, controller: _gutoolsinfo).expand(),      
-              GridTextField(hint: 'انشعابات', notempty: true, controller: _guensheabat).expand(),      
+              GridTextField(hint: 'ابزار و امکانات و تجهیزات', notempty: true, controller: _gutoolsinfo, readonly: this.parvane.register).expand(),      
+              GridTextField(hint: 'انشعابات', notempty: true, controller: _guensheabat, readonly: this.parvane.register).expand(),      
               RadioButton(val: parvane.gubimemakan, hint: 'بیمه مکان', onChange: (val)=>parvane.gubimemakan=val),
               'بیمه مکان'.toLabel(),
               SizedBox(width: 10),
-              GridTextField(hint: 'شعبه تامین اجتماعی', notempty: true, controller: _gubimeshobe).expand(),      
+              GridTextField(hint: 'شعبه تامین اجتماعی', notempty: true, controller: _gubimeshobe, readonly: this.parvane.register).expand(),      
             ]
           ),
           Row(
             children: [
-              GridTextField(hint: 'شماره کارگاه', notempty: true, controller: _gukargahno).expand(),      
-              GridTextField(hint: 'زیربنا', controller: _guzirbana).expand(),      
-              GridTextField(hint: 'تعداد طبقات', controller: _gutabaghat).expand(),      
-              GridTextField(hint: 'میزان اجاره', controller: _gurent).expand(),      
+              GridTextField(hint: 'شماره کارگاه', notempty: true, controller: _gukargahno, readonly: this.parvane.register).expand(),      
+              GridTextField(hint: 'زیربنا', controller: _guzirbana, readonly: this.parvane.register).expand(),      
+              GridTextField(hint: 'تعداد طبقات', controller: _gutabaghat, readonly: this.parvane.register).expand(),      
+              GridTextField(hint: 'میزان اجاره', controller: _gurent, readonly: this.parvane.register).expand(),      
             ]
           ),
           Row(
             children: [
-              GridTextField(hint: 'کد رهگیری ثبت نام دارایی', notempty: true, controller: _gudaraeicode).expand(),      
-              GridTextField(hint: 'واحد مالیاتی', controller: _guvahedmaliati).expand(),      
-              GridTextField(hint: 'شماره پرونده مالیاتی', notempty: true, controller: _guparvandemaliat).expand(),      
+              GridTextField(hint: 'کد رهگیری ثبت نام دارایی', notempty: true, controller: _gudaraeicode, readonly: this.parvane.register).expand(),      
+              GridTextField(hint: 'واحد مالیاتی', controller: _guvahedmaliati, readonly: this.parvane.register).expand(),      
+              GridTextField(hint: 'شماره پرونده مالیاتی', notempty: true, controller: _guparvandemaliat, readonly: this.parvane.register).expand(),      
               MultiChooseItem(val: parvane.gustatus, items: [{'id': 1, 'title': 'مالکیت'},{'id': 2,  'title': 'سرقفلی'}], hint: 'وضعیت مالکیت', onChange: (val)=>parvane.gustatus=val['id']).expand(),
             ]
           ),
           Row(
             children: [
-              GridTextField(hint: 'تلفن', notempty: true, controller: _gutel).expand(),      
-              GridTextField(hint: 'فکس', notempty: true, controller: _gufax).expand(),      
-              GridTextField(hint: 'محل استقرار', notempty: true, controller: _guesteghrarplace).expand(),      
+              GridTextField(hint: 'تلفن', notempty: true, controller: _gutel, readonly: this.parvane.register).expand(),      
+              GridTextField(hint: 'فکس', notempty: true, controller: _gufax, readonly: this.parvane.register).expand(),      
+              GridTextField(hint: 'محل استقرار', notempty: true, controller: _guesteghrarplace, readonly: this.parvane.register).expand(),      
             ],
           ),
           Row(
             children: [
-              GridTextField(hint: 'عنوان تابلو', notempty: true, controller: _gusigntitle).expand(),      
-              GridTextField(hint: 'توضیحات', controller: _gunote).expand(),      
+              GridTextField(hint: 'عنوان تابلو', notempty: true, controller: _gusigntitle, readonly: this.parvane.register).expand(),      
+              GridTextField(hint: 'توضیحات', controller: _gunote, readonly: this.parvane.register).expand(),      
             ]
           ),
         ],
@@ -561,7 +563,18 @@ class ParvaneInfo extends StatelessWidget {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                FormHeader(title: 'اطلاعات اعضاء / متقاضیان', btnRight: MyIconButton(type: ButtonType.other, icon: Icon(Icons.save, color: Colors.green,), hint: 'بعدی', onPressed: ()=>prcSave())),
+                FormHeader(
+                  title: 'اطلاعات اعضاء / متقاضیان', 
+                  // btnRight: MyIconButton(type: ButtonType.other, icon: Icon(Icons.save, color: Colors.green,), hint: 'بعدی', onPressed: ()=>prcSave())
+                  btnRight: FancySwitch(
+                    truetxt: 'ثبت شده', 
+                    falsetxt: 'ثبت نشده', 
+                    truecolor: Colors.green, 
+                    falsecolor: Colors.red.shade300,
+                    onChange: (val){}, 
+                    selected: this.parvane.register
+                  ),
+                ),
                 TabBar(
                   tabsel: _tabidx.value$,
                   tabs: [
@@ -582,21 +595,24 @@ class ParvaneInfo extends StatelessWidget {
                   // tabsel: _tabidx,
                   // validate: ()=>_form.currentState.validate(),
                 ),
-                snap.data == 2
-                  ? parvaneMObasher()
-                  : snap.data == 3
-                    ? parvanePartner()
-                    : snap.data == 4
-                      ? parvanePersonel()
-                      : Form(
-                          key: _form,
-                          child: Stack(
-                            children: [
-                              Visibility(visible: snap.data==0, child: parvanePeopInfo()),
-                              Visibility(visible: snap.data==1, child: parvaneGUNit()),
-                            ],
-                          ),
-                        )
+                IgnorePointer(
+                  ignoring: this.parvane.register,
+                  child: snap.data == 2
+                    ? parvaneMObasher()
+                    : snap.data == 3
+                      ? parvanePartner()
+                      : snap.data == 4
+                        ? parvanePersonel()
+                        : Form(
+                            key: _form,
+                            child: Stack(
+                              children: [
+                                Visibility(visible: snap.data==0, child: parvanePeopInfo()),
+                                Visibility(visible: snap.data==1, child: parvaneGUNit()),
+                              ],
+                            ),
+                          )
+                ).expand()
               ]
             );
           }
