@@ -57,9 +57,9 @@ class FmParvane extends StatelessWidget {
                   Expanded(
                     child: Card(
                       child: InkWell(
-                        onTap: ()=>changeKind(2),
+                        onTap: ()=>changeKind(0),
                         child: Ink(
-                          color: snap.data == 2 ? accentcolor(context).withOpacity(0.4) : Colors.transparent,
+                          color: snap.data == 0 ? accentcolor(context).withOpacity(0.4) : Colors.transparent,
                           child: Container(
                             padding: EdgeInsets.all(12),
                             child: Text('متقاضیان', textAlign: TextAlign.center),
@@ -187,7 +187,7 @@ class ParvaneInfo extends StatelessWidget {
 
     Bloc<int> _tabidx = Bloc<int>()..setValue(0);
 
-    bool prcSave({bool save = false}){
+    bool prcSave(){
       this.parvane.reqdate = _edreqdate.text;
       this.parvane.hoghoghisabtdate = _edhoghoghisabtdate.text;
       this.parvane.id = _id.text.toInt();
@@ -568,7 +568,16 @@ class ParvaneInfo extends StatelessWidget {
                     falsetxt: 'ثبت نشده', 
                     truecolor: Colors.green, 
                     falsecolor: Colors.red.shade300,
-                    onChange: (val) async {if (await bloc.register(context, parvane)){print("yes"); _tabidx.setValue(_tabidx.value$);}}, 
+                    onChange: (val) async {
+                      if (parvane.old == 0){
+                        if (!prcSave())
+                          return;
+                      }
+                      else if (await bloc.register(context, parvane)){
+                        print("yes"); 
+                        _tabidx.setValue(_tabidx.value$);
+                      }
+                    }, 
                     selected: this.parvane.register
                   ),
                 ),
