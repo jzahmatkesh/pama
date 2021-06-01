@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:pama/forms/GUnit/GUnit.dart';
+import 'package:pama/forms/ParvaneProcess/ParvaneProcess.dart';
 import 'ParvaneBloc.dart';
 import '../People/People.dart';
 import '../../module/consts.dart';
@@ -102,7 +103,7 @@ class FmParvane extends StatelessWidget {
                             snap.data.rows[idx].mobile.toLabel().expand(),
                             snap.data.rows[idx].lastprocess.toLabel().expand(),
                             snap.data.rows[idx].lastprocessstatus.toLabel().expand(),
-                            MyIconButton(type: ButtonType.add, hint: 'فرآیند جدید', onPressed: (){}),
+                            MyIconButton(type: ButtonType.add, hint: 'فرآیند جدید', onPressed: ()=>showFormAsDialog(context: context, form: NewParvaneProcess(parvaneid: snap.data.rows[idx].id))),
                             MyIconButton(type: ButtonType.info, hint: 'سایر اطلاعات شخصی', onPressed: ()=>showFormAsDialog(context: context, form: ParvaneInfo(bloc: _bloc, parvane: snap.data.rows[idx]))),
                           ],
                         ).card();
@@ -562,23 +563,28 @@ class ParvaneInfo extends StatelessWidget {
               children: [
                 FormHeader(
                   title: 'اطلاعات اعضاء / متقاضیان', 
-                  // btnRight: MyIconButton(type: ButtonType.other, icon: Icon(Icons.save, color: Colors.green,), hint: 'بعدی', onPressed: ()=>prcSave())
-                  btnRight: FancySwitch(
-                    truetxt: 'ثبت شده', 
-                    falsetxt: 'ثبت نشده', 
-                    truecolor: Colors.green, 
-                    falsecolor: Colors.red.shade300,
-                    onChange: (val) async {
-                      if (parvane.old == 0){
-                        if (!prcSave())
-                          return;
-                      }
-                      else if (await bloc.register(context, parvane)){
-                        print("yes"); 
-                        _tabidx.setValue(_tabidx.value$);
-                      }
-                    }, 
-                    selected: this.parvane.register
+                  btnRight: Row(
+                    children: [
+                      MyIconButton(type: ButtonType.save, onPressed: ()=>prcSave()),
+                      SizedBox(width: 10),
+                      FancySwitch(
+                        truetxt: 'ثبت شده', 
+                        falsetxt: 'ثبت نشده', 
+                        truecolor: Colors.green, 
+                        falsecolor: Colors.red.shade300,
+                        onChange: (val) async {
+                          if (parvane.old == 0){
+                            if (!prcSave())
+                              return;
+                          }
+                          else if (await bloc.register(context, parvane)){
+                            print("yes"); 
+                            _tabidx.setValue(_tabidx.value$);
+                          }
+                        }, 
+                        selected: this.parvane.register
+                      ),
+                    ],
                   ),
                 ),
                 TabBar(
