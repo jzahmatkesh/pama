@@ -1789,6 +1789,13 @@ class ParvaneRepository{
     await putMethod(api: 'Parvane/Regiser', body: jsonEncode({'token': obj.token, 'id': obj.id, 'register': obj.register ? 1 : 0}));
     return true;
   }
+
+  Future<List<Process>> loadParvaneNewProcess(Parvane obj) async{
+    Map<String, dynamic> _data = await postToServer(api: 'ParvaneProcess/newlist', body: jsonEncode(obj.toJson()));
+    if (_data['msg'] == "Success")
+      return _data['body'].map<Process>((data) => Process.fromJson(json.decode(data))).toList();
+    throw Exception(_data['msg']);
+  }
 }
 
 
