@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pama/module/theme-Manager.dart';
+import 'package:rxdart/subjects.dart';
+
 import '../../classes/Repository.dart';
 import '../../classes/classes.dart';
 import '../../module/functions.dart';
-import 'package:rxdart/subjects.dart';
-import 'package:provider/provider.dart';
 
 class ParvaneModel{
   Status status;
@@ -87,7 +86,7 @@ class ParvaneBloc{
     try{
       showWaiting(context);
       parvane.token = readToken(context);
-      parvane.cmpid = context.read<ThemeManager>().cmpid;
+      parvane.cmpid = readCmpid(context);
       int _id = await _repository.saveData(parvane);
       parvane.id = _id;
       parvane.old = _id;
