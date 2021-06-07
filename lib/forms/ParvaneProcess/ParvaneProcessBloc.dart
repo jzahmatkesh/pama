@@ -29,4 +29,17 @@ class PPrcBloc{
       _bloc.add(PPrcModel(status: Status.error, msg: '$e'));
     }
   }
+
+  newprocess(BuildContext context, int parvaneID, int processid) async{
+    try{
+      showWaiting(context);
+      await _repository.addProcessToParvane(ParvaneProcess(token: readToken(context), processid: processid, parvaneid: parvaneID));
+    }
+    catch(e){
+      myAlert(context: context, title: 'خطا', message: '$e');
+    }
+    finally{
+      hideWaiting(context);
+    }
+ }
 }

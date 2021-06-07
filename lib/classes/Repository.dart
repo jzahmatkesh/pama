@@ -1797,6 +1797,13 @@ class ParvaneRepository{
       return _data['body'].map<Process>((data) => Process.fromJson(json.decode(data))).toList();
     throw Exception(_data['msg']);
   }
+
+  Future<ParvaneProcess> addProcessToParvane(ParvaneProcess obj) async{
+    Map<String, dynamic> _data = await postToServer(api: 'ParvaneProcess/addnew', body: jsonEncode(obj.toJson()));
+    if (_data['msg'] == "Success")
+      return ParvaneProcess.fromJson(json.decode(_data['body']));
+    throw Exception(_data['msg']);
+  }
 }
 
 

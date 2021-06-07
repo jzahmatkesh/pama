@@ -34,7 +34,8 @@ class NewParvaneProcess extends StatelessWidget {
                         ListTile(
                           title: Text('فرآیند صدور'),
                           onTap: ()=>confirmMessage(context, 'آغاز فرآیند', 'آیا مایل به آغاز فرآیند ${snap.data.rows[idx].title} می باشید؟', yesclick: (){
-                            print('new process begin');
+                            Navigator.pop(context);
+                            _bloc.newprocess(context, this.parvaneid, snap.data.rows[idx].id);
                           }),
                         ).setPadding().card()
                     );

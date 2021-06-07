@@ -3065,3 +3065,34 @@ class ParvanePersonel{
     String get kindname => this.kind==1 ? 'تمام وقت' : 'نیمه وقت';
 }
 
+class ParvaneProcess{
+    int id;
+    int parvaneid;
+    int processid;
+    String title;
+    String euserfamily;
+    int finish;
+    String token;
+ 
+    ParvaneProcess({this.id = 0 ,this.parvaneid = 0 ,this.processid = 0 ,this.title ,this.euserfamily ,this.finish = 0, this.token});
+ 
+    ParvaneProcess.fromJson(Map<String, dynamic> json):
+        id = json['id'],
+        parvaneid = json['parvaneid'],
+        processid = json['processid'],
+        title = json['title'],
+        euserfamily = json['euserfamily'],
+        finish = json['finish'];
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['id'] = this.id;
+        data['parvaneid'] = this.parvaneid;
+        data['processid'] = this.processid;
+        data['title'] = this.title;
+        data['euserfamily'] = this.euserfamily;
+        data['finish'] = this.finish;
+        data['token'] = this.token;
+        return data;
+    }
+}
