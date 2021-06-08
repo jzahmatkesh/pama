@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:pama/module/consts.dart';
@@ -3071,10 +3072,16 @@ class ParvaneProcess{
     int processid;
     String title;
     String euserfamily;
-    int finish;
+    bool finish;
+    int length;
+    String startdate;
+    int dayremind;
+    String enddate;
+    String steps;
     String token;
+    bool showSteps;
  
-    ParvaneProcess({this.id = 0 ,this.parvaneid = 0 ,this.processid = 0 ,this.title ,this.euserfamily ,this.finish = 0, this.token});
+    ParvaneProcess({this.id = 0 ,this.parvaneid = 0 ,this.processid = 0 ,this.title ,this.euserfamily ,this.finish = false, this.length, this.startdate, this.dayremind, this.enddate, this.steps, this.token, this.showSteps=false});
  
     ParvaneProcess.fromJson(Map<String, dynamic> json):
         id = json['id'],
@@ -3082,7 +3089,13 @@ class ParvaneProcess{
         processid = json['processid'],
         title = json['title'],
         euserfamily = json['euserfamily'],
-        finish = json['finish'];
+        finish = json['finish'] == 1,
+        length = json['length'],
+        startdate = json['startdate'],
+        dayremind = json['dayremind'],
+        enddate = json['enddate'],
+        steps = json['steps'],
+        showSteps = false;
  
     Map<String, dynamic> toJson(){
         final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -3091,8 +3104,10 @@ class ParvaneProcess{
         data['processid'] = this.processid;
         data['title'] = this.title;
         data['euserfamily'] = this.euserfamily;
-        data['finish'] = this.finish;
+        data['finish'] = this.finish ? 1 : 0;
         data['token'] = this.token;
         return data;
     }
+
+    List<Map<String, dynamic>> get stepsList => (json.decode(this.steps) as List).map((e) => e as Map<String, dynamic>).toList();
 }

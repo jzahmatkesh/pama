@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:pama/forms/GUnit/GUnit.dart';
-import 'package:pama/forms/ParvaneProcess/ParvaneProcess.dart';
+import '../GUnit/GUnit.dart';
+import '../ParvaneProcess/ParvaneProcess.dart';
 import 'ParvaneBloc.dart';
 import '../People/People.dart';
 import '../../module/consts.dart';
@@ -101,7 +101,10 @@ class FmParvane extends StatelessWidget {
                             snap.data.rows[idx].peopname.toLabel().expand(),
                             snap.data.rows[idx].nationalid.toLabel().expand(),
                             snap.data.rows[idx].mobile.toLabel().expand(),
-                            snap.data.rows[idx].lastprocess.toLabel().expand(),
+                            TextButton(
+                              onPressed: ()=>showFormAsDialog(context: context, form: FmParvaneProcess(parvane: snap.data.rows[idx])), 
+                              child: snap.data.rows[idx].lastprocess.toLabel(color: accentcolor(context))
+                            ),
                             snap.data.rows[idx].lastprocessstatus.toLabel().expand(),
                             MyIconButton(type: ButtonType.add, hint: 'فرآیند جدید', onPressed: ()=>showFormAsDialog(context: context, form: NewParvaneProcess(parvaneid: snap.data.rows[idx].id))),
                             MyIconButton(type: ButtonType.info, hint: 'سایر اطلاعات شخصی', onPressed: ()=>showFormAsDialog(context: context, form: ParvaneInfo(bloc: _bloc, parvane: snap.data.rows[idx]))),
@@ -119,7 +122,6 @@ class FmParvane extends StatelessWidget {
     );
   }
 }
-
 
 class ParvaneInfo extends StatelessWidget {
   final Parvane parvane;
@@ -633,7 +635,6 @@ class ParvaneInfo extends StatelessWidget {
   );}
 }
 
-
 class TabBar extends StatelessWidget {
   final List<String> tabs;
   final int tabsel;
@@ -679,3 +680,11 @@ class TabBar extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+
+
