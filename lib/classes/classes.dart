@@ -2789,7 +2789,7 @@ class Parvane{
         peopname = json['peopname'],
         nationalid = json['nationalid'],
         mobile = json['mobile'],
-        lastprocess = json['lastprocess'],
+        lastprocess = (json['lastprocess'] as String).isNotEmpty ? json['lastprocess'] : null,
         lastprocessstatus = json['lastprocessstatus'],
         gunitid = json['gunitid'],
         nosazicode = json['nosazicode'],

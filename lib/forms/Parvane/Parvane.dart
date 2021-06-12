@@ -102,8 +102,11 @@ class FmParvane extends StatelessWidget {
                             snap.data.rows[idx].nationalid.toLabel().expand(),
                             snap.data.rows[idx].mobile.toLabel().expand(),
                             TextButton(
-                              onPressed: ()=>showFormAsDialog(context: context, form: FmParvaneProcess(parvane: snap.data.rows[idx])), 
-                              child: snap.data.rows[idx].lastprocess.toLabel(color: accentcolor(context))
+                              onPressed: (){
+                                if (snap.data.rows[idx].lastprocess != null)
+                                  showFormAsDialog(context: context, form: FmParvaneProcess(parvane: snap.data.rows[idx]));
+                              },
+                              child: (snap.data.rows[idx].lastprocess ?? 'بدون فرآیند').toLabel(color: accentcolor(context))
                             ),
                             snap.data.rows[idx].lastprocessstatus.toLabel().expand(),
                             MyIconButton(type: ButtonType.add, hint: 'فرآیند جدید', onPressed: ()=>showFormAsDialog(context: context, form: NewParvaneProcess(parvaneid: snap.data.rows[idx].id))),
