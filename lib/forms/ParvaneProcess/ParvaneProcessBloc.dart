@@ -19,6 +19,13 @@ class ParvaneProcessModel{
 
   ParvaneProcessModel({@required this.status, this.rows, this.msg});
 }
+class PPDocumentModel{
+  Status status;
+  List<ParvaneProcessDocument> rows;
+  String msg;
+
+  PPDocumentModel({@required this.status, this.rows, this.msg});
+}
 
 class PPrcBloc{
   ParvaneRepository _repository = ParvaneRepository();
@@ -26,6 +33,10 @@ class PPrcBloc{
   BehaviorSubject<PPrcModel> _bloc = BehaviorSubject<PPrcModel>.seeded(PPrcModel(status: Status.loading));
   Stream<PPrcModel> get stream => _bloc.stream;
   PPrcModel get value => _bloc.value;
+    
+  BehaviorSubject<PPDocumentModel> _ppDocumentbloc = BehaviorSubject<PPDocumentModel>.seeded(PPDocumentModel(status: Status.loading));
+  Stream<PPDocumentModel> get ppDocumentstream => _ppDocumentbloc.stream;
+  PPDocumentModel get ppDocumentvalue => _ppDocumentbloc.value;
     
   BehaviorSubject<ParvaneProcessModel> _pprocessbloc = BehaviorSubject<ParvaneProcessModel>.seeded(ParvaneProcessModel(status: Status.loading));
   Stream<ParvaneProcessModel> get pprocessstream => _pprocessbloc.stream;
@@ -41,10 +52,11 @@ class PPrcBloc{
     }
   }
 
-  newprocess(BuildContext context, int parvaneID, int processid) async{
+  Future<bool> newprocess(BuildContext context, int parvaneID, int processid) async{
     try{
       showWaiting(context);
       await _repository.addProcessToParvane(ParvaneProcess(token: readToken(context), processid: processid, parvaneid: parvaneID));
+      return true;
     }
     catch(e){
       myAlert(context: context, title: 'خطا', message: '$e');
@@ -52,6 +64,7 @@ class PPrcBloc{
     finally{
       hideWaiting(context);
     }
+    return false;
  }
 
   loadParvaneProcess({@required BuildContext context, @required int parvaneID, int idstep = 0}) async{
@@ -78,6 +91,16 @@ class PPrcBloc{
     }
     finally{
       hideWaiting(context);
+    }
+  }
+
+  showPPStepDocument(BuildContext context, int ppid, int stepid) async{
+    try{
+      _ppDocumentbloc.add(PPDocumentModel(status: Status.loading));
+      _ppDocumentbloc.add(PPDocumentModel(status: Status.loaded, rows: await _repository.loadParvaneProcessDocument(ppid, stepid)));
+    }
+    catch(e){
+      _ppDocumentbloc.add(PPDocumentModel(status: Status.error, msg: '$e'));
     }
   }
 }

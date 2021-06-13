@@ -109,7 +109,21 @@ class FmParvane extends StatelessWidget {
                               child: (snap.data.rows[idx].lastprocess ?? 'بدون فرآیند').toLabel(color: accentcolor(context))
                             ),
                             snap.data.rows[idx].lastprocessstatus.toLabel().expand(),
-                            MyIconButton(type: ButtonType.add, hint: 'فرآیند جدید', onPressed: ()=>showFormAsDialog(context: context, form: NewParvaneProcess(parvaneid: snap.data.rows[idx].id))),
+                            MyIconButton(
+                              type: ButtonType.add, 
+                              hint: 'فرآیند جدید', 
+                              onPressed: ()=>showFormAsDialog(
+                                context: context, 
+                                form: NewParvaneProcess(
+                                  parvaneid: snap.data.rows[idx].id), 
+                                  done: (data){
+                                    if (data !=  null && data is bool && data){
+                                      _bloc.loadData(context, user, _type.value$);
+                                      showFormAsDialog(context: context, form: FmParvaneProcess(parvane: snap.data.rows[idx]));
+                                    }
+                                  }
+                              )
+                            ),
                             MyIconButton(type: ButtonType.info, hint: 'سایر اطلاعات شخصی', onPressed: ()=>showFormAsDialog(context: context, form: ParvaneInfo(bloc: _bloc, parvane: snap.data.rows[idx]))),
                           ],
                         ).card();

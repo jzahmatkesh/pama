@@ -1792,24 +1792,23 @@ class ParvaneRepository{
 
 
   Future<List<Process>> loadParvaneNewProcess(Parvane obj) async{
-    Map<String, dynamic> _data = await postToServer(api: 'ParvaneProcess/newlist', body: jsonEncode(obj.toJson()));
-    if (_data['msg'] == "Success")
-      return _data['body'].map<Process>((data) => Process.fromJson(json.decode(data))).toList();
-    throw Exception(_data['msg']);
+    List<Map<String, dynamic>> _data = await postMethod(api: 'ParvaneProcess/newlist', body: jsonEncode(obj.toJson()));
+    return _data.map<Process>((data) => Process.fromJson(data)).toList();
   }
 
-  Future<ParvaneProcess> addProcessToParvane(ParvaneProcess obj) async{
-    Map<String, dynamic> _data = await postToServer(api: 'ParvaneProcess/addnew', body: jsonEncode(obj.toJson()));
-    if (_data['msg'] == "Success")
-      return ParvaneProcess.fromJson(json.decode(_data['body']));
-    throw Exception(_data['msg']);
+  Future<bool> addProcessToParvane(ParvaneProcess obj) async{
+    await postMethod(api: 'ParvaneProcess/addnew', body: jsonEncode(obj.toJson()));
+    return true;
   }
 
   Future<List<ParvaneProcess>> loadParvaneProcess(Parvane obj) async{
-    Map<String, dynamic> _data = await postToServer(api: 'ParvaneProcess', body: jsonEncode(obj.toJson()));
-    if (_data['msg'] == "Success")
-      return _data['body'].map<ParvaneProcess>((data) => ParvaneProcess.fromJson(json.decode(data))).toList();
-    throw Exception(_data['msg']);
+    List<Map<String, dynamic>> _data = await postMethod(api: 'ParvaneProcess', body: jsonEncode(obj.toJson()));
+    return _data.map<ParvaneProcess>((data) => ParvaneProcess.fromJson(data)).toList();
+  }
+
+  Future<List<ParvaneProcessDocument>> loadParvaneProcessDocument(int ppid, int ppstepid) async{
+    List<Map<String, dynamic>> _data = await postMethod(api: 'ParvaneProcess/StepDocuments', body: jsonEncode({"id": ppid, "stepid": ppstepid}));
+    return _data.map<ParvaneProcessDocument>((data) => ParvaneProcessDocument.fromJson(data)).toList();
   }
 }
 

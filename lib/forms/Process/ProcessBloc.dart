@@ -221,7 +221,6 @@ class ProcessBloc{
       processid: processid,
       id: 0,
       active: true,
-      title: '',
       kind: 1,
       length: 0,
       startprevend: false,
@@ -235,11 +234,7 @@ class ProcessBloc{
   }
 
   Future<bool> saveStep(BuildContext context, Prcstep obj) async{
-    if (obj.title.isEmpty){
-      myAlert(context: context, title: 'مقادیر اجباری', message: 'عنوان مرحله مشخص نشده است');
-      return false;
-    }
-    else if (obj.length == 0){
+    if (obj.length == 0){
       myAlert(context: context, title: 'مقادیر اجباری', message: 'مدت مجاز مشخص نشده است');
       return false;
     }
@@ -332,7 +327,7 @@ class ProcessBloc{
     _prcStepBloc.add(_prcStepBloc.value);
   }
   delStep(BuildContext context, Prcstep obj) async{
-    confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف مرحله ${obj.title} می باشید؟', yesclick: () async{
+    confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف مرحله ${obj.kindName()} می باشید؟', yesclick: () async{
       try{
         showWaiting(context);
         obj.token = readToken(context);

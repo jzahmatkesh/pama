@@ -158,7 +158,6 @@ class ProcessStep extends StatelessWidget {
           ),
           GridCaption(obj: [
             Text('فعال', style: gridFieldStyle()),
-            'عنوان مرحله',
             'نوع فعالیت',
             'مدت مجاز',
           ], endbuttons: 6),
@@ -178,9 +177,6 @@ class ProcessStep extends StatelessWidget {
                           onDoubleTap: ()=>_bloc.editStep(_step.id),
                           children: [
                             Switch(value: _step.active, onChanged: (val)=>_bloc.stepActive(context, _step.id, val)),
-                            _step.edit 
-                              ? Expanded(child: GridTextField(hint: 'عنوان مرحله', initialValue: '${_step.title}', onChange: (val)=>_step.title=val))
-                              : '${_step.title}',
                             _step.edit
                               ? Expanded(
                                 child: MultiChooseItem(
@@ -251,7 +247,7 @@ class PnDocument extends StatelessWidget {
         width: screenWidth(context) * 0.65,
         child: Column(
           children: [
-            FormHeader(title: 'مدارک  ${step.title} $process', btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.insertStepDocument(step.processid, step.id))),
+            FormHeader(title: 'مدارک  ${step.kindName()} $process', btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.insertStepDocument(step.processid, step.id))),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 24, vertical: 3),
               child: GridTextField(hint: 'جستجو ...', onChange: (val)=>_bloc.searchDocument(val)),
@@ -325,7 +321,7 @@ class PnIncome extends StatelessWidget {
         width: screenWidth(context) * 0.65,
         child: Column(
           children: [
-            FormHeader(title: 'درآمدهای  ${step.title} $process', btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.insertStepIncome(step.processid, step.id))),
+            FormHeader(title: 'درآمدهای  ${step.kindName()} $process', btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.insertStepIncome(step.processid, step.id))),
             // Container(
             //   padding: EdgeInsets.symmetric(horizontal: 24, vertical: 3),
             //   child: GridTextField(hint: 'جستجو ...', onChange: (val)=>_bloc.searchIncome(val)),
@@ -505,7 +501,7 @@ class PnCourse extends StatelessWidget {
         width: screenWidth(context) * 0.65,
         child: Column(
           children: [
-            FormHeader(title: 'دوره های آموزشی ${step.title} $process', btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.insertStepCourse(step.processid, step.id))),
+            FormHeader(title: 'دوره های آموزشی ${step.kindName()} $process', btnRight: MyIconButton(type: ButtonType.add, onPressed: ()=>_bloc.insertStepCourse(step.processid, step.id))),
             GridCaption(obj: [
               'عنوان دوره',
               'وابستگی'

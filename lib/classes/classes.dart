@@ -2126,7 +2126,6 @@ class Prcstep{
     int processid;
     int id;
     bool active;
-    String title;
     int kind;
     int length;
     bool startprevend;
@@ -2136,13 +2135,12 @@ class Prcstep{
     String token;
     bool edit;
  
-    Prcstep({this.processid,this.id,this.active,this.title,this.kind,this.length=0,this.startprevend,this.restart,this.sms,this.err27, this.token, this.edit=false});
+    Prcstep({this.processid,this.id,this.active,this.kind,this.length=0,this.startprevend,this.restart,this.sms,this.err27, this.token, this.edit=false});
  
     Prcstep.fromJson(Map<String, dynamic> json):
         processid = json['processid'],
         id = json['id'],
         active = json['active'] == 1,
-        title = json['title'],
         kind = json['kind'],
         length = json['length'],
         startprevend = json['startprevend'] == 1,
@@ -2156,7 +2154,6 @@ class Prcstep{
         data['processid'] = this.processid;
         data['id'] = this.id;
         data['active'] = this.active ? 1 : 0;
-        data['title'] = this.title;
         data['kind'] = this.kind;
         data['length'] = this.length;
         data['startprevend'] = this.startprevend ? 1 : 0;
@@ -3110,4 +3107,57 @@ class ParvaneProcess{
     }
 
     List<Map<String, dynamic>> get stepsList => (json.decode(this.steps) as List).map((e) => e as Map<String, dynamic>).toList();
+}
+
+class ParvaneProcessDocument{
+  int id;
+  int documentid;
+  String documentname;
+  int kind;
+  int attach;
+  String token;
+
+  ParvaneProcessDocument({this.id = 0 ,this.documentid = 0 ,this.documentname ,this.kind = 0 ,this.attach = 0, this.token});
+
+  ParvaneProcessDocument.fromJson(Map<String, dynamic> json):
+      id = json['id'],
+      documentid = json['documentid'],
+      documentname = json['documentname'],
+      kind = json['kind'],
+      attach = json['attach'];
+
+  Map<String, dynamic> toJson(){
+      final Map<String, dynamic> data = new Map<String, dynamic>();
+      data['id'] = this.id;
+      data['documentid'] = this.documentid;
+      data['documentname'] = this.documentname;
+      data['kind'] = this.kind;
+      data['attach'] = this.attach;
+      data['token'] = this.token;
+      return data;
+  }
+
+  String kindName(){
+    switch (this.kind) {
+        case 1:
+          return 'فرد صنفی';
+          break;
+        case 2:
+          return 'پروانه کسب';
+          break;
+        case 3:
+          return 'واحد صنفی';
+          break;
+        case 4:
+          return 'شریک';
+          break;
+        case 5:
+          return 'مباشر';
+          break;
+        case 6:
+          return 'کارکنان';
+          break;
+    }
+    return "";
+  }
 }
