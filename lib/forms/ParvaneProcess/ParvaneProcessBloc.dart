@@ -103,4 +103,6 @@ class PPrcBloc{
       _ppDocumentbloc.add(PPDocumentModel(status: Status.error, msg: '$e'));
     }
   }
+
+  refreshDocument()=>_ppDocumentbloc.add(_ppDocumentbloc.value);
 }

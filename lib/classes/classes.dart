@@ -3110,21 +3110,27 @@ class ParvaneProcess{
 }
 
 class ParvaneProcessDocument{
+  int ppid;
+  int ppstepid;
   int id;
   int documentid;
   String documentname;
   int kind;
   int attach;
+  String attachname;
   String token;
 
-  ParvaneProcessDocument({this.id = 0 ,this.documentid = 0 ,this.documentname ,this.kind = 0 ,this.attach = 0, this.token});
+  ParvaneProcessDocument({this.ppid, this.ppstepid, this.id = 0 ,this.documentid = 0 ,this.documentname ,this.kind = 0 ,this.attach = 0, this.attachname, this.token});
 
   ParvaneProcessDocument.fromJson(Map<String, dynamic> json):
+      ppid = json['ppid'],
+      ppstepid = json['ppstepid'],
       id = json['id'],
       documentid = json['documentid'],
       documentname = json['documentname'],
       kind = json['kind'],
-      attach = json['attach'];
+      attach = json['attach'],
+      attachname = json['attachname'];
 
   Map<String, dynamic> toJson(){
       final Map<String, dynamic> data = new Map<String, dynamic>();

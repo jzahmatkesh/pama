@@ -1,6 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pama/classes/classes.dart';
+import '../../classes/classes.dart';
 import 'ParvaneProcessBloc.dart';
 import '../../module/Widgets.dart';
 import '../../module/consts.dart';
@@ -60,8 +62,8 @@ class FmParvaneProcess extends StatelessWidget {
     final PPrcBloc _bloc = PPrcBloc()..loadParvaneProcess(context: context, parvaneID: this.parvane.id);
     Bloc<int> _stepid = Bloc<int>()..setValue(0);
     return Container(
-      width: screenWidth(context) * 0.75,
-      height: screenHeight(context) * 0.75,
+      width: screenWidth(context) * 0.95,
+      height: screenHeight(context) * 0.95,
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Column(
@@ -89,7 +91,7 @@ class FmParvaneProcess extends StatelessWidget {
                       itemBuilder: (context, idx){
                         if (snap.data.rows[idx].showSteps)
                           return Container(
-                            height: screenHeight(context) * 0.50,
+                            height: screenHeight(context) * 0.70,
                             child: Column(
                               children: [
                                 ParvaneProcessRow(bloc: _bloc, data: snap.data.rows[idx]).card(),
@@ -125,23 +127,74 @@ class FmParvaneProcess extends StatelessWidget {
                                           Container(
                                             child: StreamBuilder<PPDocumentModel>(
                                               stream: _bloc.ppDocumentstream,
-                                              builder: (context, snap){
-                                                if (snap.hasData)
-                                                  if (snap.data.status == Status.error)
-                                                    return ErrorInGrid(snap.data.msg);
-                                                  else if (snap.data.status == Status.loaded)
+                                              builder: (context, snp){
+                                                if (snp.hasData)
+                                                  if (snp.data.status == Status.error)
+                                                    return ErrorInGrid(snp.data.msg);
+                                                  else if (snp.data.status == Status.loaded)
                                                     return SingleChildScrollView(
                                                       child: Wrap(
-                                                        children: snap.data.rows.map((e) => Container(
+                                                        children: snp.data.rows.map((e) => Container(
                                                           width: screenWidth(context) * 0.2,
-                                                          height: screenWidth(context) * 0.175,
-                                                          margin: EdgeInsets.all(3),
+                                                          height: screenWidth(context) * 0.195,
+                                                          margin: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
                                                           decoration: BoxDecoration(
                                                             borderRadius: BorderRadius.circular(15),
                                                             color: Colors.grey.shade100
                                                           ),
-                                                          child: Center(
-                                                            child: '${e.documentname} - ${e.kindName()}'.toLabel(),
+                                                          child: Column(
+                                                            children: [
+                                                              Container(
+                                                                width: double.infinity,
+                                                                padding: EdgeInsets.all(12),
+                                                                decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15)),
+                                                                  color: Colors.amber.shade100
+                                                                ),
+                                                                child: Row(
+                                                                  children: [
+                                                                    MyIconButton(
+                                                                      type: ButtonType.other, 
+                                                                      hint: 'آپلود مدرک', 
+                                                                      icon: Icon(Icons.upload_outlined), 
+                                                                      onPressed: ()=>prcUploadImg(context: context, id: e.ppid, id1: e.ppstepid, id2: e.id, tag: 'TBPPSDocument', function: (str){e.attachname=str; _bloc.refreshDocument();}),
+                                                                    ),
+                                                                    Column(
+                                                                      children: [
+                                                                        Text('${e.documentname}', textAlign: TextAlign.center,),
+                                                                        SizedBox(height: 10),
+                                                                        Text('${e.kindName()}', textAlign: TextAlign.center,),
+                                                                      ],
+                                                                    ).expand(),
+                                                                  ],
+                                                                )
+                                                              ),
+                                                              if (e.attachname.toLowerCase().contains("xls") || e.attachname.toLowerCase().contains("xlsx"))
+                                                                Image.asset("images/excel.png", fit: BoxFit.cover).expand()
+                                                              else if (e.attachname.toLowerCase().contains("mp3"))
+                                                                Image.asset("images/mp3.png", fit: BoxFit.cover).expand()
+                                                              else if (e.attachname.toLowerCase().contains("mp4") || e.attachname.toLowerCase().contains("avi"))
+                                                                Image.asset("images/mp4.png", fit: BoxFit.cover).expand()
+                                                              else if (e.attachname.toLowerCase().contains("xls") || e.attachname.toLowerCase().contains("xlsx"))
+                                                                Image.asset("images/excel.png", fit: BoxFit.cover).expand()
+                                                              else if (e.attachname.toLowerCase().contains("doc") || e.attachname.toLowerCase().contains("docx"))
+                                                                Image.asset("images/Word.png", fit: BoxFit.cover).expand()
+                                                              else if (e.attachname.toLowerCase().contains("pdf"))
+                                                                Image.asset("images/pdf.png", fit: BoxFit.cover).expand()
+                                                              else if (!e.attachname.toLowerCase().contains("png") && !e.attachname.toLowerCase().contains("jpg") && !e.attachname.toLowerCase().contains("jpeg") && !e.attachname.toLowerCase().contains("bmp") && e.attachname.trim().isNotEmpty)
+                                                                Image.asset("images/other.png", fit: BoxFit.cover).expand()
+                                                              else
+                                                                Image.network("http://${serverIP()}:8080/PamaApi/LoadFile.jsp?type=TBPPSDocument&id=${e.ppid}&id1=${e.ppstepid}&id2=${e.id}&flg=${Random().nextInt(1000)}", fit: BoxFit.cover).expand(),
+                                                              Container(
+                                                                width: double.infinity,
+                                                                padding: EdgeInsets.all(5),
+                                                                decoration: BoxDecoration(
+                                                                  color: Colors.grey.shade200,
+                                                                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15)),
+                                                                ),
+                                                                child: Text('${e.attachname}', textAlign: TextAlign.left,)
+                                                              )
+                                                            ],
                                                           ),
                                                         )).toList()
                                                       ),
