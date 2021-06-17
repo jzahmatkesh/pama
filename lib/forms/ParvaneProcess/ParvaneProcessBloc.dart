@@ -26,6 +26,14 @@ class PPDocumentModel{
 
   PPDocumentModel({@required this.status, this.rows, this.msg});
 }
+class PPIncomeModel{
+  Status status;
+  List<ParvaneProcessIncome> rows;
+  String msg;
+
+  PPIncomeModel({@required this.status, this.rows, this.msg});
+}
+
 
 class PPrcBloc{
   ParvaneRepository _repository = ParvaneRepository();
@@ -37,6 +45,10 @@ class PPrcBloc{
   BehaviorSubject<PPDocumentModel> _ppDocumentbloc = BehaviorSubject<PPDocumentModel>.seeded(PPDocumentModel(status: Status.loading));
   Stream<PPDocumentModel> get ppDocumentstream => _ppDocumentbloc.stream;
   PPDocumentModel get ppDocumentvalue => _ppDocumentbloc.value;
+    
+  BehaviorSubject<PPIncomeModel> _ppIncomebloc = BehaviorSubject<PPIncomeModel>.seeded(PPIncomeModel(status: Status.loading));
+  Stream<PPIncomeModel> get ppIncomestream => _ppIncomebloc.stream;
+  PPIncomeModel get ppIncomevalue => _ppIncomebloc.value;
     
   BehaviorSubject<ParvaneProcessModel> _pprocessbloc = BehaviorSubject<ParvaneProcessModel>.seeded(ParvaneProcessModel(status: Status.loading));
   Stream<ParvaneProcessModel> get pprocessstream => _pprocessbloc.stream;
@@ -80,6 +92,20 @@ class PPrcBloc{
     }
   }
 
+  delParvaneProcess({@required BuildContext context, @required int id}){
+    confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف فرآیند می باشید؟', yesclick: () async{
+      try{
+        if (await _repository.delParvaneProcess(readToken(context), id)){
+          _pprocessbloc.value.rows.removeWhere((element) => element.id==id);
+          _pprocessbloc.add(_pprocessbloc.value);
+        }
+      }
+      catch(e){
+        myAlert(context: context, title: 'خطا', message: '$e');
+      }
+    });
+  }
+
   showParvaneProcessSteps(BuildContext context, int id) async{
     try{
       showWaiting(context);
@@ -105,4 +131,14 @@ class PPrcBloc{
   }
 
   refreshDocument()=>_ppDocumentbloc.add(_ppDocumentbloc.value);
+
+  showPPStepIncome(BuildContext context, int ppid, int stepid) async{
+    try{
+      _ppIncomebloc.add(PPIncomeModel(status: Status.loading));
+      _ppIncomebloc.add(PPIncomeModel(status: Status.loaded, rows: await _repository.loadParvaneProcessIncome(ppid, stepid)));
+    }
+    catch(e){
+      _ppIncomebloc.add(PPIncomeModel(status: Status.error, msg: '$e'));
+    }
+  }
 }

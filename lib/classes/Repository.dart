@@ -1810,6 +1810,25 @@ class ParvaneRepository{
     List<Map<String, dynamic>> _data = await postMethod(api: 'ParvaneProcess/StepDocuments', body: jsonEncode({"id": ppid, "stepid": ppstepid}));
     return _data.map<ParvaneProcessDocument>((data) => ParvaneProcessDocument.fromJson(data)).toList();
   }
+
+  Future<List<ParvaneProcessIncome>> loadParvaneProcessIncome(int ppid, int ppstepid) async{
+    List<Map<String, dynamic>> _data = await postMethod(api: 'ParvaneProcess/StepIncome', body: jsonEncode({"id": ppid, "stepid": ppstepid}));
+    return _data.map<ParvaneProcessIncome>((data) => ParvaneProcessIncome.fromJson(data)).toList();
+  }
+
+  Future<bool> delParvaneProcess(String token, int id) async{
+     Map<String, dynamic> _data = await delToServer(api: 'ParvaneProcess', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': token,
+       'id': id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
 }
 
 

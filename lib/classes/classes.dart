@@ -2170,7 +2170,7 @@ class Prcstep{
           return 'مدرک';
           break;
         case 2:
-          return 'مدیره';
+          return 'هیئت مدیره';
           break;
         case 3:
           return 'بازرسی';
@@ -3106,7 +3106,7 @@ class ParvaneProcess{
         return data;
     }
 
-    List<Map<String, dynamic>> get stepsList => (json.decode(this.steps) as List).map((e) => e as Map<String, dynamic>).toList();
+    List<Prcstep> get stepsList => (json.decode(this.steps) as List).map((e) => Prcstep.fromJson(e)).toList();
 }
 
 class ParvaneProcessDocument{
@@ -3167,3 +3167,47 @@ class ParvaneProcessDocument{
     return "";
   }
 }
+
+class ParvaneProcessIncome{
+    int ppid;
+    int ppstepid;
+    int incomeid;
+    String incomename;
+    double price;
+    String date;
+    String shenase;
+    String note;
+    String token;
+    bool edit;
+ 
+    ParvaneProcessIncome({this.ppid = 0 ,this.ppstepid = 0 ,this.incomeid = 0 ,this.incomename ,this.price ,this.date ,this.shenase ,this.note, this.token, this.edit});
+ 
+    ParvaneProcessIncome.fromJson(Map<String, dynamic> json):
+        ppid = json['ppid'],
+        ppstepid = json['ppstepid'],
+        incomeid = json['incomeid'],
+        incomename = json['incomename'],
+        price = json['price'],
+        date = json['date'],
+        shenase = json['shenase'],
+        note = json['note'],
+        edit = false;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['ppid'] = this.ppid;
+        data['ppstepid'] = this.ppstepid;
+        data['incomeid'] = this.incomeid;
+        data['incomename'] = this.incomename;
+        data['price'] = this.price;
+        data['date'] = this.date;
+        data['shenase'] = this.shenase;
+        data['note'] = this.note;
+        data['token'] = this.token;
+        return data;
+    }
+}
+
+
+
+
