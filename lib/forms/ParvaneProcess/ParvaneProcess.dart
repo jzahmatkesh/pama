@@ -322,7 +322,7 @@ class IncomeList extends StatelessWidget {
                           ? GridTextField(hint: 'توضیحات', initialValue: income.note, onChange: (val)=>income.note = val).expand(flex: 2)
                           : income.note.toLabel().expand(),
                         income.edit
-                          ? MyIconButton(type: ButtonType.save, onPressed: (){})
+                          ? MyIconButton(type: ButtonType.save, onPressed: ()=>bloc.savePPStepIncome(context, income))
                           : MyIconButton(type: ButtonType.edit, onPressed: ()=>bloc.editPPStepIncome(income))
                       ]
                     );

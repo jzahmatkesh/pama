@@ -1829,6 +1829,11 @@ class ParvaneRepository{
     throw Exception(_data['msg']);
   }
 
+  Future<bool> saveParvaneProcessIncome(ParvaneProcessIncome data) async{
+    await putMethod(api: 'ParvaneProcess/StepIncome', body: jsonEncode(data.toJson()));
+    return true;
+  }
+
 }
 
 

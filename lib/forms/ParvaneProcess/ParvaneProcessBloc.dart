@@ -146,4 +146,20 @@ class PPrcBloc{
     _ppIncomebloc.value.rows.forEach((element)=>element.edit = element.incomeid == data.incomeid && !data.edit);
     _ppIncomebloc.add(_ppIncomebloc.value);
   }
+
+  savePPStepIncome(BuildContext context, ParvaneProcessIncome data) async{
+    try{
+      showWaiting(context);
+      data.token = readToken(context);
+      await _repository.saveParvaneProcessIncome(data);
+      data.edit = false;
+      _ppIncomebloc.add(_ppIncomebloc.value); 
+    }
+    catch(e){
+      myAlert(context: context, title: 'خطا', message: '$e');
+    }
+    finally{
+      hideWaiting(context);
+    }
+  }
 }
