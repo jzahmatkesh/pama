@@ -141,4 +141,9 @@ class PPrcBloc{
       _ppIncomebloc.add(PPIncomeModel(status: Status.error, msg: '$e'));
     }
   }
+
+  editPPStepIncome(ParvaneProcessIncome data){
+    _ppIncomebloc.value.rows.forEach((element)=>element.edit = element.incomeid == data.incomeid && !data.edit);
+    _ppIncomebloc.add(_ppIncomebloc.value);
+  }
 }

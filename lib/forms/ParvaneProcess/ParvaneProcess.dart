@@ -308,6 +308,7 @@ class IncomeList extends StatelessWidget {
                   itemBuilder: (context, idx){
                     ParvaneProcessIncome income = snap.data.rows[idx];
                     return MyRow(
+                      onDoubleTap: ()=>bloc.editPPStepIncome(income),
                       children: [
                         income.incomename.toLabel().expand(),                    
                         moneySeprator(income.price).toLabel().expand(),                    
@@ -322,7 +323,7 @@ class IncomeList extends StatelessWidget {
                           : income.note.toLabel().expand(),
                         income.edit
                           ? MyIconButton(type: ButtonType.save, onPressed: (){})
-                          : MyIconButton(type: ButtonType.edit, onPressed: (){})
+                          : MyIconButton(type: ButtonType.edit, onPressed: ()=>bloc.editPPStepIncome(income))
                       ]
                     );
                   }
