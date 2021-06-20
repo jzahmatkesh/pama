@@ -159,6 +159,8 @@ class ParvaneProcessStepDetail extends StatelessWidget {
                     onTap: (){
                       if (e.kind == 1)
                         bloc.showPPStepDocument(context, pprow.id, e.id);
+                      if (e.kind == 2)
+                        bloc.showPPStepMeeting(context, pprow.id, e.id);
                       if (e.kind == 4)
                         bloc.showPPStepIncome(context, pprow.id, e.id);
                       stepid.setValue(e); 
@@ -181,9 +183,11 @@ class ParvaneProcessStepDetail extends StatelessWidget {
             SizedBox(height: 10),
             cstp.hasData &&  cstp.data.kind == 1
               ? DocumentList(bloc: this.bloc)
-              : cstp.hasData &&  cstp.data.kind == 4
-                ? IncomeList(bloc: this.bloc)
-                : Container()
+              : cstp.hasData &&  cstp.data.kind == 2
+                ? MeetingList(bloc: this.bloc)
+                : cstp.hasData &&  cstp.data.kind == 4
+                  ? IncomeList(bloc: this.bloc)
+                  : Container()
           ],
         );
       }
@@ -324,6 +328,73 @@ class IncomeList extends StatelessWidget {
                         income.edit
                           ? MyIconButton(type: ButtonType.save, onPressed: ()=>bloc.savePPStepIncome(context, income))
                           : MyIconButton(type: ButtonType.edit, onPressed: ()=>bloc.editPPStepIncome(income))
+                      ]
+                    );
+                  }
+                );
+            return Center(child: CupertinoActivityIndicator());
+          }
+        ).expand(),
+      ],
+    ).expand();
+  }
+}
+
+class MeetingList extends StatelessWidget {
+  final PPrcBloc bloc;
+  const MeetingList({@required this.bloc, Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    TextEditingController _edate = TextEditingController();
+    TextEditingController _mdate = TextEditingController();
+    return Column(
+      children: [
+        GridCaption(
+          obj: [
+            'تاریخ ارجاع',
+            'تاریخ جلسه',
+            'نتیجه',
+            'شماره مصوبه',
+            Text('خلاصه نظر', style: gridFieldStyle()).expand(flex: 2)
+          ],
+        ),
+        StreamBuilder<PPMeetingModel>(
+          stream: this.bloc.ppMeetingstream,
+          builder: (context, snap){
+            if (snap.hasData)
+              if (snap.data.status == Status.error)
+                return ErrorInGrid('${snap.data.msg}');
+              else if (snap.data.status == Status.loaded)
+                return ListView.builder(
+                  itemCount: snap.data.rows.length,
+                  itemBuilder: (context, idx){
+                    ParvaneProcessMeeting meet = snap.data.rows[idx];
+                    if (meet.edit){
+                      _edate.text = meet.edate;
+                      _mdate.text = meet.mdate;
+                    }
+                    return MyRow(
+                      onDoubleTap: ()=>bloc.editPPStepMeeting(meet),
+                      children: [
+                        meet.edit
+                          ? GridTextField(hint: 'تاریخ ارجاع', controller: _edate, datepicker: true).expand()
+                          : meet.edate.toLabel().expand(),
+                        meet.edit
+                          ? GridTextField(hint: 'تاریخ جلسه', controller: _mdate, datepicker: true).expand()
+                          : meet.mdate.toLabel().expand(),
+                        meet.edit
+                          ? DropDownButton(val: meet.res, items: [{'id': 0, 'title': ''},{'id': 1, 'title': 'قبول'},{'id': 2, 'title': 'رد'},{'id': 3, 'title': 'مشروط'}], hint: 'نتیجه', onChange: (val)=>meet.res=val).expand()
+                          : meet.resName.toLabel().expand(),
+                        meet.edit
+                          ? GridTextField(hint: 'شماره مصوبه', initialValue: '${meet.mosavabeno}', onChange: (val)=>meet.mosavabeno = int.tryParse(val)).expand()
+                          : '${meet.mosavabeno}'.toLabel().expand(),
+                        meet.edit
+                          ? GridTextField(hint: 'خلاصه نظر', initialValue: meet.note, onChange: (val)=>meet.note = val).expand(flex: 2)
+                          : meet.note.toLabel().expand(),
+                        meet.edit
+                          ? MyIconButton(type: ButtonType.save, onPressed: (){meet.edate=_edate.text;meet.mdate=_mdate.text; bloc.savePPStepMeeting(context, meet);})
+                          : MyIconButton(type: ButtonType.edit, onPressed: ()=>bloc.editPPStepMeeting(meet))
                       ]
                     );
                   }

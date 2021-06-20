@@ -3208,6 +3208,51 @@ class ParvaneProcessIncome{
     }
 }
 
+class ParvaneProcessMeeting{
+    int ppid;
+    int ppstepid;
+    int id;
+    String edate;
+    String mdate;
+    int res;
+    int mosavabeno;
+    String note;
+    String token;
+    bool edit;
+ 
+    ParvaneProcessMeeting({this.ppid = 0 ,this.ppstepid = 0 ,this.id = 0,this.edate,this.mdate ,this.res = 0 ,this.mosavabeno = 0 ,this.note, this.edit=false, this.token});
+ 
+    ParvaneProcessMeeting.fromJson(Map<String, dynamic> json):
+        ppid = json['ppid'],
+        ppstepid = json['ppstepid'],
+        id = json['id'],
+        edate = json['edate'] ?? '',
+        mdate = json['mdate'] ?? '',
+        res = json['res'] ?? 0,
+        mosavabeno = json['mosavabeno'],
+        note = json['note'],
+        edit= false || (json['res'] ?? 0) == 0;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['ppid'] = this.ppid;
+        data['ppstepid'] = this.ppstepid;
+        data['id'] = this.id;
+        data['edate'] = this.edate;
+        data['mdate'] = this.mdate;
+        data['res'] = this.res;
+        data['mosavabeno'] = this.mosavabeno;
+        data['note'] = this.note;
+        data['token'] = this.token;
+        return data;
+    }
+
+    String get resName => this.res==1 
+      ? 'قبول'
+      : this.res==2
+        ? 'رد'
+        : 'مشروط';
+}
 
 
 

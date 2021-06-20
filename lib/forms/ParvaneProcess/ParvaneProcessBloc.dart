@@ -33,6 +33,13 @@ class PPIncomeModel{
 
   PPIncomeModel({@required this.status, this.rows, this.msg});
 }
+class PPMeetingModel{
+  Status status;
+  List<ParvaneProcessMeeting> rows;
+  String msg;
+
+  PPMeetingModel({@required this.status, this.rows, this.msg});
+}
 
 
 class PPrcBloc{
@@ -49,6 +56,10 @@ class PPrcBloc{
   BehaviorSubject<PPIncomeModel> _ppIncomebloc = BehaviorSubject<PPIncomeModel>.seeded(PPIncomeModel(status: Status.loading));
   Stream<PPIncomeModel> get ppIncomestream => _ppIncomebloc.stream;
   PPIncomeModel get ppIncomevalue => _ppIncomebloc.value;
+    
+  BehaviorSubject<PPMeetingModel> _ppMeetingbloc = BehaviorSubject<PPMeetingModel>.seeded(PPMeetingModel(status: Status.loading));
+  Stream<PPMeetingModel> get ppMeetingstream => _ppMeetingbloc.stream;
+  PPMeetingModel get ppMeetingvalue => _ppMeetingbloc.value;
     
   BehaviorSubject<ParvaneProcessModel> _pprocessbloc = BehaviorSubject<ParvaneProcessModel>.seeded(ParvaneProcessModel(status: Status.loading));
   Stream<ParvaneProcessModel> get pprocessstream => _pprocessbloc.stream;
@@ -141,12 +152,10 @@ class PPrcBloc{
       _ppIncomebloc.add(PPIncomeModel(status: Status.error, msg: '$e'));
     }
   }
-
   editPPStepIncome(ParvaneProcessIncome data){
     _ppIncomebloc.value.rows.forEach((element)=>element.edit = element.incomeid == data.incomeid && !data.edit);
     _ppIncomebloc.add(_ppIncomebloc.value);
   }
-
   savePPStepIncome(BuildContext context, ParvaneProcessIncome data) async{
     try{
       showWaiting(context);
@@ -161,5 +170,38 @@ class PPrcBloc{
     finally{
       hideWaiting(context);
     }
+  }
+
+  showPPStepMeeting(BuildContext context, int ppid, int stepid) async{
+    try{
+      _ppMeetingbloc.add(PPMeetingModel(status: Status.loading));
+      _ppMeetingbloc.add(PPMeetingModel(status: Status.loaded, rows: await _repository.loadParvaneProcessMeeting(ppid, stepid)));
+    }
+    catch(e){
+      _ppMeetingbloc.add(PPMeetingModel(status: Status.error, msg: '$e'));
+    }
+  }
+  editPPStepMeeting(ParvaneProcessMeeting data){
+    _ppMeetingbloc.value.rows.forEach((element)=>element.edit = element.id == data.id && !data.edit);
+    _ppMeetingbloc.add(_ppMeetingbloc.value);
+  }
+  savePPStepMeeting(BuildContext context, ParvaneProcessMeeting data) async{
+    if (data.edate.trim().isEmpty || data.mdate.trim().isEmpty || data.res==0 || data.mosavabeno==0 || data.note.trim().isEmpty)
+      myAlert(context: context, title: 'خطا', message: 'تمامی مقادیر می بایست مشخص گردد');
+    else
+      try{
+        showWaiting(context);
+        data.token = readToken(context);
+        await _repository.saveParvaneProcessMeeting(data);
+        data.edit = false;
+        _ppMeetingbloc.add(_ppMeetingbloc.value); 
+        showPPStepMeeting(context, data.ppid, data.ppstepid);
+      }
+      catch(e){
+        myAlert(context: context, title: 'خطا', message: '$e');
+      }
+      finally{
+        hideWaiting(context);
+      }
   }
 }

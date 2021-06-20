@@ -1811,11 +1811,6 @@ class ParvaneRepository{
     return _data.map<ParvaneProcessDocument>((data) => ParvaneProcessDocument.fromJson(data)).toList();
   }
 
-  Future<List<ParvaneProcessIncome>> loadParvaneProcessIncome(int ppid, int ppstepid) async{
-    List<Map<String, dynamic>> _data = await postMethod(api: 'ParvaneProcess/StepIncome', body: jsonEncode({"id": ppid, "stepid": ppstepid}));
-    return _data.map<ParvaneProcessIncome>((data) => ParvaneProcessIncome.fromJson(data)).toList();
-  }
-
   Future<bool> delParvaneProcess(String token, int id) async{
      Map<String, dynamic> _data = await delToServer(api: 'ParvaneProcess', 
       header: {
@@ -1829,8 +1824,23 @@ class ParvaneRepository{
     throw Exception(_data['msg']);
   }
 
+  Future<List<ParvaneProcessIncome>> loadParvaneProcessIncome(int ppid, int ppstepid) async{
+    List<Map<String, dynamic>> _data = await postMethod(api: 'ParvaneProcess/StepIncome', body: jsonEncode({"id": ppid, "stepid": ppstepid}));
+    return _data.map<ParvaneProcessIncome>((data) => ParvaneProcessIncome.fromJson(data)).toList();
+  }
+
   Future<bool> saveParvaneProcessIncome(ParvaneProcessIncome data) async{
     await putMethod(api: 'ParvaneProcess/StepIncome', body: jsonEncode(data.toJson()));
+    return true;
+  }
+
+  Future<List<ParvaneProcessMeeting>> loadParvaneProcessMeeting(int ppid, int ppstepid) async{
+    List<Map<String, dynamic>> _data = await postMethod(api: 'ParvaneProcess/StepMeeting', body: jsonEncode({"id": ppid, "stepid": ppstepid}));
+    return _data.map<ParvaneProcessMeeting>((data) => ParvaneProcessMeeting.fromJson(data)).toList();
+  }
+
+  Future<bool> saveParvaneProcessMeeting(ParvaneProcessMeeting data) async{
+    await putMethod(api: 'ParvaneProcess/StepMeeting', body: jsonEncode(data.toJson()));
     return true;
   }
 
