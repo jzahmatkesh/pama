@@ -1844,6 +1844,21 @@ class ParvaneRepository{
     return true;
   }
 
+  Future<bool> delParvaneProcessMeeting(ParvaneProcessMeeting data) async{
+     Map<String, dynamic> _data = await delToServer(api: 'ParvaneProcess/StepMeeting', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': data.token,
+       'ppid': data.ppid.toString(),
+       'ppstepid': data.ppstepid.toString(),
+       'id': data.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
 }
 
 

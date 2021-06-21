@@ -204,4 +204,20 @@ class PPrcBloc{
         hideWaiting(context);
       }
   }
+  delPPStepMeeting(BuildContext context, ParvaneProcessMeeting data){
+    confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف نظر هیت مدیره می باشید؟', yesclick: () async{
+      try{
+        showWaiting(context);
+        data.token = readToken(context);
+        await _repository.delParvaneProcessMeeting(data);
+        showPPStepMeeting(context, data.ppid, data.ppstepid);
+      }
+      catch(e){
+        myAlert(context: context, title: 'خطا', message: '$e');
+      }
+      finally{
+        hideWaiting(context);
+      }
+    });
+  }
 }

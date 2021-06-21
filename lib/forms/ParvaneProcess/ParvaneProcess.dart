@@ -358,6 +358,7 @@ class MeetingList extends StatelessWidget {
             'شماره مصوبه',
             Text('خلاصه نظر', style: gridFieldStyle()).expand(flex: 2)
           ],
+          endbuttons: 2,
         ),
         StreamBuilder<PPMeetingModel>(
           stream: this.bloc.ppMeetingstream,
@@ -391,10 +392,13 @@ class MeetingList extends StatelessWidget {
                           : '${meet.mosavabeno}'.toLabel().expand(),
                         meet.edit
                           ? GridTextField(hint: 'خلاصه نظر', initialValue: meet.note, onChange: (val)=>meet.note = val).expand(flex: 2)
-                          : meet.note.toLabel().expand(),
+                          : meet.note.toLabel().expand(flex: 2),
+                        meet.id > 1 && !meet.edit
+                          ? MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delPPStepMeeting(context, meet))
+                          : Container(width: 35),
                         meet.edit
                           ? MyIconButton(type: ButtonType.save, onPressed: (){meet.edate=_edate.text;meet.mdate=_mdate.text; bloc.savePPStepMeeting(context, meet);})
-                          : MyIconButton(type: ButtonType.edit, onPressed: ()=>bloc.editPPStepMeeting(meet))
+                          : MyIconButton(type: ButtonType.edit, onPressed: ()=>bloc.editPPStepMeeting(meet)),
                       ]
                     );
                   }
