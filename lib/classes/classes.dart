@@ -3254,5 +3254,67 @@ class ParvaneProcessMeeting{
         : 'مشروط';
 }
 
+class ParvaneProcessInspection{
+    int ppid;
+    int ppstepid;
+    int id;
+    String edate;
+    int peopid;
+    String peopfamily;
+    String bdate;
+    int res;
+    bool cashdesk;
+    int degree;
+    String note;
+    String token;
+    bool edit;
+ 
+    ParvaneProcessInspection({this.ppid = 0 ,this.ppstepid = 0 ,this.id = 0, this.edate, this.peopid = 0 ,this.peopfamily ,this.bdate ,this.res = 0 ,this.cashdesk,this.degree = 0 ,this.note, this.token, this.edit=false});
+ 
+    ParvaneProcessInspection.fromJson(Map<String, dynamic> json):
+        ppid = json['ppid'],
+        ppstepid = json['ppstepid'],
+        id = json['id'],
+        edate = json['edate'],
+        peopid = json['peopid'],
+        peopfamily = json['peopfamily'],
+        bdate = json['bdate'],
+        res = json['res'],
+        cashdesk = json['cashdesk'] == 1,
+        degree = json['degree'],
+        note = json['note'],
+        edit = false;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['ppid'] = this.ppid;
+        data['ppstepid'] = this.ppstepid;
+        data['id'] = this.id;
+        data['edate'] = this.edate;
+        data['peopid'] = this.peopid;
+        data['peopfamily'] = this.peopfamily;
+        data['bdate'] = this.bdate;
+        data['res'] = this.res;
+        data['cashdesk'] = this.cashdesk ? 1 : 0;
+        data['degree'] = this.degree;
+        data['note'] = this.note;
+        data['token'] = this.token;
+        return data;
+    }
+
+    String get resName => this.res==1 
+      ? 'قبول'
+      : this.res==2
+        ? 'رد'
+        : 'مشروط';
+
+    String get degreeName => this.degree==1 
+       ? 'درجه یک'
+       : this.degree==2
+        ? 'درجه دو'
+        : this.degree==3
+          ? 'درجه سه'
+          : 'درجه چهار';
+}
 
 

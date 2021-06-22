@@ -1834,6 +1834,7 @@ class ParvaneRepository{
     return true;
   }
 
+
   Future<List<ParvaneProcessMeeting>> loadParvaneProcessMeeting(int ppid, int ppstepid) async{
     List<Map<String, dynamic>> _data = await postMethod(api: 'ParvaneProcess/StepMeeting', body: jsonEncode({"id": ppid, "stepid": ppstepid}));
     return _data.map<ParvaneProcessMeeting>((data) => ParvaneProcessMeeting.fromJson(data)).toList();
@@ -1846,6 +1847,32 @@ class ParvaneRepository{
 
   Future<bool> delParvaneProcessMeeting(ParvaneProcessMeeting data) async{
      Map<String, dynamic> _data = await delToServer(api: 'ParvaneProcess/StepMeeting', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': data.token,
+       'ppid': data.ppid.toString(),
+       'ppstepid': data.ppstepid.toString(),
+       'id': data.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
+
+
+  Future<List<ParvaneProcessInspection>> loadParvaneProcessInspection(int ppid, int ppstepid) async{
+    List<Map<String, dynamic>> _data = await postMethod(api: 'ParvaneProcess/StepInspection', body: jsonEncode({"id": ppid, "stepid": ppstepid}));
+    return _data.map<ParvaneProcessInspection>((data) => ParvaneProcessInspection.fromJson(data)).toList();
+  }
+
+  Future<bool> saveParvaneProcessInspection(ParvaneProcessInspection data) async{
+    await putMethod(api: 'ParvaneProcess/StepInspection', body: jsonEncode(data.toJson()));
+    return true;
+  }
+
+  Future<bool> delParvaneProcessInspection(ParvaneProcessInspection data) async{
+     Map<String, dynamic> _data = await delToServer(api: 'ParvaneProcess/StepInspection', 
       header: {
        'Content-Type': 'application/json',
        'token': data.token,

@@ -161,6 +161,8 @@ class ParvaneProcessStepDetail extends StatelessWidget {
                         bloc.showPPStepDocument(context, pprow.id, e.id);
                       if (e.kind == 2)
                         bloc.showPPStepMeeting(context, pprow.id, e.id);
+                      if (e.kind == 3)
+                        bloc.showPPStepInspection(context, pprow.id, e.id);
                       if (e.kind == 4)
                         bloc.showPPStepIncome(context, pprow.id, e.id);
                       stepid.setValue(e); 
@@ -185,9 +187,11 @@ class ParvaneProcessStepDetail extends StatelessWidget {
               ? DocumentList(bloc: this.bloc)
               : cstp.hasData &&  cstp.data.kind == 2
                 ? MeetingList(bloc: this.bloc)
-                : cstp.hasData &&  cstp.data.kind == 4
-                  ? IncomeList(bloc: this.bloc)
-                  : Container()
+                : cstp.hasData &&  cstp.data.kind == 3
+                  ? InspectionList(bloc: this.bloc)
+                  : cstp.hasData &&  cstp.data.kind == 4
+                    ? IncomeList(bloc: this.bloc)
+                    : Container()
           ],
         );
       }
@@ -399,6 +403,85 @@ class MeetingList extends StatelessWidget {
                         meet.edit
                           ? MyIconButton(type: ButtonType.save, onPressed: (){meet.edate=_edate.text;meet.mdate=_mdate.text; bloc.savePPStepMeeting(context, meet);})
                           : MyIconButton(type: ButtonType.edit, onPressed: ()=>bloc.editPPStepMeeting(meet)),
+                      ]
+                    );
+                  }
+                );
+            return Center(child: CupertinoActivityIndicator());
+          }
+        ).expand(),
+      ],
+    ).expand();
+  }
+}
+
+class InspectionList extends StatelessWidget {
+  final PPrcBloc bloc;
+  const InspectionList({@required this.bloc, Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    TextEditingController _edate = TextEditingController();
+    TextEditingController _bdate = TextEditingController();
+    return Column(
+      children: [
+        GridCaption(
+          obj: [
+            'تاریخ ارجاع',
+            'بازرس',
+            'تاریخ بازرسی',
+            'نتیجه',
+            'صندوق',
+            'درجه',
+            Text('خلاصه نظر', style: gridFieldStyle()).expand(flex: 2)
+          ],
+          endbuttons: 2,
+        ),
+        StreamBuilder<PPInspectionModel>(
+          stream: this.bloc.ppInspectionstream,
+          builder: (context, snap){
+            if (snap.hasData)
+              if (snap.data.status == Status.error)
+                return ErrorInGrid('${snap.data.msg}');
+              else if (snap.data.status == Status.loaded)
+                return ListView.builder(
+                  itemCount: snap.data.rows.length,
+                  itemBuilder: (context, idx){
+                    ParvaneProcessInspection insp = snap.data.rows[idx];
+                    if (insp.edit){
+                      _edate.text = insp.edate;
+                      _bdate.text = insp.bdate;
+                    }
+                    return MyRow(
+                      onDoubleTap: ()=>bloc.editPPStepInspection(insp),
+                      children: [
+                        insp.edit
+                          ? GridTextField(hint: 'تاریخ ارجاع', controller: _edate, datepicker: true).expand()
+                          : insp.edate.toLabel().expand(),
+                        insp.edit
+                          ? GridTextField(hint: 'بازرس', initialValue: insp.peopfamily).expand()
+                          : insp.peopfamily.toLabel().expand(),
+                        insp.edit
+                          ? GridTextField(hint: 'تاریخ بازرسی', controller: _bdate, datepicker: true).expand()
+                          : insp.bdate.toLabel().expand(),
+                        insp.edit
+                          ? DropDownButton(val: insp.degree, items: [{'id': 0, 'title': ''},{'id': 1, 'title': 'درجه یک'},{'id': 2, 'title': 'درجه دو'},{'id': 3, 'title': 'درجه سه'},{'id': 4, 'title': 'درجه چهار'}], hint: 'درجه', onChange: (val)=>insp.degree=val).expand()
+                          : insp.degreeName.toLabel().expand(),
+                        insp.edit
+                          ? RadioButton(val: insp.cashdesk, hint: 'صندوق', onChange: (val)=>insp.cashdesk=val)
+                          : RadioButton(val: insp.cashdesk, hint: 'صندوق', onChange: (val){}),
+                        insp.edit
+                          ? DropDownButton(val: insp.res, items: [{'id': 0, 'title': ''},{'id': 1, 'title': 'قبول'},{'id': 2, 'title': 'رد'},{'id': 3, 'title': 'مشروط'}], hint: 'نتیجه', onChange: (val)=>insp.res=val).expand()
+                          : insp.resName.toLabel().expand(),
+                        insp.edit
+                          ? GridTextField(hint: 'خلاصه نظر', initialValue: insp.note, onChange: (val)=>insp.note = val).expand(flex: 2)
+                          : insp.note.toLabel().expand(flex: 2),
+                        insp.id > 1 && !insp.edit
+                          ? MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delPPStepInspection(context, insp))
+                          : Container(width: 35),
+                        insp.edit
+                          ? MyIconButton(type: ButtonType.save, onPressed: (){insp.edate=_edate.text;insp.bdate=_bdate.text; bloc.savePPStepInspection(context, insp);})
+                          : MyIconButton(type: ButtonType.edit, onPressed: ()=>bloc.editPPStepInspection(insp)),
                       ]
                     );
                   }

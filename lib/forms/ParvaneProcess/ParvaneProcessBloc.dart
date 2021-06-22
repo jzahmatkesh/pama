@@ -40,6 +40,13 @@ class PPMeetingModel{
 
   PPMeetingModel({@required this.status, this.rows, this.msg});
 }
+class PPInspectionModel{
+  Status status;
+  List<ParvaneProcessInspection> rows;
+  String msg;
+
+  PPInspectionModel({@required this.status, this.rows, this.msg});
+}
 
 
 class PPrcBloc{
@@ -60,6 +67,10 @@ class PPrcBloc{
   BehaviorSubject<PPMeetingModel> _ppMeetingbloc = BehaviorSubject<PPMeetingModel>.seeded(PPMeetingModel(status: Status.loading));
   Stream<PPMeetingModel> get ppMeetingstream => _ppMeetingbloc.stream;
   PPMeetingModel get ppMeetingvalue => _ppMeetingbloc.value;
+    
+  BehaviorSubject<PPInspectionModel> _ppInspectionbloc = BehaviorSubject<PPInspectionModel>.seeded(PPInspectionModel(status: Status.loading));
+  Stream<PPInspectionModel> get ppInspectionstream => _ppInspectionbloc.stream;
+  PPInspectionModel get ppInspectionvalue => _ppInspectionbloc.value;
     
   BehaviorSubject<ParvaneProcessModel> _pprocessbloc = BehaviorSubject<ParvaneProcessModel>.seeded(ParvaneProcessModel(status: Status.loading));
   Stream<ParvaneProcessModel> get pprocessstream => _pprocessbloc.stream;
@@ -211,6 +222,55 @@ class PPrcBloc{
         data.token = readToken(context);
         await _repository.delParvaneProcessMeeting(data);
         showPPStepMeeting(context, data.ppid, data.ppstepid);
+      }
+      catch(e){
+        myAlert(context: context, title: 'خطا', message: '$e');
+      }
+      finally{
+        hideWaiting(context);
+      }
+    });
+  }
+
+  showPPStepInspection(BuildContext context, int ppid, int stepid) async{
+    try{
+      _ppInspectionbloc.add(PPInspectionModel(status: Status.loading));
+      _ppInspectionbloc.add(PPInspectionModel(status: Status.loaded, rows: await _repository.loadParvaneProcessInspection(ppid, stepid)));
+    }
+    catch(e){
+      _ppInspectionbloc.add(PPInspectionModel(status: Status.error, msg: '$e'));
+    }
+  }
+  editPPStepInspection(ParvaneProcessInspection data){
+    _ppInspectionbloc.value.rows.forEach((element)=>element.edit = element.id == data.id && !data.edit);
+    _ppInspectionbloc.add(_ppInspectionbloc.value);
+  }
+  savePPStepInspection(BuildContext context, ParvaneProcessInspection data) async{
+    if (data.edate.trim().isEmpty || data.bdate.trim().isEmpty || data.res==0 || data.degree==0 || data.note.trim().isEmpty)
+      myAlert(context: context, title: 'خطا', message: 'تمامی مقادیر می بایست مشخص گردد');
+    else
+      try{
+        showWaiting(context);
+        data.token = readToken(context);
+        await _repository.saveParvaneProcessInspection(data);
+        data.edit = false;
+        _ppInspectionbloc.add(_ppInspectionbloc.value); 
+        showPPStepInspection(context, data.ppid, data.ppstepid);
+      }
+      catch(e){
+        myAlert(context: context, title: 'خطا', message: '$e');
+      }
+      finally{
+        hideWaiting(context);
+      }
+  }
+  delPPStepInspection(BuildContext context, ParvaneProcessInspection data){
+    confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف بازرسی می باشید؟', yesclick: () async{
+      try{
+        showWaiting(context);
+        data.token = readToken(context);
+        await _repository.delParvaneProcessInspection(data);
+        showPPStepInspection(context, data.ppid, data.ppstepid);
       }
       catch(e){
         myAlert(context: context, title: 'خطا', message: '$e');
