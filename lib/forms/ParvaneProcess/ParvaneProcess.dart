@@ -430,12 +430,12 @@ class InspectionList extends StatelessWidget {
             'تاریخ ارجاع',
             'بازرس',
             'تاریخ بازرسی',
-            'نتیجه',
-            'صندوق',
             'درجه',
+            'صندوق',
+            'نتیجه',
             Text('خلاصه نظر', style: gridFieldStyle()).expand(flex: 2)
           ],
-          endbuttons: 2,
+          endbuttons: 1,
         ),
         StreamBuilder<PPInspectionModel>(
           stream: this.bloc.ppInspectionstream,
@@ -459,7 +459,7 @@ class InspectionList extends StatelessWidget {
                           ? GridTextField(hint: 'تاریخ ارجاع', controller: _edate, datepicker: true).expand()
                           : insp.edate.toLabel().expand(),
                         insp.edit
-                          ? GridTextField(hint: 'بازرس', initialValue: insp.peopfamily).expand()
+                          ? ForeignKeyField(hint: 'بازرس', initialValue: {'id': insp.peopid, 'name': insp.peopfamily}, onChange: (val){if (val != null){insp.peopid = val['id']; insp.peopfamily = val['name'];}}, f2key: 'Inspection').expand()
                           : insp.peopfamily.toLabel().expand(),
                         insp.edit
                           ? GridTextField(hint: 'تاریخ بازرسی', controller: _bdate, datepicker: true).expand()
@@ -468,8 +468,8 @@ class InspectionList extends StatelessWidget {
                           ? DropDownButton(val: insp.degree, items: [{'id': 0, 'title': ''},{'id': 1, 'title': 'درجه یک'},{'id': 2, 'title': 'درجه دو'},{'id': 3, 'title': 'درجه سه'},{'id': 4, 'title': 'درجه چهار'}], hint: 'درجه', onChange: (val)=>insp.degree=val).expand()
                           : insp.degreeName.toLabel().expand(),
                         insp.edit
-                          ? RadioButton(val: insp.cashdesk, hint: 'صندوق', onChange: (val)=>insp.cashdesk=val)
-                          : RadioButton(val: insp.cashdesk, hint: 'صندوق', onChange: (val){}),
+                          ? RadioButton(val: insp.cashdesk, hint: 'صندوق', onChange: (val)=>insp.cashdesk=val).setPadding(padd: EdgeInsets.symmetric(horizontal: 5))
+                          : Switch(value: insp.cashdesk, onChanged: (val){}).setPadding(padd: EdgeInsets.symmetric(horizontal: 5)),
                         insp.edit
                           ? DropDownButton(val: insp.res, items: [{'id': 0, 'title': ''},{'id': 1, 'title': 'قبول'},{'id': 2, 'title': 'رد'},{'id': 3, 'title': 'مشروط'}], hint: 'نتیجه', onChange: (val)=>insp.res=val).expand()
                           : insp.resName.toLabel().expand(),

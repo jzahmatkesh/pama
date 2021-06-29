@@ -3283,7 +3283,7 @@ class ParvaneProcessInspection{
         cashdesk = json['cashdesk'] == 1,
         degree = json['degree'],
         note = json['note'],
-        edit = false;
+        edit= false || (json['res'] ?? 0) == 0;
  
     Map<String, dynamic> toJson(){
         final Map<String, dynamic> data = new Map<String, dynamic>();
