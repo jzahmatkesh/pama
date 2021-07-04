@@ -179,7 +179,35 @@ class ParvaneProcessStepDetail extends StatelessWidget {
                       child: Text('${e.kindName()}').center(),
                     )
                   ).hMargin().expand()).toList(),
-                Expanded(flex: 3, child: Container())
+                Expanded(flex: 2, child: Container()),
+                Container(
+                  width: 170,
+                  decoration: BoxDecoration(
+                    borderRadius:BorderRadius.circular(12),
+                    border: Border.all(color: Colors.black12)
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius:BorderRadius.only(topRight: Radius.circular(12), bottomRight: Radius.circular(12)),
+                          color: Colors.blueAccent.withOpacity(0.35)
+                        ),
+                        child: Center(child: Text('ثبت شده', style: TextStyle(fontWeight: FontWeight.bold,))),
+                      ).expand(),
+                      Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius:BorderRadius.only(topLeft: Radius.circular(12), bottomLeft: Radius.circular(12)),
+                          // color: Colors.deepOrangeAccent
+                        ),
+                        child: Center(child: Text('ثبت نشده', style: TextStyle(fontWeight: FontWeight.bold))),
+                      ).expand()
+                    ],
+                  )
+                ),
+                SizedBox(width: 25)
               ],
             ),
             SizedBox(height: 10),
