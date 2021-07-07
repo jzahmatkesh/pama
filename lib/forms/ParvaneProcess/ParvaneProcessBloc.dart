@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -50,7 +52,7 @@ class PPInspectionModel{
 
 
 class PPrcBloc{
-  ParvaneRepository _repository = ParvaneRepository();
+  ParvaneProcessRepository _repository = ParvaneProcessRepository();
     
   BehaviorSubject<PPrcModel> _bloc = BehaviorSubject<PPrcModel>.seeded(PPrcModel(status: Status.loading));
   Stream<PPrcModel> get stream => _bloc.stream;
@@ -136,6 +138,27 @@ class PPrcBloc{
     }
     catch(e){
       _pprocessbloc.add(ParvaneProcessModel(status: Status.error, msg: '$e'));
+    }
+    finally{
+      hideWaiting(context);
+    }
+  }
+  
+  finishParvaneProcessStep(BuildContext context, int processid, Prcstep step) async{
+    try{
+      showWaiting(context);
+      step.token = readToken(context);
+      step.processid = processid;
+print("${step.toJson()}");
+      bool _res = await _repository.finishParavneProcessStep(step);
+      String _steps = _pprocessbloc.value.rows.where((element) => element.id==step.processid).first.steps;
+print("before: $_steps");
+      _steps = (json.decode(_steps) as List).map((e){if (e['id'] == step.id) e['finish'] = _res ? 1 : 0;}).toString();
+print("after: $_steps");
+      _pprocessbloc.add(_pprocessbloc.value);
+    }
+    catch(e){
+      myAlert(context: context, title: 'خطا', message: '$e');
     }
     finally{
       hideWaiting(context);

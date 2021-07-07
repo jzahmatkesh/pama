@@ -9,31 +9,33 @@ import '../../module/theme-Manager.dart';
 import '../Dashboard/Dashboard.dart';
 import 'LoginBloc.dart';
 
+LoginBloc _loginBloc;
+
 class Login extends StatelessWidget {
   const Login({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    LoginBloc _loginBloc = LoginBloc();
+    if (_loginBloc == null){
+      _loginBloc = LoginBloc();
+      _loginBloc.stream$.listen((data){
+        if (data.status == LoginStatus.error)
+          myAlert(context: context, title: 'خطا', message: data.msg);
+        else if (data.status == LoginStatus.loaded){
+            context.read<ThemeManager>().setToken(data.user.token, data.user.ejriat);
+            context.read<ThemeManager>().setUser(data.user);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Dashboard(user: data.user,)),
+            );
+        }
+      });
+      Future.delayed(Duration(milliseconds: 3), (){
+        _loginBloc.verify();
+      });
+    }
 
-    Future.delayed(Duration(milliseconds: 3)).then((e){
-      _loginBloc.verify();
-    });
-
-    _loginBloc.stream$.listen((data){
-      if (data.status == LoginStatus.error)
-        myAlert(context: context, title: 'خطا', message: data.msg);
-      else if (data.status == LoginStatus.loaded){
-          context.read<ThemeManager>().setToken(data.user.token, data.user.ejriat);
-          context.read<ThemeManager>().setUser(data.user);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => Dashboard(user: data.user,)),
-          );
-      }
-    });
     Map<String, String> _logindata = {'username': '', 'pass': ''};
-
 
     return Scaffold(
       body: SafeArea(

@@ -2132,10 +2132,11 @@ class Prcstep{
     bool restart;
     bool sms;
     bool err27;
+    bool finish;
     String token;
     bool edit;
  
-    Prcstep({this.processid,this.id,this.active,this.kind,this.length=0,this.startprevend,this.restart,this.sms,this.err27, this.token, this.edit=false});
+    Prcstep({this.processid,this.id,this.active,this.kind,this.length=0,this.startprevend,this.restart,this.sms,this.err27, this.token, this.edit=false, this.finish});
  
     Prcstep.fromJson(Map<String, dynamic> json):
         processid = json['processid'],
@@ -2146,6 +2147,7 @@ class Prcstep{
         startprevend = json['startprevend'] == 1,
         restart = json['restart'] == 1,
         sms = json['sms'] == 1,
+        finish = json['finish'] == 1,
         err27 = json['err27'] == 1,
         edit = false;
  
@@ -2159,6 +2161,7 @@ class Prcstep{
         data['startprevend'] = this.startprevend ? 1 : 0;
         data['restart'] = this.restart ? 1 : 0;
         data['sms'] = this.sms ? 1 : 0;
+        data['finish'] = this.finish ? 1 : 0;
         data['err27'] = this.err27 ? 1 : 0;
         data['token'] = this.token;
         return data;

@@ -180,39 +180,44 @@ class ParvaneProcessStepDetail extends StatelessWidget {
                     )
                   ).hMargin().expand()).toList(),
                 Expanded(flex: 2, child: Container()),
-                Container(
-                  width: 170,
-                  decoration: BoxDecoration(
-                    borderRadius:BorderRadius.circular(12),
-                    border: Border.all(color: Colors.black12)
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius:BorderRadius.only(topRight: Radius.circular(12), bottomRight: Radius.circular(12)),
-                          color: Colors.blueAccent.withOpacity(0.35)
-                        ),
-                        child: Center(child: Text('ثبت شده', style: TextStyle(fontWeight: FontWeight.bold,))),
-                      ).expand(),
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius:BorderRadius.only(topLeft: Radius.circular(12), bottomLeft: Radius.circular(12)),
-                          // color: Colors.deepOrangeAccent
-                        ),
-                        child: Center(child: Text('ثبت نشده', style: TextStyle(fontWeight: FontWeight.bold))),
-                      ).expand()
-                    ],
+                cstp.hasData && cstp.data.kind >= 1 && cstp.data.kind <= 4
+                  ? InkWell(
+                    onTap: ()=>bloc.finishParvaneProcessStep(context, pprow.id, cstp.data),
+                    child: Container(
+                      width: 170,
+                      decoration: BoxDecoration(
+                        borderRadius:BorderRadius.circular(12),
+                        border: Border.all(color: Colors.black12)
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 40,
+                            decoration: BoxDecoration(
+                              borderRadius:BorderRadius.only(topRight: Radius.circular(12), bottomRight: Radius.circular(12)),
+                              color: cstp.data.finish ? Colors.blueAccent.withOpacity(0.35) : Colors.white
+                            ),
+                            child: Center(child: Text('ثبت شده', style: TextStyle(fontWeight: FontWeight.bold,))),
+                          ).expand(),
+                          Container(
+                            height: 40,
+                            decoration: BoxDecoration(
+                              borderRadius:BorderRadius.only(topLeft: Radius.circular(12), bottomLeft: Radius.circular(12)),
+                              color: !cstp.data.finish ? Colors.red.withOpacity(0.35) : Colors.white
+                            ),
+                            child: Center(child: Text('ثبت نشده', style: TextStyle(fontWeight: FontWeight.bold))),
+                          ).expand()
+                        ],
+                      )
+                    ),
                   )
-                ),
+                  : Container(),
                 SizedBox(width: 25)
               ],
             ),
             SizedBox(height: 10),
             cstp.hasData &&  cstp.data.kind == 1
-              ? DocumentList(bloc: this.bloc)
+              ? DocumentList(bloc: this.bloc, finish: cstp.data.finish)
               : cstp.hasData &&  cstp.data.kind == 2
                 ? MeetingList(bloc: this.bloc)
                 : cstp.hasData &&  cstp.data.kind == 3
@@ -229,7 +234,8 @@ class ParvaneProcessStepDetail extends StatelessWidget {
 
 class DocumentList extends StatelessWidget {
   final PPrcBloc bloc;
-  const DocumentList({@required this.bloc, Key key }) : super(key: key);
+  final bool finish;
+  const DocumentList({@required this.bloc,@required this.finish, Key key }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -262,12 +268,14 @@ class DocumentList extends StatelessWidget {
                           ),
                           child: Row(
                             children: [
-                              MyIconButton(
-                                type: ButtonType.other, 
-                                hint: 'آپلود مدرک', 
-                                icon: Icon(Icons.upload_outlined), 
-                                onPressed: ()=>prcUploadImg(context: context, id: e.ppid, id1: e.ppstepid, id2: e.id, tag: 'TBPPSDocument', function: (str){e.attachname=str; bloc.refreshDocument();}),
-                              ),
+                              this.finish
+                                ? Container()
+                                : MyIconButton(
+                                  type: ButtonType.other, 
+                                  hint: 'آپلود مدرک', 
+                                  icon: Icon(Icons.upload_outlined), 
+                                  onPressed: ()=>prcUploadImg(context: context, id: e.ppid, id1: e.ppstepid, id2: e.id, tag: 'TBPPSDocument', function: (str){e.attachname=str; bloc.refreshDocument();}),
+                                ),
                               Column(
                                 children: [
                                   Text('${e.documentname}', textAlign: TextAlign.center,),

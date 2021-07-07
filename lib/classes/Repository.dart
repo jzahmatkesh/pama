@@ -1789,7 +1789,9 @@ class ParvaneRepository{
     await putMethod(api: 'Parvane/Regiser', body: jsonEncode({'token': obj.token, 'id': obj.id, 'register': obj.register ? 1 : 0}));
     return true;
   }
+}
 
+class ParvaneProcessRepository{
 
   Future<List<Process>> loadParvaneNewProcess(Parvane obj) async{
     List<Map<String, dynamic>> _data = await postMethod(api: 'ParvaneProcess/newlist', body: jsonEncode(obj.toJson()));
@@ -1886,6 +1888,8 @@ class ParvaneRepository{
     throw Exception(_data['msg']);
   }
 
+  Future<bool> finishParavneProcessStep(Prcstep step) async{
+    Map<String, dynamic> _data = await putMethod(api: 'ParvaneProcess/FinishStep', body: jsonEncode(step.toJson()));
+    return _data['finish'];
+  }
 }
-
-
