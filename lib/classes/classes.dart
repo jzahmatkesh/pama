@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:pama/module/consts.dart';
@@ -2132,11 +2131,10 @@ class Prcstep{
     bool restart;
     bool sms;
     bool err27;
-    bool finish;
     String token;
     bool edit;
  
-    Prcstep({this.processid,this.id,this.active,this.kind,this.length=0,this.startprevend,this.restart,this.sms,this.err27, this.token, this.edit=false, this.finish});
+    Prcstep({this.processid,this.id,this.active,this.kind,this.length=0,this.startprevend,this.restart,this.sms,this.err27, this.token, this.edit=false});
  
     Prcstep.fromJson(Map<String, dynamic> json):
         processid = json['processid'],
@@ -2147,7 +2145,6 @@ class Prcstep{
         startprevend = json['startprevend'] == 1,
         restart = json['restart'] == 1,
         sms = json['sms'] == 1,
-        finish = json['finish'] == 1,
         err27 = json['err27'] == 1,
         edit = false;
  
@@ -2161,7 +2158,6 @@ class Prcstep{
         data['startprevend'] = this.startprevend ? 1 : 0;
         data['restart'] = this.restart ? 1 : 0;
         data['sms'] = this.sms ? 1 : 0;
-        data['finish'] = this.finish ? 1 : 0;
         data['err27'] = this.err27 ? 1 : 0;
         data['token'] = this.token;
         return data;
@@ -3066,6 +3062,77 @@ class ParvanePersonel{
     String get kindname => this.kind==1 ? 'تمام وقت' : 'نیمه وقت';
 }
 
+class PPStep{
+    int ppid;
+    int id;
+    int kind;
+    bool startprevend;
+    bool restart;
+    bool sms;
+    bool err27;
+    int length;
+    bool show;
+    bool finish;
+    String finishdate;
+    String edate;
+    int remainday;
+    String token;
+ 
+    PPStep({this.ppid = 0 ,this.id = 0 ,this.kind = 0 ,this.startprevend = false ,this.restart = false ,this.sms = false ,this.err27 = false ,this.length = 0 ,this.finish = false, this.edate, this.finishdate, this.token, this.show, this.remainday});
+ 
+    PPStep.fromJson(Map<String, dynamic> json):
+        ppid = json['ppid'],
+        id = json['id'],
+        kind = json['kind'],
+        startprevend = json['startprevend'] == 1,
+        restart = json['restart'] == 1,
+        sms = json['sms'] == 1,
+        err27 = json['err27'] == 1,
+        length = json['length'],
+        finish = json['finish'] == 1,
+        finishdate = json['finishdate'],
+        remainday = json['remainday'],
+        edate = json['edate'],
+        show = false;
+ 
+    Map<String, dynamic> toJson(){
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['ppid'] = this.ppid;
+        data['id'] = this.id;
+        // data['kind'] = this.kind;
+        // data['startprevend'] = this.startprevend;
+        // data['restart'] = this.restart;
+        // data['sms'] = this.sms;
+        // data['err27'] = this.err27;
+        // data['length'] = this.length;
+        data['finish'] = this.finish ? 1 : 0;
+        // data['finishdate'] = this.finishdate;
+        data['token'] = this.token;
+        return data;
+    }
+
+    String kindName(){
+      switch (this.kind) {
+        case 1:
+          return 'مدرک';
+          break;
+        case 2:
+          return 'هیئت مدیره';
+          break;
+        case 3:
+          return 'بازرسی';
+          break;
+        case 4:
+          return 'حسابداری';
+          break;
+        case 5:
+          return 'آموزش';
+          break;
+      }
+      return "";
+    }
+}
+
 class ParvaneProcess{
     int id;
     int parvaneid;
@@ -3077,7 +3144,7 @@ class ParvaneProcess{
     String startdate;
     int dayremind;
     String enddate;
-    String steps;
+    List<PPStep> steps;
     String token;
     bool showSteps;
  
@@ -3094,7 +3161,6 @@ class ParvaneProcess{
         startdate = json['startdate'],
         dayremind = json['dayremind'],
         enddate = json['enddate'],
-        steps = json['steps'],
         showSteps = false;
  
     Map<String, dynamic> toJson(){
@@ -3108,8 +3174,6 @@ class ParvaneProcess{
         data['token'] = this.token;
         return data;
     }
-
-    List<Prcstep> get stepsList => (json.decode(this.steps) as List).map((e) => Prcstep.fromJson(e)).toList();
 }
 
 class ParvaneProcessDocument{

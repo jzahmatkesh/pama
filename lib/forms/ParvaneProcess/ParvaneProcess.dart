@@ -145,88 +145,150 @@ class ParvaneProcessStepDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){                                 
-    Bloc<Prcstep> stepid = Bloc<Prcstep>();
-    return StreamBuilder<Prcstep>(
-      stream: stepid.stream$,
-      builder: (context, cstp) {
-        return Column(
-          children: [
-            Row(
+    void stepclicked(PPStep e){
+      if (e.kind == 1)
+        bloc.showPPStepDocument(context, pprow.id, e.id);
+      if (e.kind == 2)
+        bloc.showPPStepMeeting(context, pprow.id, e.id);
+      if (e.kind == 3)
+        bloc.showPPStepInspection(context, pprow.id, e.id);
+      if (e.kind == 4)
+        bloc.showPPStepIncome(context, pprow.id, e.id);
+      bloc.showPPStepDetail(e);     
+    }
+
+    return StreamBuilder<PPStepModel>(
+      stream: bloc.ppStepstream,
+      builder: (context, snap) {
+        if (snap.hasData)
+          if (snap.data.status == Status.error)
+            return ErrorInGrid('${snap.data.msg}');
+          else if (snap.data.status == Status.loaded){
+            PPStep _activestep;
+            if (snap.data.rows.where((element) => element.show).length > 0)
+              _activestep = snap.data.rows.where((element) => element.show).first;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(width: 10),
-                ...pprow.stepsList.map((e) => 
-                  InkWell(
-                    onTap: (){
-                      if (e.kind == 1)
-                        bloc.showPPStepDocument(context, pprow.id, e.id);
-                      if (e.kind == 2)
-                        bloc.showPPStepMeeting(context, pprow.id, e.id);
-                      if (e.kind == 3)
-                        bloc.showPPStepInspection(context, pprow.id, e.id);
-                      if (e.kind == 4)
-                        bloc.showPPStepIncome(context, pprow.id, e.id);
-                      stepid.setValue(e); 
-                    },
-                    hoverColor: accentcolor(context).withOpacity(0.25),
-                    highlightColor: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(15),
-                    child: Container(
-                      height: 45,
-                      decoration: BoxDecoration(
+                Row(
+                  children: [
+                    SizedBox(width: 10),
+                    ...snap.data.rows.map((e) => 
+                      InkWell(
+                        onTap: ()=>stepclicked(e),
+                        hoverColor: accentcolor(context).withOpacity(0.25),
+                        highlightColor: Colors.grey.shade100,
                         borderRadius: BorderRadius.circular(15),
-                        color: cstp.hasData && cstp.data.id == e.id ? accentcolor(context).withOpacity(0.3) : Colors.grey.withOpacity(0.1),
-                      ),
-                      child: Text('${e.kindName()}').center(),
-                    )
-                  ).hMargin().expand()).toList(),
-                Expanded(flex: 2, child: Container()),
-                cstp.hasData && cstp.data.kind >= 1 && cstp.data.kind <= 4
-                  ? InkWell(
-                    onTap: ()=>bloc.finishParvaneProcessStep(context, pprow.id, cstp.data),
-                    child: Container(
-                      width: 170,
-                      decoration: BoxDecoration(
-                        borderRadius:BorderRadius.circular(12),
-                        border: Border.all(color: Colors.black12)
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 40,
+                        child: Container(
+                          height: 45,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: e.show ? accentcolor(context).withOpacity(0.3) : Colors.grey.withOpacity(0.1),
+                          ),
+                          child: Text('${e.kindName()}').center(),
+                        )
+                      ).hMargin().expand()).toList(),
+                    Expanded(flex: 2, child: Container()),
+                    _activestep != null
+                      ? InkWell(
+                          onTap: ()=>bloc.finishParvaneProcessStep(context, _activestep),
+                          child: Container(
+                            width: 170,
                             decoration: BoxDecoration(
-                              borderRadius:BorderRadius.only(topRight: Radius.circular(12), bottomRight: Radius.circular(12)),
-                              color: cstp.data.finish ? Colors.blueAccent.withOpacity(0.35) : Colors.white
+                              borderRadius:BorderRadius.circular(12),
+                              border: Border.all(color: Colors.black12)
                             ),
-                            child: Center(child: Text('ثبت شده', style: TextStyle(fontWeight: FontWeight.bold,))),
-                          ).expand(),
-                          Container(
-                            height: 40,
-                            decoration: BoxDecoration(
-                              borderRadius:BorderRadius.only(topLeft: Radius.circular(12), bottomLeft: Radius.circular(12)),
-                              color: !cstp.data.finish ? Colors.red.withOpacity(0.35) : Colors.white
-                            ),
-                            child: Center(child: Text('ثبت نشده', style: TextStyle(fontWeight: FontWeight.bold))),
-                          ).expand()
-                        ],
-                      )
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    borderRadius:BorderRadius.only(topRight: Radius.circular(12), bottomRight: Radius.circular(12)),
+                                    color: _activestep.finish ? Colors.blueAccent.withOpacity(0.35) : appbarColor(context),
+                                  ),
+                                  child: Center(child: Text('ثبت شده', style: TextStyle(fontWeight: FontWeight.bold,))),
+                                ).expand(),
+                                Container(
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    borderRadius:BorderRadius.only(topLeft: Radius.circular(12), bottomLeft: Radius.circular(12)),
+                                    color: !_activestep.finish ? Colors.red.withOpacity(0.35) : appbarColor(context),
+                                  ),
+                                  child: Center(child: Text('ثبت نشده', style: TextStyle(fontWeight: FontWeight.bold))),
+                                ).expand()
+                              ],
+                            )
+                          ),
+                        )
+                      : Container(),
+                    SizedBox(width: 25)
+                  ],
+                ),
+                Divider(),
+                _activestep != null
+                  ? Container(
+                    margin: EdgeInsets.all(6),
+                    padding: EdgeInsets.all(6),
+                    color: appbarColor(context),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(18),
+                          child: Row(
+                            children: [
+                              'تاریخ شروع مرحله: '.toLabel(bold: true),
+                              _activestep.edate.toLabel(),
+                            ],
+                          ), 
+                        ),
+                        Container(
+                          width: 2,
+                          height: 40,
+                          color: Colors.black12,
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(18),
+                          child: Row(
+                            children: [
+                              'مدت مرحله: '.toLabel(bold: true),
+                              '${_activestep.length} روز'.toLabel(),
+                            ],
+                          ), 
+                          // onSelected: (_){}
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(18),
+                          color: _activestep.remainday >= 0 ? Colors.green.shade300 : Colors.red.shade300,
+                          child: Row(
+                            children: [
+                              'مدت باقیمانده: '.toLabel(bold: true),
+                              '${_activestep.remainday < 0 ? ' ('+(_activestep.remainday*-1).toString()+') ' : _activestep.remainday} روز'.toLabel(),
+                            ],
+                          ), 
+                        ),
+                        _activestep.startprevend
+                          ? Container(padding: EdgeInsets.all(18), child: 'شروع با اتمام مرحله قبلی'.toLabel())
+                          : Container()
+                      ],
                     ),
                   )
-                  : Container(),
-                SizedBox(width: 25)
+                : Container(),
+                _activestep != null
+                  ? _activestep.kind == 1
+                    ? DocumentList(bloc: this.bloc, finish: _activestep.finish)
+                    : _activestep.kind == 2
+                      ? MeetingList(bloc: this.bloc, finish: _activestep.finish)
+                      : _activestep.kind == 3
+                        ? InspectionList(bloc: this.bloc, finish: _activestep.finish)
+                        : _activestep.kind == 4
+                          ? IncomeList(bloc: this.bloc, finish: _activestep.finish)
+                          : Container()
+                  : Container()
               ],
-            ),
-            SizedBox(height: 10),
-            cstp.hasData &&  cstp.data.kind == 1
-              ? DocumentList(bloc: this.bloc, finish: cstp.data.finish)
-              : cstp.hasData &&  cstp.data.kind == 2
-                ? MeetingList(bloc: this.bloc)
-                : cstp.hasData &&  cstp.data.kind == 3
-                  ? InspectionList(bloc: this.bloc)
-                  : cstp.hasData &&  cstp.data.kind == 4
-                    ? IncomeList(bloc: this.bloc)
-                    : Container()
-          ],
-        );
+            );
+        }
+        return Center(child: CupertinoActivityIndicator());
       }
     ).expand();
   }
@@ -255,7 +317,7 @@ class DocumentList extends StatelessWidget {
                     margin: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
-                      color: Colors.grey.shade100
+                      color: appbarColor(context)
                     ),
                     child: Column(
                       children: [
@@ -264,7 +326,7 @@ class DocumentList extends StatelessWidget {
                           padding: EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15)),
-                            color: Colors.amber.shade100
+                            color: accentcolor(context).withOpacity(0.35),
                           ),
                           child: Row(
                             children: [
@@ -306,7 +368,7 @@ class DocumentList extends StatelessWidget {
                           width: double.infinity,
                           padding: EdgeInsets.all(5),
                           decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
+                            color: accentcolor(context).withOpacity(0.35),
                             borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15)),
                           ),
                           child: Text('${e.attachname}', textAlign: TextAlign.left,)
@@ -325,7 +387,8 @@ class DocumentList extends StatelessWidget {
 
 class IncomeList extends StatelessWidget {
   final PPrcBloc bloc;
-  const IncomeList({@required this.bloc, Key key}) : super(key: key);
+  final bool finish;
+  const IncomeList({@required this.bloc, @required this.finish, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -352,22 +415,24 @@ class IncomeList extends StatelessWidget {
                   itemBuilder: (context, idx){
                     ParvaneProcessIncome income = snap.data.rows[idx];
                     return MyRow(
-                      onDoubleTap: ()=>bloc.editPPStepIncome(income),
+                      onDoubleTap: this.finish ? null : ()=>bloc.editPPStepIncome(income),
                       children: [
                         income.incomename.toLabel().expand(),                    
                         moneySeprator(income.price).toLabel().expand(),                    
-                        income.edit
+                        income.edit && !this.finish
                           ? GridTextField(hint: 'تاریخ پرداخت', initialValue: income.date, datepicker: true, onChange: (val)=>income.date = val).expand()
                           : income.date.toLabel().expand(),
-                        income.edit
+                        income.edit && !this.finish
                           ? GridTextField(hint: 'شناسه پرداخت', initialValue: income.shenase, onChange: (val)=>income.shenase = val).expand()
                           : income.shenase.toLabel().expand(),
-                        income.edit
+                        income.edit && !this.finish
                           ? GridTextField(hint: 'توضیحات', initialValue: income.note, onChange: (val)=>income.note = val).expand(flex: 2)
                           : income.note.toLabel().expand(),
-                        income.edit
-                          ? MyIconButton(type: ButtonType.save, onPressed: ()=>bloc.savePPStepIncome(context, income))
-                          : MyIconButton(type: ButtonType.edit, onPressed: ()=>bloc.editPPStepIncome(income))
+                        this.finish
+                          ? Container()
+                          : income.edit
+                            ? MyIconButton(type: ButtonType.save, onPressed: ()=>bloc.savePPStepIncome(context, income))
+                            : MyIconButton(type: ButtonType.edit, onPressed: ()=>bloc.editPPStepIncome(income))
                       ]
                     );
                   }
@@ -382,7 +447,8 @@ class IncomeList extends StatelessWidget {
 
 class MeetingList extends StatelessWidget {
   final PPrcBloc bloc;
-  const MeetingList({@required this.bloc, Key key}) : super(key: key);
+  final bool finish;
+  const MeetingList({@required this.bloc, @required this.finish, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -416,29 +482,33 @@ class MeetingList extends StatelessWidget {
                       _mdate.text = meet.mdate;
                     }
                     return MyRow(
-                      onDoubleTap: ()=>bloc.editPPStepMeeting(meet),
+                      onDoubleTap: this.finish ? null : ()=>bloc.editPPStepMeeting(meet),
                       children: [
-                        meet.edit
+                        meet.edit && !this.finish
                           ? GridTextField(hint: 'تاریخ ارجاع', controller: _edate, datepicker: true).expand()
                           : meet.edate.toLabel().expand(),
-                        meet.edit
+                        meet.edit && !this.finish
                           ? GridTextField(hint: 'تاریخ جلسه', controller: _mdate, datepicker: true).expand()
                           : meet.mdate.toLabel().expand(),
-                        meet.edit
+                        meet.edit && !this.finish
                           ? DropDownButton(val: meet.res, items: [{'id': 0, 'title': ''},{'id': 1, 'title': 'قبول'},{'id': 2, 'title': 'رد'},{'id': 3, 'title': 'مشروط'}], hint: 'نتیجه', onChange: (val)=>meet.res=val).expand()
                           : meet.resName.toLabel().expand(),
-                        meet.edit
+                        meet.edit && !this.finish
                           ? GridTextField(hint: 'شماره مصوبه', initialValue: '${meet.mosavabeno}', onChange: (val)=>meet.mosavabeno = int.tryParse(val)).expand()
                           : '${meet.mosavabeno}'.toLabel().expand(),
-                        meet.edit
+                        meet.edit && !this.finish
                           ? GridTextField(hint: 'خلاصه نظر', initialValue: meet.note, onChange: (val)=>meet.note = val).expand(flex: 2)
                           : meet.note.toLabel().expand(flex: 2),
-                        meet.id > 1 && !meet.edit
-                          ? MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delPPStepMeeting(context, meet))
-                          : Container(width: 35),
-                        meet.edit
-                          ? MyIconButton(type: ButtonType.save, onPressed: (){meet.edate=_edate.text;meet.mdate=_mdate.text; bloc.savePPStepMeeting(context, meet);})
-                          : MyIconButton(type: ButtonType.edit, onPressed: ()=>bloc.editPPStepMeeting(meet)),
+                         this.finish
+                          ? Container()
+                          : meet.id > 1 && !meet.edit
+                            ? MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delPPStepMeeting(context, meet))
+                            : Container(width: 35),
+                         this.finish
+                          ? Container()
+                          : meet.edit
+                            ? MyIconButton(type: ButtonType.save, onPressed: (){meet.edate=_edate.text;meet.mdate=_mdate.text; bloc.savePPStepMeeting(context, meet);})
+                            : MyIconButton(type: ButtonType.edit, onPressed: ()=>bloc.editPPStepMeeting(meet)),
                       ]
                     );
                   }
@@ -453,7 +523,8 @@ class MeetingList extends StatelessWidget {
 
 class InspectionList extends StatelessWidget {
   final PPrcBloc bloc;
-  const InspectionList({@required this.bloc, Key key}) : super(key: key);
+  final bool finish;
+  const InspectionList({@required this.bloc, @required this.finish, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -489,35 +560,39 @@ class InspectionList extends StatelessWidget {
                       _bdate.text = insp.bdate;
                     }
                     return MyRow(
-                      onDoubleTap: ()=>bloc.editPPStepInspection(insp),
+                      onDoubleTap: this.finish ? null : ()=>bloc.editPPStepInspection(insp),
                       children: [
-                        insp.edit
+                        insp.edit && !this.finish
                           ? GridTextField(hint: 'تاریخ ارجاع', controller: _edate, datepicker: true).expand()
                           : insp.edate.toLabel().expand(),
-                        insp.edit
+                        insp.edit && !this.finish
                           ? ForeignKeyField(hint: 'بازرس', initialValue: {'id': insp.peopid, 'name': insp.peopfamily}, onChange: (val){if (val != null){insp.peopid = val['id']; insp.peopfamily = val['name'];}}, f2key: 'Inspection').expand()
                           : insp.peopfamily.toLabel().expand(),
-                        insp.edit
+                        insp.edit && !this.finish
                           ? GridTextField(hint: 'تاریخ بازرسی', controller: _bdate, datepicker: true).expand()
                           : insp.bdate.toLabel().expand(),
-                        insp.edit
+                        insp.edit && !this.finish
                           ? DropDownButton(val: insp.degree, items: [{'id': 0, 'title': ''},{'id': 1, 'title': 'درجه یک'},{'id': 2, 'title': 'درجه دو'},{'id': 3, 'title': 'درجه سه'},{'id': 4, 'title': 'درجه چهار'}], hint: 'درجه', onChange: (val)=>insp.degree=val).expand()
                           : insp.degreeName.toLabel().expand(),
-                        insp.edit
+                        insp.edit && !this.finish
                           ? RadioButton(val: insp.cashdesk, hint: 'صندوق', onChange: (val)=>insp.cashdesk=val).setPadding(padd: EdgeInsets.symmetric(horizontal: 5))
                           : Switch(value: insp.cashdesk, onChanged: (val){}).setPadding(padd: EdgeInsets.symmetric(horizontal: 5)),
-                        insp.edit
+                        insp.edit && !this.finish
                           ? DropDownButton(val: insp.res, items: [{'id': 0, 'title': ''},{'id': 1, 'title': 'قبول'},{'id': 2, 'title': 'رد'},{'id': 3, 'title': 'مشروط'}], hint: 'نتیجه', onChange: (val)=>insp.res=val).expand()
                           : insp.resName.toLabel().expand(),
-                        insp.edit
+                        insp.edit && !this.finish
                           ? GridTextField(hint: 'خلاصه نظر', initialValue: insp.note, onChange: (val)=>insp.note = val).expand(flex: 2)
                           : insp.note.toLabel().expand(flex: 2),
-                        insp.id > 1 && !insp.edit
-                          ? MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delPPStepInspection(context, insp))
-                          : Container(width: 35),
-                        insp.edit
-                          ? MyIconButton(type: ButtonType.save, onPressed: (){insp.edate=_edate.text;insp.bdate=_bdate.text; bloc.savePPStepInspection(context, insp);})
-                          : MyIconButton(type: ButtonType.edit, onPressed: ()=>bloc.editPPStepInspection(insp)),
+                        this.finish
+                          ? Container()
+                          : insp.id > 1 && !insp.edit
+                            ? MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delPPStepInspection(context, insp))
+                            : Container(width: 35),
+                        this.finish
+                          ? Container()
+                          : insp.edit
+                            ? MyIconButton(type: ButtonType.save, onPressed: (){insp.edate=_edate.text;insp.bdate=_bdate.text; bloc.savePPStepInspection(context, insp);})
+                            : MyIconButton(type: ButtonType.edit, onPressed: ()=>bloc.editPPStepInspection(insp)),
                       ]
                     );
                   }

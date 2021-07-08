@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -20,6 +18,13 @@ class ParvaneProcessModel{
   String msg;
 
   ParvaneProcessModel({@required this.status, this.rows, this.msg});
+}
+class PPStepModel{
+  Status status;
+  List<PPStep> rows;
+  String msg;
+
+  PPStepModel({@required this.status, this.rows, this.msg});
 }
 class PPDocumentModel{
   Status status;
@@ -78,6 +83,11 @@ class PPrcBloc{
   Stream<ParvaneProcessModel> get pprocessstream => _pprocessbloc.stream;
   ParvaneProcessModel get pprocessvalue => _pprocessbloc.value;
 
+  BehaviorSubject<PPStepModel> _ppStepbloc = BehaviorSubject<PPStepModel>.seeded(PPStepModel(status: Status.loading));
+  Stream<PPStepModel> get ppStepstream => _ppStepbloc.stream;
+  PPStepModel get ppStepvalue => _ppStepbloc.value;
+
+
   loadProcess({@required BuildContext context, @required int parvaneID}) async{
     try{
       _bloc.add(PPrcModel(status: Status.loading));
@@ -135,6 +145,8 @@ class PPrcBloc{
       showWaiting(context);
       pprocessvalue.rows.forEach((element)=>element.showSteps=element.id==id && !element.showSteps);
       _pprocessbloc.add(pprocessvalue);
+      if (pprocessvalue.rows.where((element) => element.id==id).first.showSteps)
+        loadPPSteps(context, id);
     }
     catch(e){
       _pprocessbloc.add(ParvaneProcessModel(status: Status.error, msg: '$e'));
@@ -144,18 +156,29 @@ class PPrcBloc{
     }
   }
   
-  finishParvaneProcessStep(BuildContext context, int processid, Prcstep step) async{
+  loadPPSteps(BuildContext context, int ppid) async{
+    try{
+      _ppStepbloc.add(PPStepModel(status: Status.loading));
+      var _rows = await _repository.loadPPSteps(ParvaneProcess(token: readToken(context), id: ppid));
+      _ppStepbloc.add(PPStepModel(status: Status.loaded, rows: _rows));
+    }
+    catch(e){
+      _ppStepbloc.add(PPStepModel(status: Status.error, msg: '$e'));
+    }
+  }
+
+  showPPStepDetail(PPStep step){
+    _ppStepbloc.value.rows.forEach((e)=> e.show = (e.id==step.id));
+    _ppStepbloc.add(_ppStepbloc.value);
+  }
+ 
+
+  finishParvaneProcessStep(BuildContext context, PPStep step) async{
     try{
       showWaiting(context);
       step.token = readToken(context);
-      step.processid = processid;
-print("${step.toJson()}");
-      bool _res = await _repository.finishParavneProcessStep(step);
-      String _steps = _pprocessbloc.value.rows.where((element) => element.id==step.processid).first.steps;
-print("before: $_steps");
-      _steps = (json.decode(_steps) as List).map((e){if (e['id'] == step.id) e['finish'] = _res ? 1 : 0;}).toString();
-print("after: $_steps");
-      _pprocessbloc.add(_pprocessbloc.value);
+      step.finish = await _repository.finishParavneProcessStep(step);
+      _ppStepbloc.add(_ppStepbloc.value);
     }
     catch(e){
       myAlert(context: context, title: 'خطا', message: '$e');
