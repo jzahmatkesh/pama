@@ -1892,8 +1892,7 @@ class ParvaneProcessRepository{
     List<Map<String, dynamic>> _data = await postMethod(api: 'ParvaneProcess/Steps', body: jsonEncode(obj.toJson()));
     return _data.map<PPStep>((data) => PPStep.fromJson(data)).toList();
   }
-  Future<bool> finishParavneProcessStep(PPStep step) async{
-    Map<String, dynamic> _data = await putMethod(api: 'ParvaneProcess/FinishStep', body: jsonEncode(step.toJson()));
-    return _data['finish'] == 1;
+  Future<Map<String, dynamic>> finishParavneProcessStep(PPStep step) async{
+    return await putMethod(api: 'ParvaneProcess/FinishStep', body: jsonEncode(step.toJson()));
   }
 }

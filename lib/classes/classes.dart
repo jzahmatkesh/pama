@@ -3139,7 +3139,7 @@ class ParvaneProcess{
     int processid;
     String title;
     String euserfamily;
-    bool finish;
+    int finish;
     int length;
     String startdate;
     int dayremind;
@@ -3148,7 +3148,7 @@ class ParvaneProcess{
     String token;
     bool showSteps;
  
-    ParvaneProcess({this.id = 0 ,this.parvaneid = 0 ,this.processid = 0 ,this.title ,this.euserfamily ,this.finish = false, this.length, this.startdate, this.dayremind, this.enddate, this.steps, this.token, this.showSteps=false});
+    ParvaneProcess({this.id = 0 ,this.parvaneid = 0 ,this.processid = 0 ,this.title ,this.euserfamily ,this.finish = 0, this.length, this.startdate, this.dayremind, this.enddate, this.steps, this.token, this.showSteps=false});
  
     ParvaneProcess.fromJson(Map<String, dynamic> json):
         id = json['id'],
@@ -3156,7 +3156,7 @@ class ParvaneProcess{
         processid = json['processid'],
         title = json['title'],
         euserfamily = json['euserfamily'],
-        finish = json['finish'] == 1,
+        finish = json['finish'],
         length = json['length'],
         startdate = json['startdate'],
         dayremind = json['dayremind'],
@@ -3170,10 +3170,13 @@ class ParvaneProcess{
         data['processid'] = this.processid;
         data['title'] = this.title;
         data['euserfamily'] = this.euserfamily;
-        data['finish'] = this.finish ? 1 : 0;
+        data['finish'] = this.finish;
         data['token'] = this.token;
         return data;
     }
+
+    bool get isFinished => this.finish>0;
+    String get failedNote => this.finish==10 ? 'رد شده با نظر هیت مدیره' : this.finish==11 ? 'رد شده با نظر بازرسی' : '';
 }
 
 class ParvaneProcessDocument{

@@ -177,7 +177,10 @@ class PPrcBloc{
     try{
       showWaiting(context);
       step.token = readToken(context);
-      step.finish = await _repository.finishParavneProcessStep(step);
+      Map<String, dynamic> _res = await _repository.finishParavneProcessStep(step);
+      step.finish = _res['finish']==1; 
+      _pprocessbloc.value.rows.where((element) => element.id==step.ppid).first.finish = _res['pfinish'];
+      _pprocessbloc.add(_pprocessbloc.value);
       _ppStepbloc.add(_ppStepbloc.value);
     }
     catch(e){

@@ -93,13 +93,13 @@ class FmParvaneProcess extends StatelessWidget {
                             height: screenHeight(context) * 0.70,
                             child: Column(
                               children: [
-                                ParvaneProcessRow(bloc: _bloc, data: snap.data.rows[idx]).card(),
+                                ParvaneProcessRow(bloc: _bloc, data: snap.data.rows[idx]),
                                 SizedBox(height: 10),
                                 ParvaneProcessStepDetail(bloc: _bloc, pprow: snap.data.rows[idx])
                               ],
                             ),
                           ).card();
-                        return ParvaneProcessRow(bloc: _bloc, data: snap.data.rows[idx]).card();
+                        return ParvaneProcessRow(bloc: _bloc, data: snap.data.rows[idx]);
                       }
                     );
                 return Center(child: CupertinoActivityIndicator());
@@ -128,13 +128,12 @@ class ParvaneProcessRow extends StatelessWidget {
         '${data.length}'.toLabel().expand(),
         '${data.enddate}'.toLabel().expand(),
         '${data.dayremind}'.toLabel().expand(),
-        data.finish 
-          ? Tooltip(message: 'اتمام فرآیند', child: Icon(Icons.check_box_outlined))
-          : SizedBox(width: 40),
         MyIconButton(type: ButtonType.other, icon: Icon(Icons.view_sidebar_rounded, color: accentcolor(context),), hint: 'مشاهده وضعیت فرآیند', onPressed: ()=>bloc.showParvaneProcessSteps(context, data.id)),
-        MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delParvaneProcess(context: context, id: data.id))
+        data.isFinished
+          ? SizedBox(width: 40)
+          : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delParvaneProcess(context: context, id: data.id))
       ]
-    );
+    ).card(color: data.finish == 1 ? Colors.green.shade200 : data.finish > 1 ? Colors.red.shade200 : null);
   }
 }
 
@@ -392,6 +391,7 @@ class IncomeList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController _date = TextEditingController();
     return Column(
       children: [
         GridCaption(
@@ -414,13 +414,15 @@ class IncomeList extends StatelessWidget {
                   itemCount: snap.data.rows.length,
                   itemBuilder: (context, idx){
                     ParvaneProcessIncome income = snap.data.rows[idx];
+                    if (income.edit && !this.finish)
+                      _date.text = income.date;
                     return MyRow(
                       onDoubleTap: this.finish ? null : ()=>bloc.editPPStepIncome(income),
                       children: [
                         income.incomename.toLabel().expand(),                    
                         moneySeprator(income.price).toLabel().expand(),                    
                         income.edit && !this.finish
-                          ? GridTextField(hint: 'تاریخ پرداخت', initialValue: income.date, datepicker: true, onChange: (val)=>income.date = val).expand()
+                          ? GridTextField(hint: 'تاریخ پرداخت', datepicker: true, controller: _date, onChange: (val)=>income.date = val).expand()
                           : income.date.toLabel().expand(),
                         income.edit && !this.finish
                           ? GridTextField(hint: 'شناسه پرداخت', initialValue: income.shenase, onChange: (val)=>income.shenase = val).expand()
@@ -431,7 +433,7 @@ class IncomeList extends StatelessWidget {
                         this.finish
                           ? Container()
                           : income.edit
-                            ? MyIconButton(type: ButtonType.save, onPressed: ()=>bloc.savePPStepIncome(context, income))
+                            ? MyIconButton(type: ButtonType.save, onPressed: (){income.date=_date.text; bloc.savePPStepIncome(context, income);})
                             : MyIconButton(type: ButtonType.edit, onPressed: ()=>bloc.editPPStepIncome(income))
                       ]
                     );
