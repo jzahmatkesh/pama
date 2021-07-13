@@ -127,13 +127,13 @@ class ParvaneProcessRow extends StatelessWidget {
         '${data.startdate}'.toLabel().expand(),
         '${data.length}'.toLabel().expand(),
         '${data.enddate}'.toLabel().expand(),
-        '${data.dayremind}'.toLabel().expand(),
+        '${data.dayremind} ${data.finish>=11 ? '[ رد شده با نظر بازرسی ]' : data.finish >= 10 ? '[ رد شده با نظر هیت مدیره ]' : ''}'.toLabel().expand(),
         MyIconButton(type: ButtonType.other, icon: Icon(Icons.view_sidebar_rounded, color: accentcolor(context),), hint: 'مشاهده وضعیت فرآیند', onPressed: ()=>bloc.showParvaneProcessSteps(context, data.id)),
         data.isFinished
           ? SizedBox(width: 40)
           : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delParvaneProcess(context: context, id: data.id))
       ]
-    ).card(color: data.finish == 1 ? Colors.green.shade200 : data.finish > 1 ? Colors.red.shade200 : null);
+    ).card(color: data.finish == 1 ? Colors.green.shade200 : data.finish > 1 ? Colors.deepOrange.shade100 : null);
   }
 }
 

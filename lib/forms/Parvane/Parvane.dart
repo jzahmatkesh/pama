@@ -79,9 +79,9 @@ class FmParvane extends StatelessWidget {
               'کد ملی',
               'شماره همراه',
               'آخرین فرآیند',
-              'وضعیت فرآیند'
+              // 'وضعیت فرآیند'
             ],
-            endbuttons: 2,
+            endbuttons: 3,
           ),
           Expanded(
             child: StreamBuilder<ParvaneModel>(
@@ -103,12 +103,12 @@ class FmParvane extends StatelessWidget {
                             snap.data.rows[idx].mobile.toLabel().expand(),
                             TextButton(
                               onPressed: (){
-                                if (snap.data.rows[idx].lastprocess != null)
+                                if (snap.data.rows[idx].lastprocess != null || snap.data.rows[idx].failprocess != null)
                                   showFormAsDialog(context: context, form: FmParvaneProcess(parvane: snap.data.rows[idx]));
                               },
-                              child: (snap.data.rows[idx].lastprocess ?? 'بدون فرآیند').toLabel(color: accentcolor(context))
-                            ),
-                            snap.data.rows[idx].lastprocessstatus.toLabel().expand(),
+                              child: (snap.data.rows[idx].lastprocess ?? (snap.data.rows[idx].failprocess ?? 'بدون فرآیند')).toLabel(color: snap.data.rows[idx].lastprocess != null || snap.data.rows[idx].failprocess == null ? accentcolor(context) : backgroundColor(context))
+                            ).expand(),
+                            // snap.data.rows[idx].lastprocessstatus.toLabel().expand(),
                             MyIconButton(
                               type: ButtonType.add, 
                               hint: 'فرآیند جدید', 
