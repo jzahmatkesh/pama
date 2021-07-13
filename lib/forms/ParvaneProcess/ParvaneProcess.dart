@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import '../../classes/classes.dart';
 import 'ParvaneProcessBloc.dart';
 import '../../module/Widgets.dart';
@@ -35,7 +36,7 @@ class NewParvaneProcess extends StatelessWidget {
                       itemCount: snap.data.rows.length,
                       itemBuilder: (context, idx)=>
                         ListTile(
-                          title: Text('فرآیند صدور'),
+                          title: Text('${snap.data.rows[idx].title}'),
                           onTap: ()=>confirmMessage(context, 'آغاز فرآیند', 'آیا مایل به آغاز فرآیند ${snap.data.rows[idx].title} می باشید؟', yesclick: () async{
                             Navigator.pop(context);
                             if (await _bloc.newprocess(context, this.parvaneid, snap.data.rows[idx].id))
@@ -133,7 +134,7 @@ class ParvaneProcessRow extends StatelessWidget {
           ? SizedBox(width: 40)
           : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delParvaneProcess(context: context, id: data.id))
       ]
-    ).card(color: data.finish == 1 ? Colors.green.shade200 : data.finish > 1 ? Colors.deepOrange.shade100 : null);
+    ).card(color: data.finish == 1 ? Colors.green.shade100 : data.finish > 1 ? Colors.deepOrange.shade100 : null);
   }
 }
 
@@ -182,13 +183,22 @@ class ParvaneProcessStepDetail extends StatelessWidget {
                           height: 45,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color: e.show ? accentcolor(context).withOpacity(0.3) : Colors.grey.withOpacity(0.1),
+                            color: e.show ? accentcolor(context).withOpacity(0.3) : e.finish ? Colors.green.shade100 : Colors.grey.withOpacity(0.1),
                           ),
-                          child: Text('${e.kindName()}').center(),
+                          child: Row(
+                            children: [
+                              SizedBox(width: 5),
+                              e.finish 
+                                ? Icon(FontAwesome.check, color: e.show ? accentcolor(context).withOpacity(0.5) : Colors.green.shade200,)
+                                : Container(),
+                              SizedBox(width: 5),
+                              Text('${e.kindName()}').center(),
+                            ],
+                          ),
                         )
                       ).hMargin().expand()).toList(),
-                    Expanded(flex: 2, child: Container()),
-                    _activestep != null
+                    Spacer(),
+                    _activestep != null && _activestep.id > 0
                       ? InkWell(
                           onTap: ()=>bloc.finishParvaneProcessStep(context, _activestep),
                           child: Container(
@@ -224,7 +234,7 @@ class ParvaneProcessStepDetail extends StatelessWidget {
                   ],
                 ),
                 Divider(),
-                _activestep != null
+                _activestep != null && _activestep.id > 0
                   ? Container(
                     margin: EdgeInsets.all(6),
                     padding: EdgeInsets.all(6),
@@ -274,15 +284,17 @@ class ParvaneProcessStepDetail extends StatelessWidget {
                   )
                 : Container(),
                 _activestep != null
-                  ? _activestep.kind == 1
-                    ? DocumentList(bloc: this.bloc, finish: _activestep.finish)
-                    : _activestep.kind == 2
-                      ? MeetingList(bloc: this.bloc, finish: _activestep.finish)
-                      : _activestep.kind == 3
-                        ? InspectionList(bloc: this.bloc, finish: _activestep.finish)
-                        : _activestep.kind == 4
-                          ? IncomeList(bloc: this.bloc, finish: _activestep.finish)
-                          : Container()
+                  ? _activestep.kind == 0
+                    ? FinishProcess(bloc: this.bloc, step: _activestep)
+                    : _activestep.kind == 1
+                      ? DocumentList(bloc: this.bloc, finish: _activestep.finish)
+                      : _activestep.kind == 2
+                        ? MeetingList(bloc: this.bloc, finish: _activestep.finish)
+                        : _activestep.kind == 3
+                          ? InspectionList(bloc: this.bloc, finish: _activestep.finish)
+                          : _activestep.kind == 4
+                            ? IncomeList(bloc: this.bloc, finish: _activestep.finish)
+                            : Container()
                   : Container()
               ],
             );
@@ -604,5 +616,18 @@ class InspectionList extends StatelessWidget {
         ).expand(),
       ],
     ).expand();
+  }
+}
+
+class FinishProcess extends StatelessWidget {
+  final PPrcBloc bloc;
+  final PPStep step;  
+  const FinishProcess({@required this.bloc, @required this.step, Key key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: 'اتمام شد رفت پی کارش'.toLabel()
+    );
   }
 }

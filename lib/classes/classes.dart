@@ -3115,21 +3115,12 @@ class PPStep{
 
     String kindName(){
       switch (this.kind) {
-        case 1:
-          return 'مدرک';
-          break;
-        case 2:
-          return 'هیئت مدیره';
-          break;
-        case 3:
-          return 'بازرسی';
-          break;
-        case 4:
-          return 'حسابداری';
-          break;
-        case 5:
-          return 'آموزش';
-          break;
+        case 0: return 'اتمام فرآیند';
+        case 1: return 'مدرک';
+        case 2: return 'هیئت مدیره';
+        case 3: return 'بازرسی';
+        case 4: return 'حسابداری';
+        case 5: return 'آموزش';
       }
       return "";
     }
