@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import '../../classes/classes.dart';
+import 'FinishParvaneProcess.dart';
 import 'ParvaneProcessBloc.dart';
 import '../../module/Widgets.dart';
 import '../../module/consts.dart';
@@ -96,7 +97,7 @@ class FmParvaneProcess extends StatelessWidget {
                               children: [
                                 ParvaneProcessRow(bloc: _bloc, data: snap.data.rows[idx]),
                                 SizedBox(height: 10),
-                                ParvaneProcessStepDetail(bloc: _bloc, pprow: snap.data.rows[idx])
+                                ParvaneProcessStepDetail(bloc: _bloc, parvane: this.parvane, pprow: snap.data.rows[idx])
                               ],
                             ),
                           ).card();
@@ -141,7 +142,8 @@ class ParvaneProcessRow extends StatelessWidget {
 class ParvaneProcessStepDetail extends StatelessWidget {
   final PPrcBloc bloc;
   final ParvaneProcess pprow;
-  const ParvaneProcessStepDetail({@required this.bloc,@required this.pprow, Key key }) : super(key: key);
+  final Parvane parvane;
+  const ParvaneProcessStepDetail({@required this.bloc, @required this.pprow, @required this.parvane, Key key }) : super(key: key);
 
   @override
   Widget build(BuildContext context){                                 
@@ -285,7 +287,7 @@ class ParvaneProcessStepDetail extends StatelessWidget {
                 : Container(),
                 _activestep != null
                   ? _activestep.kind == 0
-                    ? FinishProcess(bloc: this.bloc, step: _activestep)
+                    ? FinishProcess(bloc: this.bloc, parvane: this.parvane, pprow: pprow, step: _activestep)
                     : _activestep.kind == 1
                       ? DocumentList(bloc: this.bloc, finish: _activestep.finish)
                       : _activestep.kind == 2
@@ -622,12 +624,16 @@ class InspectionList extends StatelessWidget {
 class FinishProcess extends StatelessWidget {
   final PPrcBloc bloc;
   final PPStep step;  
-  const FinishProcess({@required this.bloc, @required this.step, Key key }) : super(key: key);
+  final ParvaneProcess pprow;
+  final Parvane parvane;
+  const FinishProcess({@required this.bloc, @required this.parvane, @required this.pprow, @required this.step, Key key }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: 'اتمام شد رفت پی کارش'.toLabel()
-    );
+    print('${this.step.id} - ${this.step.kind}');    
+    return this.pprow.kind == 0
+      ? 'نوع فرآیند قایل تشخیص نمی باشد'.toLabel().center()
+      : FinishProcess1(bloc: this.bloc, parvane: this.parvane, pprow: this.pprow);
   }
 }
+

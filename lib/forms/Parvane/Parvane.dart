@@ -104,7 +104,7 @@ class FmParvane extends StatelessWidget {
                             TextButton(
                               onPressed: (){
                                 if (snap.data.rows[idx].lastprocess != null || snap.data.rows[idx].failprocess != null)
-                                  showFormAsDialog(context: context, form: FmParvaneProcess(parvane: snap.data.rows[idx]));
+                                  showFormAsDialog(context: context, form: FmParvaneProcess(parvane: snap.data.rows[idx]), done: (data)=>_bloc.loadData(context, user, _type.value$));
                               },
                               child: (snap.data.rows[idx].lastprocess ?? (snap.data.rows[idx].failprocess ?? 'بدون فرآیند')).toLabel(color: snap.data.rows[idx].lastprocess != null || snap.data.rows[idx].failprocess == null ? accentcolor(context) : backgroundColor(context))
                             ).expand(),

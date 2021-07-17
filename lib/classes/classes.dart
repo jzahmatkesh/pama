@@ -3131,6 +3131,7 @@ class ParvaneProcess{
     int parvaneid;
     int processid;
     String title;
+    int kind;
     String euserfamily;
     int finish;
     int length;
@@ -3141,13 +3142,14 @@ class ParvaneProcess{
     String token;
     bool showSteps;
  
-    ParvaneProcess({this.id = 0 ,this.parvaneid = 0 ,this.processid = 0 ,this.title ,this.euserfamily ,this.finish = 0, this.length, this.startdate, this.dayremind, this.enddate, this.steps, this.token, this.showSteps=false});
+    ParvaneProcess({this.id = 0 ,this.parvaneid = 0 ,this.processid = 0, this.kind = 0 ,this.title ,this.euserfamily ,this.finish = 0, this.length, this.startdate, this.dayremind, this.enddate, this.steps, this.token, this.showSteps=false});
  
     ParvaneProcess.fromJson(Map<String, dynamic> json):
         id = json['id'],
         parvaneid = json['parvaneid'],
         processid = json['processid'],
         title = json['title'],
+        kind = json['kind'],
         euserfamily = json['euserfamily'],
         finish = json['finish'],
         length = json['length'],

@@ -1710,6 +1710,10 @@ class ParvaneRepository{
     );
   }
 
+  static Future<int> sodorParvane(Parvane obj) async{
+    Map<String, dynamic> _data = await putMethod(api: 'Parvane/Sodor', body: jsonEncode(obj.toJson()));
+    return _data['id'];
+  }
 
   Future<List<ParvaneMobasher>> loadMObasher(ParvaneMobasher obj) async{
     List<Map<String, dynamic>> _data = await postMethod(api: 'Parvane/Mobasher', body: jsonEncode({'token': obj.token, 'parvaneid': obj.parvaneid}));

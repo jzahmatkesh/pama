@@ -329,4 +329,16 @@ class PPrcBloc{
       }
     });
   }
+
+  sodorParvane(BuildContext context, Parvane parvane) async{
+    try{
+      parvane.token = readToken(context);
+      await ParvaneRepository.sodorParvane(parvane);
+      Navigator.pop(context);
+      myAlert(context: context, title: 'صدور پروانه', message: 'صدور پروانه با موفقیت انجام گردید', color: Colors.green);
+    }
+    catch(e){
+      myAlert(context: context, title: 'خطا', message: '$e');
+    }
+  }
 }
