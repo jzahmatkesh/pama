@@ -38,6 +38,7 @@ class FinishProcess1 extends StatelessWidget {
               children: [
                 GridTextField(hint: 'توضیحات', initialValue: '${this.parvane.note}', onChange: (val)=>parvane.note = val).expand(),
                 MyOutlineButton(title: 'صدور پروانه', color: Colors.green, icon: Icons.save, onPressed: (){
+                  parvane.old = pprow.id;
                   parvane.datesodor = _edsodor.text;
                   parvane.datetahvil = _edtahvil.text;
                   this.bloc.sodorParvane(context, parvane);
