@@ -413,7 +413,6 @@ class ClassDetail extends StatelessWidget {
                                   onChange: (val)=>bloc.changeDClassKind(_dcls, val),
                                 )),
                                 Expanded(child: ForeignKeyField(hint: 'سرفصل', initialValue: {'id': _dcls.topicid, 'name': _dcls.topictitle}, f2key: 'Topic', onChange: (val){
-                                  print('$val');
                                   _dcls.topicid=val['id'];
                                   _dcls.topictitle=val['name'];
                                   context.read<ThemeManager>().setCompany(val['id']);

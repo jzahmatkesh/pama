@@ -597,7 +597,6 @@ class ParvaneInfo extends StatelessWidget {
                               return;
                           }
                           else if (await bloc.register(context, parvane)){
-                            print("yes"); 
                             _tabidx.setValue(_tabidx.value$);
                           }
                         }, 

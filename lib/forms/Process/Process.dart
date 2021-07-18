@@ -518,7 +518,6 @@ class PnCourse extends StatelessWidget {
                         itemCount: snap.data.rows.length,
                         itemBuilder: (context, idx){
                           PrcStepCourse _course = snap.data.rows[idx];
-                          print('${_course.kind}');
                           return MyRow(
                             // onDoubleTap: ()=>_bloc.editStepCourse(_course),
                             children: [

@@ -29,7 +29,6 @@ class GUnitBloc{
       _gunitbloc.add(GUnitModel(status: Status.loading));
       GUnit gun = await _repository.findByNosaziCode(readToken(context), code);
       if (gun == null)
-        print("asasa34253455");
       _gunitbloc.add(GUnitModel(gunit: gun, status: Status.loaded));
       if (justcheck)
         Navigator.of(context).pop(_gunitbloc.value.gunit);

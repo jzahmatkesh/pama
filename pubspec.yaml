@@ -32,7 +32,7 @@ dependencies:
   shared_preferences: ^0.5.10
   http: ^0.12.2
   simple_animations: ^2.2.2
-  persian_datepicker: ^1.3.1
+  # persian_datepicker: ^1.3.1
   crypto: ^2.1.5
   rxdart: ^0.24.1
   rflutter_alert: ^1.0.5

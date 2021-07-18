@@ -630,7 +630,6 @@ class FinishProcess extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('${this.step.id} - ${this.step.kind}');    
     return this.pprow.kind == 0
       ? 'نوع فرآیند قایل تشخیص نمی باشد'.toLabel().center()
       : FinishProcess1(bloc: this.bloc, parvane: this.parvane, pprow: this.pprow);
