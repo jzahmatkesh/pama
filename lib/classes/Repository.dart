@@ -1841,6 +1841,16 @@ class ParvaneProcessRepository{
   }
 
 
+  Future<List<ParvaneProcessCourse>> loadParvaneProcessCourse(int ppid, int ppstepid) async{
+    List<Map<String, dynamic>> _data = await postMethod(api: 'ParvaneProcess/StepCourse', body: jsonEncode({"id": ppid, "stepid": ppstepid}));
+    return _data.map<ParvaneProcessCourse>((data) => ParvaneProcessCourse.fromJson(data)).toList();
+  }
+  static Future<List<Class>> loadParvaneProcessCourseClasses(int courseid) async{
+    List<Map<String, dynamic>> _data = await postMethod(api: 'ParvaneProcess/StepCourseClasses', body: jsonEncode({"courseid": courseid}));
+    return _data.map<Class>((data) => Class.fromJson(data)).toList();
+  }
+
+
   Future<List<ParvaneProcessMeeting>> loadParvaneProcessMeeting(int ppid, int ppstepid) async{
     List<Map<String, dynamic>> _data = await postMethod(api: 'ParvaneProcess/StepMeeting', body: jsonEncode({"id": ppid, "stepid": ppstepid}));
     return _data.map<ParvaneProcessMeeting>((data) => ParvaneProcessMeeting.fromJson(data)).toList();

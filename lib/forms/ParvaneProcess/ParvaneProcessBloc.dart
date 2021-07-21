@@ -47,6 +47,13 @@ class PPMeetingModel{
 
   PPMeetingModel({@required this.status, this.rows, this.msg});
 }
+class PPCourseModel{
+  Status status;
+  List<ParvaneProcessCourse> rows;
+  String msg;
+
+  PPCourseModel({@required this.status, this.rows, this.msg});
+}
 class PPInspectionModel{
   Status status;
   List<ParvaneProcessInspection> rows;
@@ -74,7 +81,11 @@ class PPrcBloc{
   BehaviorSubject<PPMeetingModel> _ppMeetingbloc = BehaviorSubject<PPMeetingModel>.seeded(PPMeetingModel(status: Status.loading));
   Stream<PPMeetingModel> get ppMeetingstream => _ppMeetingbloc.stream;
   PPMeetingModel get ppMeetingvalue => _ppMeetingbloc.value;
-    
+
+  BehaviorSubject<PPCourseModel> _ppCoursebloc = BehaviorSubject<PPCourseModel>.seeded(PPCourseModel(status: Status.loading));
+  Stream<PPCourseModel> get ppCoursestream => _ppCoursebloc.stream;
+  PPCourseModel get ppCoursevalue => _ppCoursebloc.value;
+
   BehaviorSubject<PPInspectionModel> _ppInspectionbloc = BehaviorSubject<PPInspectionModel>.seeded(PPInspectionModel(status: Status.loading));
   Stream<PPInspectionModel> get ppInspectionstream => _ppInspectionbloc.stream;
   PPInspectionModel get ppInspectionvalue => _ppInspectionbloc.value;
@@ -330,6 +341,20 @@ class PPrcBloc{
     });
   }
 
+  showPPStepCourse(BuildContext context, int ppid, int stepid) async{
+    try{
+      _ppCoursebloc.add(PPCourseModel(status: Status.loading));
+      _ppCoursebloc.add(PPCourseModel(status: Status.loaded, rows: await _repository.loadParvaneProcessCourse(ppid, stepid)));
+    }
+    catch(e){
+      _ppCoursebloc.add(PPCourseModel(status: Status.error, msg: '$e'));
+    }
+  }
+  showPPStepCourseClass(ParvaneProcessCourse course){
+    ppCoursevalue.rows.forEach((element)=>element.showclass=false);
+    course.showclass = true;
+    _ppCoursebloc.add(ppCoursevalue);
+  }
   sodorParvane(BuildContext context, Parvane parvane) async{
     try{
       parvane.token = readToken(context);

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:pama/classes/Repository.dart';
 import '../../classes/classes.dart';
 import 'FinishParvaneProcess.dart';
 import 'ParvaneProcessBloc.dart';
@@ -156,6 +157,8 @@ class ParvaneProcessStepDetail extends StatelessWidget {
         bloc.showPPStepInspection(context, pprow.id, e.id);
       if (e.kind == 4)
         bloc.showPPStepIncome(context, pprow.id, e.id);
+      if (e.kind == 5)
+        bloc.showPPStepCourse(context, pprow.id, e.id);
       bloc.showPPStepDetail(e);     
     }
 
@@ -296,7 +299,9 @@ class ParvaneProcessStepDetail extends StatelessWidget {
                           ? InspectionList(bloc: this.bloc, finish: _activestep.finish)
                           : _activestep.kind == 4
                             ? IncomeList(bloc: this.bloc, finish: _activestep.finish)
-                            : Container()
+                            : _activestep.kind == 5
+                              ? CourseList(bloc: this.bloc, finish: _activestep.finish)
+                              : Container()
                   : Container()
               ],
             );
@@ -611,6 +616,103 @@ class InspectionList extends StatelessWidget {
                             : MyIconButton(type: ButtonType.edit, onPressed: ()=>bloc.editPPStepInspection(insp)),
                       ]
                     );
+                  }
+                );
+            return Center(child: CupertinoActivityIndicator());
+          }
+        ).expand(),
+      ],
+    ).expand();
+  }
+}
+
+class CourseList extends StatelessWidget {
+  final PPrcBloc bloc;
+  final bool finish;
+  const CourseList({@required this.bloc, @required this.finish, Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Widget corseRow(ParvaneProcessCourse crs)=>MyRow(
+      color: crs.classid > 0 ? crs.rsv ? Colors.green.shade100 : Colors.yellow.shade100 : null,
+      children: [
+        crs.title.toLabel().expand(),
+        crs.kindName().toLabel().expand(),
+        crs.typeName().toLabel().expand(),
+        crs.minDegreeName().toLabel().expand(),
+        '${crs.absent}'.toLabel().expand(),
+        '${crs.price}'.toLabel().expand(),
+        MyIconButton(type: ButtonType.other, icon: Icon(Icons.view_agenda, color: accentcolor(context)), hint: 'انتخاب کلاس', onPressed: ()=>bloc.showPPStepCourseClass(crs))
+      ]
+    );
+    return Column(
+      children: [
+        GridCaption(
+          obj: [
+            'عنوان دوره',
+            'نوع دوره',
+            'نحوه حضور',
+            'حداقل مدرک',
+            'غیبت مجاز',
+            'هزینه'
+          ],
+          endbuttons: 1,
+        ),
+        StreamBuilder<PPCourseModel>(
+          stream: this.bloc.ppCoursestream,
+          builder: (context, snap){
+            if (snap.hasData)
+              if (snap.data.status == Status.error)
+                return ErrorInGrid('${snap.data.msg}');
+              else if (snap.data.status == Status.loaded)
+                return ListView.builder(
+                  itemCount: snap.data.rows.length,
+                  itemBuilder: (context, idx){
+                    return snap.data.rows[idx].showclass
+                      ? Container(
+                        height: screenHeight(context)*0.3,
+                        child: Column(
+                          children: [
+                            corseRow(snap.data.rows[idx]),
+                            Column(
+                              children: [
+                                GridCaption(
+                                  obj: [
+                                    'عنوان کلاس',
+                                    'تاریخ برگذاری',
+                                    'ظرفیت حضوری [باقیمانده]',
+                                    'ظرفیت غیرحضوری [باقیمانده]',
+                                  ],
+                                  endbuttons: 1,
+                                ),
+                                FutureBuilder<List<Class>>(
+                                  future: ParvaneProcessRepository.loadParvaneProcessCourseClasses(snap.data.rows[idx].courseid),
+                                  builder: (context, snap){
+                                    if (snap.hasData)
+                                      return ListView.builder(
+                                        itemCount: snap.data.length,
+                                        itemBuilder: (context, idx)=>MyRow(
+                                          children: [
+                                            snap.data[idx].title.toLabel().expand(),
+                                            snap.data[idx].begindate.toLabel().expand(),
+                                            '${snap.data[idx].hozori} - [ ${snap.data[idx].hozoriremain} ]'.toLabel().expand(),
+                                            '${snap.data[idx].nothozori} - [ ${snap.data[idx].nothozoriremain} ]'.toLabel().expand(),
+                                            MyIconButton(type: ButtonType.none, icon: Icon(Icons.check_circle, color: accentcolor(context)),hint: 'ثبت نام', onPressed: (){}),
+                                            MyIconButton(type: ButtonType.none, icon: Icon(Icons.check_circle, color: accentcolor(context).withOpacity(0.65)), hint: 'رزرو', onPressed: (){}),
+                                          ]
+                                        )
+                                      );
+                                    if (snap.hasError)
+                                      return Center(child: Text('خطا در دریافت اطلاعات لطفا مجددا سعی نمایید'));
+                                    return Center(child: CupertinoActivityIndicator());
+                                  }
+                                ).expand()
+                              ],
+                            ).setPadding(padd: EdgeInsets.symmetric(horizontal: 35)).card().expand(),
+                          ],
+                        ),
+                      )
+                      : corseRow(snap.data.rows[idx]);
                   }
                 );
             return Center(child: CupertinoActivityIndicator());

@@ -2590,6 +2590,8 @@ class Class{
     String begindate;
     int hozori;
     int nothozori;
+    int hozoriremain;
+    int nothozoriremain;
     String token;
     bool edit;
     bool showdetail;
@@ -2603,6 +2605,8 @@ class Class{
         begindate = json['begindate'],
         hozori = json['hozori'],
         nothozori = json['nothozori'],
+        hozoriremain = json['hozoriremain'],
+        nothozoriremain = json['nothozoriremain'],
         edit=false,
         showdetail=false;
  
@@ -3382,4 +3386,108 @@ class ParvaneProcessInspection{
           : 'درجه چهار';
 }
 
+class ParvaneProcessCourse{
+  int ppid;
+  int ppstepid;
+  int id;
+  int courseid;
+  String title;
+  int classid;
+  bool hozori;
+  bool rsv;
+  String note;
+  int kind;
+  int type;
+  int mindegree;
+  int maxdegree;
+  int absent;
+  double price;
+  bool showclass;
+  String token;
 
+  ParvaneProcessCourse({this.ppid = 0 ,this.ppstepid = 0 ,this.id = 0 ,this.courseid = 0 ,this.title ,this.classid = 0,this.hozori ,this.rsv, this.note ,this.kind = 0 ,this.type = 0 ,this.mindegree = 0 ,this.maxdegree = 0 ,this.absent = 0 ,this.price, this.showclass, this.token});
+
+  ParvaneProcessCourse.fromJson(Map<String, dynamic> json):
+      ppid = json['ppid'],
+      ppstepid = json['ppstepid'],
+      id = json['id'],
+      courseid = json['courseid'],
+      title = json['title'],
+      classid = json['classid'],
+      rsv = json['rsv'] == 1,
+      hozori = json['hozori']==1,
+      note = json['note'],
+      kind = json['kind'],
+      type = json['type'],
+      mindegree = json['mindegree'],
+      maxdegree = json['maxdegree'],
+      absent = json['absent'],
+      showclass = false,
+      price = json['price'];
+
+  Map<String, dynamic> toJson(){
+      final Map<String, dynamic> data = new Map<String, dynamic>();
+      data['ppid'] = this.ppid;
+      data['ppstepid'] = this.ppstepid;
+      data['id'] = this.id;
+      data['courseid'] = this.courseid;
+      data['title'] = this.title;
+      data['classid'] = this.classid;
+      data['rsv'] = this.rsv ? 1: 0;
+      data['hozori'] = this.hozori ? 1: 0;
+      data['note'] = this.note;
+      data['kind'] = this.kind;
+      data['type'] = this.type;
+      data['mindegree'] = this.mindegree;
+      data['maxdegree'] = this.maxdegree;
+      data['absent'] = this.absent;
+      data['price'] = this.price;
+      data['token'] = this.token;
+      return data;
+  }
+
+  String kindName(){
+    switch (this.kind) {
+      case 1: return 'آزاد';
+      case 2: return 'صدور و تمدید';
+    }
+    return "";
+  }
+
+  String typeName(){
+    switch (this.type) {
+      case 1: return 'حضوری';
+      case 2: return 'غیرحضوری';
+      case 3: return 'حضوری و غیرحضوری';
+    }
+    return "";
+  }
+
+  String minDegreeName(){
+    switch (this.mindegree) {
+      case 1: return 'زیردیپلم';
+      case 2: return 'دیپلم';
+      case 3: return 'دانشجو';
+      case 4: return 'کاردانی';
+      case 5: return 'کارشناسی';
+      case 6: return 'کارشناسی ارشد';
+      case 7: return 'دکتری';
+      case 8: return 'فوق دکتری';
+    }
+    return "";
+  }
+
+  String maxDegreeName(){
+    switch (this.maxdegree) {
+      case 1: return 'زیردیپلم';
+      case 2: return 'دیپلم';
+      case 3: return 'دانشجو';
+      case 4: return 'کاردانی';
+      case 5: return 'کارشناسی';
+      case 6: return 'کارشناسی ارشد';
+      case 7: return 'دکتری';
+      case 8: return 'فوق دکتری';
+    }
+    return "";
+  }
+}
