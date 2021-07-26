@@ -683,7 +683,7 @@ class CourseList extends StatelessWidget {
                                     'ظرفیت حضوری [باقیمانده]',
                                     'ظرفیت غیرحضوری [باقیمانده]',
                                   ],
-                                  endbuttons: 1,
+                                  endbuttons: 2,
                                 ),
                                 FutureBuilder<List<Class>>(
                                   future: ParvaneProcessRepository.loadParvaneProcessCourseClasses(snap.data.rows[idx].courseid),
@@ -697,8 +697,11 @@ class CourseList extends StatelessWidget {
                                             snap.data[idx].begindate.toLabel().expand(),
                                             '${snap.data[idx].hozori} - [ ${snap.data[idx].hozoriremain} ]'.toLabel().expand(),
                                             '${snap.data[idx].nothozori} - [ ${snap.data[idx].nothozoriremain} ]'.toLabel().expand(),
-                                            MyIconButton(type: ButtonType.none, icon: Icon(Icons.check_circle, color: accentcolor(context)),hint: 'ثبت نام', onPressed: (){}),
-                                            MyIconButton(type: ButtonType.none, icon: Icon(Icons.check_circle, color: accentcolor(context).withOpacity(0.65)), hint: 'رزرو', onPressed: (){}),
+                                            snap.data[idx].hozoriremain == 0 && snap.data[idx].nothozoriremain == 0
+                                              ? Container()
+                                              : MyOutlineButton(title: 'ثبت نام', color: Colors.blue, onPressed: (){}),
+                                            SizedBox(width: 5),
+                                            MyOutlineButton(title: 'رزرو', color: Colors.green, onPressed: (){}),
                                           ]
                                         )
                                       );
