@@ -686,7 +686,7 @@ class CourseList extends StatelessWidget {
                                   endbuttons: 2,
                                 ),
                                 FutureBuilder<List<Class>>(
-                                  future: ParvaneProcessRepository.loadParvaneProcessCourseClasses(snap.data.rows[idx].courseid),
+                                  future: ParvaneProcessRepository.loadParvaneProcessCourseClasses(snap.data.rows[idx].ppid, snap.data.rows[idx].ppstepid, snap.data.rows[idx].courseid),
                                   builder: (context, snap){
                                     if (snap.hasData)
                                       return ListView.builder(
@@ -697,11 +697,15 @@ class CourseList extends StatelessWidget {
                                             snap.data[idx].begindate.toLabel().expand(),
                                             '${snap.data[idx].hozori} - [ ${snap.data[idx].hozoriremain} ]'.toLabel().expand(),
                                             '${snap.data[idx].nothozori} - [ ${snap.data[idx].nothozoriremain} ]'.toLabel().expand(),
-                                            snap.data[idx].hozoriremain == 0 && snap.data[idx].nothozoriremain == 0
-                                              ? Container()
-                                              : MyOutlineButton(title: 'ثبت نام', color: Colors.blue, onPressed: (){}),
+                                            snap.data[idx].reg || snap.data[idx].rsv
+                                              ? MyOutlineButton(title: 'انصراف', color: Colors.blue, onPressed: (){})
+                                              : snap.data[idx].hozoriremain == 0 && snap.data[idx].nothozoriremain == 0
+                                                ? Container()
+                                                : MyOutlineButton(title: 'ثبت نام', color: Colors.blue, onPressed: (){}),
                                             SizedBox(width: 5),
-                                            MyOutlineButton(title: 'رزرو', color: Colors.green, onPressed: (){}),
+                                            !snap.data[idx].rsv && !snap.data[idx].reg
+                                              ? MyOutlineButton(title: 'رزرو', color: Colors.green, onPressed: (){})
+                                              : Container(),
                                           ]
                                         )
                                       );

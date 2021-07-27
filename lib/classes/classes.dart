@@ -2593,10 +2593,12 @@ class Class{
     int hozoriremain;
     int nothozoriremain;
     String token;
+    bool reg;
+    bool rsv;
     bool edit;
     bool showdetail;
  
-    Class({this.courseid,this.id=0,this.title='',this.begindate='',this.hozori=0,this.nothozori=0, this.token, this.edit=false, this.showdetail=false});
+    Class({this.courseid,this.id=0,this.title='',this.begindate='',this.hozori=0,this.nothozori=0, this.token, this.edit=false, this.showdetail=false, this.reg, this.rsv});
  
     Class.fromJson(Map<String, dynamic> json):
         courseid = json['courseid'],
@@ -2607,6 +2609,8 @@ class Class{
         nothozori = json['nothozori'],
         hozoriremain = json['hozoriremain'],
         nothozoriremain = json['nothozoriremain'],
+        reg = json['reg'] == 1,
+        rsv = json['rsv'] == 1,
         edit=false,
         showdetail=false;
  
