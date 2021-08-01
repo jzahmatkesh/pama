@@ -350,11 +350,6 @@ class PPrcBloc{
       _ppCoursebloc.add(PPCourseModel(status: Status.error, msg: '$e'));
     }
   }
-  showPPStepCourseClass(ParvaneProcessCourse course){
-    ppCoursevalue.rows.forEach((element)=>element.showclass=false);
-    course.showclass = true;
-    _ppCoursebloc.add(ppCoursevalue);
-  }
   sodorParvane(BuildContext context, Parvane parvane) async{
     try{
       parvane.token = readToken(context);

@@ -633,18 +633,6 @@ class CourseList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget corseRow(ParvaneProcessCourse crs)=>MyRow(
-      color: crs.classid > 0 ? crs.rsv ? Colors.green.shade100 : Colors.yellow.shade100 : null,
-      children: [
-        crs.title.toLabel().expand(),
-        crs.kindName().toLabel().expand(),
-        crs.typeName().toLabel().expand(),
-        crs.minDegreeName().toLabel().expand(),
-        '${crs.absent}'.toLabel().expand(),
-        '${crs.price}'.toLabel().expand(),
-        MyIconButton(type: ButtonType.other, icon: Icon(Icons.view_agenda, color: accentcolor(context)), hint: 'انتخاب کلاس', onPressed: ()=>bloc.showPPStepCourseClass(crs))
-      ]
-    );
     return Column(
       children: [
         GridCaption(
@@ -652,7 +640,8 @@ class CourseList extends StatelessWidget {
             'عنوان دوره',
             'نوع دوره',
             'نحوه حضور',
-            'حداقل مدرک',
+            'شروع کلاس',
+            'عنوان کلاس',
             'غیبت مجاز',
             'هزینه'
           ],
@@ -668,58 +657,21 @@ class CourseList extends StatelessWidget {
                 return ListView.builder(
                   itemCount: snap.data.rows.length,
                   itemBuilder: (context, idx){
-                    return snap.data.rows[idx].showclass
-                      ? Container(
-                        height: screenHeight(context)*0.3,
-                        child: Column(
-                          children: [
-                            corseRow(snap.data.rows[idx]),
-                            Column(
-                              children: [
-                                GridCaption(
-                                  obj: [
-                                    'عنوان کلاس',
-                                    'تاریخ برگذاری',
-                                    'ظرفیت حضوری [باقیمانده]',
-                                    'ظرفیت غیرحضوری [باقیمانده]',
-                                  ],
-                                  endbuttons: 2,
-                                ),
-                                FutureBuilder<List<Class>>(
-                                  future: ParvaneProcessRepository.loadParvaneProcessCourseClasses(snap.data.rows[idx].ppid, snap.data.rows[idx].ppstepid, snap.data.rows[idx].courseid),
-                                  builder: (context, snap){
-                                    if (snap.hasData)
-                                      return ListView.builder(
-                                        itemCount: snap.data.length,
-                                        itemBuilder: (context, idx)=>MyRow(
-                                          children: [
-                                            snap.data[idx].title.toLabel().expand(),
-                                            snap.data[idx].begindate.toLabel().expand(),
-                                            '${snap.data[idx].hozori} - [ ${snap.data[idx].hozoriremain} ]'.toLabel().expand(),
-                                            '${snap.data[idx].nothozori} - [ ${snap.data[idx].nothozoriremain} ]'.toLabel().expand(),
-                                            snap.data[idx].reg || snap.data[idx].rsv
-                                              ? MyOutlineButton(title: 'انصراف', color: Colors.blue, onPressed: (){})
-                                              : snap.data[idx].hozoriremain == 0 && snap.data[idx].nothozoriremain == 0
-                                                ? Container()
-                                                : MyOutlineButton(title: 'ثبت نام', color: Colors.blue, onPressed: (){}),
-                                            SizedBox(width: 5),
-                                            !snap.data[idx].rsv && !snap.data[idx].reg
-                                              ? MyOutlineButton(title: 'رزرو', color: Colors.green, onPressed: (){})
-                                              : Container(),
-                                          ]
-                                        )
-                                      );
-                                    if (snap.hasError)
-                                      return Center(child: Text('خطا در دریافت اطلاعات لطفا مجددا سعی نمایید'));
-                                    return Center(child: CupertinoActivityIndicator());
-                                  }
-                                ).expand()
-                              ],
-                            ).setPadding(padd: EdgeInsets.symmetric(horizontal: 35)).card().expand(),
-                          ],
-                        ),
-                      )
-                      : corseRow(snap.data.rows[idx]);
+                    return MyRow(
+                      color: snap.data.rows[idx].classid > 0 ? snap.data.rows[idx].rsv ? Colors.green.shade100 : Colors.yellow.shade100 : null,
+                      children: [
+                        snap.data.rows[idx].title.toLabel().expand(),
+                        snap.data.rows[idx].kindName().toLabel().expand(),
+                        snap.data.rows[idx].typeName().toLabel().expand(),
+                        snap.data.rows[idx].begindate.toLabel().expand(),
+                        snap.data.rows[idx].classtitle.toLabel().expand(),
+                        '${snap.data.rows[idx].absent}'.toLabel().expand(),
+                        '${snap.data.rows[idx].price}'.toLabel().expand(),
+                        snap.data.rows[idx].classid == 0
+                          ? MyIconButton(type: ButtonType.other, icon: Icon(Icons.view_agenda, color: accentcolor(context)), hint: 'انتخاب کلاس', onPressed: ()=>showFormAsDialog(context: context, form: ChooseClass(course: snap.data.rows[idx])))
+                          : MyIconButton(type: ButtonType.del, onPressed: (){}),
+                      ]
+                    );
                   }
                 );
             return Center(child: CupertinoActivityIndicator());
@@ -745,3 +697,129 @@ class FinishProcess extends StatelessWidget {
   }
 }
 
+class ChooseClass extends StatelessWidget {
+  final ParvaneProcessCourse course;
+  const ChooseClass({@required this.course, Key key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Bloc<int> _state = Bloc<int>()..setValue(1);
+    int i = 0;
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Container(
+        height: screenHeight(context) * 0.75,
+        width: screenWidth(context) * 0.85,
+        child: Column(
+          children: [
+            FormHeader(
+              title: 'لیست کلاسهای دوره ${this.course.title}',
+              btnRight: MyIconButton(type: ButtonType.other, icon: Icon(Icons.add_alert, color: accentcolor(context),), hint: 'اضافه شدن به لیست انتظار', onPressed: (){}),
+            ),
+            GridCaption(
+              obj: [
+                'عنوان کلاس',
+                'تاریخ برگذاری',
+                this.course.type == 1 || this.course.type == 3
+                  ? 'ظرفیت حضوری [باقیمانده]'
+                  : Container(),
+                this.course.type == 2 || this.course.type == 3
+                  ? 'ظرفیت غیرحضوری [باقیمانده]'
+                  : Container(),
+              ],
+              endbuttons: 2,
+            ),
+            FutureBuilder<List<Class>>(
+              future: ParvaneProcessRepository.loadParvaneProcessCourseClasses(this.course.ppid, this.course.ppstepid, this.course.courseid),
+              builder: (context, snap){
+                if (snap.hasData)
+                  return StreamBuilder<int>(
+                    stream: _state.stream$,
+                    builder: (context, state) {
+                      if (state.hasData)
+                        return state.data == 2
+                          ? RegisterInClass(course: this.course, cls: snap.data[i], state: _state,)
+                          : ListView.builder(
+                              itemCount: snap.data.length,
+                              itemBuilder: (context, idx)=>MyRow(
+                                children: [
+                                  snap.data[idx].title.toLabel().expand(),
+                                  snap.data[idx].begindate.toLabel().expand(),
+                                  this.course.type == 1 || this.course.type == 3
+                                    ? '${snap.data[idx].hozori} - [ ${snap.data[idx].hozoriremain} ]'.toLabel().expand()
+                                    : Container(),
+                                  this.course.type == 2 || this.course.type == 3
+                                    ? '${snap.data[idx].nothozori} - [ ${snap.data[idx].nothozoriremain} ]'.toLabel().expand()
+                                    : Container(),
+                                  MyOutlineButton(title: 'ثبت نام', color: accentcolor(context), onPressed: ()=>_state.setValue(2)),
+                                ]
+                              )
+                            );
+                    return CupertinoActivityIndicator();
+                    }
+                  );
+                if (snap.hasError)
+                  return Center(child: Text('خطا در دریافت اطلاعات لطفا مجددا سعی نمایید'));
+                return Center(child: CupertinoActivityIndicator());
+              }
+            ).expand()
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class RegisterInClass extends StatelessWidget {
+  final ParvaneProcessCourse course;
+  final Class cls;
+  final Bloc<int> state;
+  const RegisterInClass({@required this.course, @required this.cls, @required this.state, Key key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Bloc<int> _hozortype = Bloc<int>()..setValue(course.type);
+    return Center(
+      child: Card(
+        child: Container(
+          padding: EdgeInsets.all(28),
+          width: 375,
+          // height:  225,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              this.course.type == 3
+                ? StreamBuilder<int>(
+                    stream: _hozortype.stream$,
+                    builder: (context, snap) {
+                      if (snap.hasData)
+                        return Row(
+                          children: [
+                            Switch(value: snap.data == 1, onChanged: (val)=>_hozortype.setValue(1)),
+                            'حضوری'.toLabel(),
+                            SizedBox(width: 15),
+                            Switch(value: snap.data == 2, onChanged: (val)=>_hozortype.setValue(2)),
+                            'غیر حضوری'.toLabel(),
+                          ],
+                        );
+                      return CupertinoActivityIndicator();
+                    }
+                  )
+                : Container(),
+              GridTextField(hint: 'مشخصات پرداخت'),
+              ForeignKeyField(hint: 'وابستگی', initialValue: {'id': 1, 'name': 'حسن'}, f2key: 'People'),
+              SizedBox(height: 25),
+              Row(
+                children: [
+                  MyOutlineButton(title: 'ذخیره', color: Colors.green, icon: Icons.save, onPressed: (){}),
+                  SizedBox(width: 10),
+                  MyOutlineButton(title: 'انصراف', color: Colors.deepOrange, icon: Icons.cancel, onPressed: ()=>state.setValue(1)),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

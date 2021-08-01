@@ -3406,10 +3406,11 @@ class ParvaneProcessCourse{
   int maxdegree;
   int absent;
   double price;
-  bool showclass;
+  String begindate;
+  String classtitle;
   String token;
 
-  ParvaneProcessCourse({this.ppid = 0 ,this.ppstepid = 0 ,this.id = 0 ,this.courseid = 0 ,this.title ,this.classid = 0,this.hozori ,this.rsv, this.note ,this.kind = 0 ,this.type = 0 ,this.mindegree = 0 ,this.maxdegree = 0 ,this.absent = 0 ,this.price, this.showclass, this.token});
+  ParvaneProcessCourse({this.ppid = 0 ,this.ppstepid = 0 ,this.id = 0 ,this.courseid = 0 ,this.title ,this.classid = 0,this.hozori ,this.rsv, this.note ,this.kind = 0 ,this.type = 0 ,this.mindegree = 0 ,this.maxdegree = 0 ,this.absent = 0 ,this.price, this.begindate, this.classtitle, this.token});
 
   ParvaneProcessCourse.fromJson(Map<String, dynamic> json):
       ppid = json['ppid'],
@@ -3426,7 +3427,8 @@ class ParvaneProcessCourse{
       mindegree = json['mindegree'],
       maxdegree = json['maxdegree'],
       absent = json['absent'],
-      showclass = false,
+      begindate = json['begindate'] ?? '',
+      classtitle = json['classtitle'],
       price = json['price'];
 
   Map<String, dynamic> toJson(){
