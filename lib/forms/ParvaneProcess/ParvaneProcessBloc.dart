@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -143,6 +145,7 @@ class PPrcBloc{
         if (await _repository.delParvaneProcess(readToken(context), id)){
           _pprocessbloc.value.rows.removeWhere((element) => element.id==id);
           _pprocessbloc.add(_pprocessbloc.value);
+          Navigator.pop(context);
         }
       }
       catch(e){
@@ -360,5 +363,10 @@ class PPrcBloc{
     catch(e){
       myAlert(context: context, title: 'خطا', message: '$e');
     }
+  }
+
+  Future<List<DClass>> loadPPSCoursePeople(BuildContext context, int ppid, int ppstepid, int course, int clas) async {
+      List<Map<String, dynamic>> _data = await postMethod(api: 'ParvaneProcess/PrvRegClass', body: jsonEncode({'token': readToken(context), 'ppid': ppid, 'ppstepid': ppstepid, 'courseid': course, 'classid': clas}));
+      return _data.map((e) => DClass.fromJson(e)).toList();
   }
 }

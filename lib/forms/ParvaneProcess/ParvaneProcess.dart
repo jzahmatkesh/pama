@@ -668,7 +668,7 @@ class CourseList extends StatelessWidget {
                         '${snap.data.rows[idx].absent}'.toLabel().expand(),
                         '${snap.data.rows[idx].price}'.toLabel().expand(),
                         snap.data.rows[idx].classid == 0
-                          ? MyIconButton(type: ButtonType.other, icon: Icon(Icons.view_agenda, color: accentcolor(context)), hint: 'انتخاب کلاس', onPressed: ()=>showFormAsDialog(context: context, form: ChooseClass(course: snap.data.rows[idx])))
+                          ? MyIconButton(type: ButtonType.other, icon: Icon(Icons.view_agenda, color: accentcolor(context)), hint: 'انتخاب کلاس', onPressed: ()=>showFormAsDialog(context: context, form: ChooseClass(bloc: bloc, course: snap.data.rows[idx])))
                           : MyIconButton(type: ButtonType.del, onPressed: (){}),
                       ]
                     );
@@ -698,8 +698,9 @@ class FinishProcess extends StatelessWidget {
 }
 
 class ChooseClass extends StatelessWidget {
+  final PPrcBloc bloc;
   final ParvaneProcessCourse course;
-  const ChooseClass({@required this.course, Key key }) : super(key: key);
+  const ChooseClass({@required this.bloc, @required this.course, Key key }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -738,7 +739,7 @@ class ChooseClass extends StatelessWidget {
                     builder: (context, state) {
                       if (state.hasData)
                         return state.data == 2
-                          ? RegisterInClass(course: this.course, cls: snap.data[i], state: _state,)
+                          ? RegisterInClass(bloc: bloc, course: this.course, cls: snap.data[i], state: _state,)
                           : ListView.builder(
                               itemCount: snap.data.length,
                               itemBuilder: (context, idx)=>MyRow(
@@ -751,7 +752,13 @@ class ChooseClass extends StatelessWidget {
                                   this.course.type == 2 || this.course.type == 3
                                     ? '${snap.data[idx].nothozori} - [ ${snap.data[idx].nothozoriremain} ]'.toLabel().expand()
                                     : Container(),
-                                  MyOutlineButton(title: 'ثبت نام', color: accentcolor(context), onPressed: ()=>_state.setValue(2)),
+                                  MyOutlineButton(
+                                    title: 'ثبت نام', 
+                                    color: accentcolor(context), 
+                                    onPressed: (){
+                                      _state.setValue(2);
+                                    }
+                                  ),
                                 ]
                               )
                             );
@@ -771,14 +778,16 @@ class ChooseClass extends StatelessWidget {
 }
 
 class RegisterInClass extends StatelessWidget {
+  final PPrcBloc bloc;
   final ParvaneProcessCourse course;
   final Class cls;
   final Bloc<int> state;
-  const RegisterInClass({@required this.course, @required this.cls, @required this.state, Key key }) : super(key: key);
+  const RegisterInClass({@required this.bloc , @required this.course, @required this.cls, @required this.state, Key key }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Bloc<int> _hozortype = Bloc<int>()..setValue(course.type);
+    int peopid = 0;
     return Center(
       child: Card(
         child: Container(
@@ -806,12 +815,29 @@ class RegisterInClass extends StatelessWidget {
                     }
                   )
                 : Container(),
+              FutureBuilder<List<DClass>>(
+                future: bloc.loadPPSCoursePeople(context, course.ppid, course.ppstepid, cls.courseid, cls.id),
+                builder: (context, snap){
+                  if (snap.hasData)
+                    if (snap.data.length > 0)
+                      return DropDownButton(
+                        hint: 'وابستگی',
+                        val: snap.data[0].peopid,
+                        items: snap.data.map<Map<String, dynamic>>((e) => {'id': e.peopid, 'title': e.peopfamily}).toList(),
+                        onChange: (int val)=>peopid=val,
+                      );
+                    else
+                      return 'اطلاعاتی وجود ندارد'.toLabel();
+                  if (snap.hasError)
+                    return snap.error.toString().toLabel();
+                  return CupertinoActivityIndicator();
+                }
+              ),
               GridTextField(hint: 'مشخصات پرداخت'),
-              ForeignKeyField(hint: 'وابستگی', initialValue: {'id': 1, 'name': 'حسن'}, f2key: 'People'),
               SizedBox(height: 25),
               Row(
                 children: [
-                  MyOutlineButton(title: 'ذخیره', color: Colors.green, icon: Icons.save, onPressed: (){}),
+                  MyOutlineButton(title: 'ذخیره', color: Colors.green, icon: Icons.save, onPressed: ()=>print('${_hozortype.value$} - $peopid')),
                   SizedBox(width: 10),
                   MyOutlineButton(title: 'انصراف', color: Colors.deepOrange, icon: Icons.cancel, onPressed: ()=>state.setValue(1)),
                 ],
