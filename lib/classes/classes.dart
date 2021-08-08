@@ -3394,12 +3394,13 @@ class ParvaneProcessCourse{
   int ppid;
   int ppstepid;
   int id;
+  int peopid;
+  String peopfamily;
   int courseid;
-  String title;
   int classid;
   bool hozori;
-  bool rsv;
-  String note;
+  String pinfo;
+  String title;
   int kind;
   int type;
   int mindegree;
@@ -3410,7 +3411,7 @@ class ParvaneProcessCourse{
   String classtitle;
   String token;
 
-  ParvaneProcessCourse({this.ppid = 0 ,this.ppstepid = 0 ,this.id = 0 ,this.courseid = 0 ,this.title ,this.classid = 0,this.hozori ,this.rsv, this.note ,this.kind = 0 ,this.type = 0 ,this.mindegree = 0 ,this.maxdegree = 0 ,this.absent = 0 ,this.price, this.begindate, this.classtitle, this.token});
+  ParvaneProcessCourse({this.ppid = 0 ,this.ppstepid = 0 ,this.id = 0,this.peopid=0, this.peopfamily,this.courseid = 0 ,this.title ,this.classid = 0,this.hozori ,this.pinfo ,this.kind = 0 ,this.type = 0 ,this.mindegree = 0 ,this.maxdegree = 0 ,this.absent = 0 ,this.price, this.begindate, this.classtitle, this.token});
 
   ParvaneProcessCourse.fromJson(Map<String, dynamic> json):
       ppid = json['ppid'],
@@ -3419,9 +3420,10 @@ class ParvaneProcessCourse{
       courseid = json['courseid'],
       title = json['title'],
       classid = json['classid'],
-      rsv = json['rsv'] == 1,
+      peopid = json['peopid'],
+      peopfamily = json['peopfamily'],
       hozori = json['hozori']==1,
-      note = json['note'],
+      pinfo = json['pinfo'],
       kind = json['kind'],
       type = json['type'],
       mindegree = json['mindegree'],
@@ -3437,17 +3439,10 @@ class ParvaneProcessCourse{
       data['ppstepid'] = this.ppstepid;
       data['id'] = this.id;
       data['courseid'] = this.courseid;
-      data['title'] = this.title;
       data['classid'] = this.classid;
-      data['rsv'] = this.rsv ? 1: 0;
+      data['peopid'] = this.peopid;
       data['hozori'] = this.hozori ? 1: 0;
-      data['note'] = this.note;
-      data['kind'] = this.kind;
-      data['type'] = this.type;
-      data['mindegree'] = this.mindegree;
-      data['maxdegree'] = this.maxdegree;
-      data['absent'] = this.absent;
-      data['price'] = this.price;
+      data['pinfo'] = this.pinfo;
       data['token'] = this.token;
       return data;
   }

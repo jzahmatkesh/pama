@@ -658,7 +658,7 @@ class CourseList extends StatelessWidget {
                   itemCount: snap.data.rows.length,
                   itemBuilder: (context, idx){
                     return MyRow(
-                      color: snap.data.rows[idx].classid > 0 ? snap.data.rows[idx].rsv ? Colors.green.shade100 : Colors.yellow.shade100 : null,
+                      color: snap.data.rows[idx].classid > 0 ? Colors.yellow.shade100 : null,
                       children: [
                         snap.data.rows[idx].title.toLabel().expand(),
                         snap.data.rows[idx].kindName().toLabel().expand(),
@@ -738,8 +738,8 @@ class ChooseClass extends StatelessWidget {
                     stream: _state.stream$,
                     builder: (context, state) {
                       if (state.hasData)
-                        return state.data == 2
-                          ? RegisterInClass(bloc: bloc, course: this.course, cls: snap.data[i], state: _state,)
+                        return state.data > -1
+                          ? RegisterInClass(bloc: bloc, course: this.course, cls: snap.data[state.data], state: _state,)
                           : ListView.builder(
                               itemCount: snap.data.length,
                               itemBuilder: (context, idx)=>MyRow(
@@ -756,7 +756,7 @@ class ChooseClass extends StatelessWidget {
                                     title: 'ثبت نام', 
                                     color: accentcolor(context), 
                                     onPressed: (){
-                                      _state.setValue(2);
+                                      _state.setValue(idx);
                                     }
                                   ),
                                 ]
@@ -787,7 +787,8 @@ class RegisterInClass extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Bloc<int> _hozortype = Bloc<int>()..setValue(course.type);
-    int peopid = 0;
+    this.course.classid = this.cls.id;
+    this.course.hozori = this.course.type == 1;
     return Center(
       child: Card(
         child: Container(
@@ -804,10 +805,10 @@ class RegisterInClass extends StatelessWidget {
                       if (snap.hasData)
                         return Row(
                           children: [
-                            Switch(value: snap.data == 1, onChanged: (val)=>_hozortype.setValue(1)),
+                            Switch(value: snap.data == 1, onChanged: (val){_hozortype.setValue(1); this.course.hozori = val;}),
                             'حضوری'.toLabel(),
                             SizedBox(width: 15),
-                            Switch(value: snap.data == 2, onChanged: (val)=>_hozortype.setValue(2)),
+                            Switch(value: snap.data == 0, onChanged: (val){_hozortype.setValue(0); this.course.hozori = val;}),
                             'غیر حضوری'.toLabel(),
                           ],
                         );
@@ -824,7 +825,7 @@ class RegisterInClass extends StatelessWidget {
                         hint: 'وابستگی',
                         val: snap.data[0].peopid,
                         items: snap.data.map<Map<String, dynamic>>((e) => {'id': e.peopid, 'title': e.peopfamily}).toList(),
-                        onChange: (int val)=>peopid=val,
+                        onChange: (int val){this.course.peopid=val; this.course.peopfamily = snap.data.where((element) => element.peopid==val).first.peopfamily;},
                       );
                     else
                       return 'اطلاعاتی وجود ندارد'.toLabel();
@@ -833,13 +834,13 @@ class RegisterInClass extends StatelessWidget {
                   return CupertinoActivityIndicator();
                 }
               ),
-              GridTextField(hint: 'مشخصات پرداخت'),
+              GridTextField(hint: 'مشخصات پرداخت', initialValue: this.course.pinfo, onChange: (val)=>this.course.pinfo=val),
               SizedBox(height: 25),
               Row(
                 children: [
-                  MyOutlineButton(title: 'ذخیره', color: Colors.green, icon: Icons.save, onPressed: ()=>print('${_hozortype.value$} - $peopid')),
+                  MyOutlineButton(title: 'ذخیره', color: Colors.green, icon: Icons.save, onPressed: ()=>bloc.savePSCourse(context, this.course)),
                   SizedBox(width: 10),
-                  MyOutlineButton(title: 'انصراف', color: Colors.deepOrange, icon: Icons.cancel, onPressed: ()=>state.setValue(1)),
+                  MyOutlineButton(title: 'انصراف', color: Colors.deepOrange, icon: Icons.cancel, onPressed: ()=>state.setValue(-1)),
                 ],
               )
             ],

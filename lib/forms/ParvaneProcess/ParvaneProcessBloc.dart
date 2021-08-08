@@ -369,4 +369,16 @@ class PPrcBloc{
       List<Map<String, dynamic>> _data = await postMethod(api: 'ParvaneProcess/PrvRegClass', body: jsonEncode({'token': readToken(context), 'ppid': ppid, 'ppstepid': ppstepid, 'courseid': course, 'classid': clas}));
       return _data.map((e) => DClass.fromJson(e)).toList();
   }
+
+  savePSCourse(BuildContext context, ParvaneProcessCourse ppcc) async{
+    try{
+    ppcc.token = readToken(context);
+print('${ppcc.toJson()}');    
+    await putMethod(api: 'ParvaneProcess/StepCourseClasses', body: jsonEncode(ppcc.toJson()));
+    }
+    catch(e){
+print("error: $e");      
+      myAlert(context: context, title: 'خطا', message: 'خطا در ذخیره اطلاعات کلاس انتخاب شده');
+    }
+  }
 }
