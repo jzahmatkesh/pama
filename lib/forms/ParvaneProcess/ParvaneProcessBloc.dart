@@ -370,15 +370,45 @@ class PPrcBloc{
       return _data.map((e) => DClass.fromJson(e)).toList();
   }
 
-  savePSCourse(BuildContext context, ParvaneProcessCourse ppcc) async{
+  Future<bool> savePSCourse(BuildContext context, ParvaneProcessCourse ppcc) async{
     try{
-    ppcc.token = readToken(context);
-print('${ppcc.toJson()}');    
-    await putMethod(api: 'ParvaneProcess/StepCourseClasses', body: jsonEncode(ppcc.toJson()));
+      ppcc.token = readToken(context);
+      await putMethod(api: 'ParvaneProcess/StepCourseClasses', body: jsonEncode(ppcc.toJson()));
+      return true;
     }
     catch(e){
-print("error: $e");      
       myAlert(context: context, title: 'خطا', message: 'خطا در ذخیره اطلاعات کلاس انتخاب شده');
+      return false;
+    }
+  }
+
+  delPPStepCourse(BuildContext context, ParvaneProcessCourse course){
+    confirmMessage(context, 'تایید حذف', 'آیا مایل به حذف کلاس ${course.classtitle} دوره ${course.title} می باشید؟', yesclick: () async{
+      try{
+        showWaiting(context);
+        course.token = readToken(context);
+        await _repository.delParvaneProcessCourse(course);
+        showPPStepCourse(context, course.ppid, course.ppstepid);
+        Navigator.pop(context);
+      }
+      catch(e){
+        myAlert(context: context, title: 'خطا', message: '$e');
+      }
+      finally{
+        hideWaiting(context);
+      }
+    });
+  }
+
+  Future<bool> reserveCourse(BuildContext context, ParvaneProcessCourse ppcc) async{
+    try{
+      ppcc.token = readToken(context);
+      await putMethod(api: 'ParvaneProcess/ReserveCourse', body: jsonEncode(ppcc.toJson()));
+      return true;
+    }
+    catch(e){
+      myAlert(context: context, title: 'خطا', message: 'رزرو دوره با موفقیت انجام نشد. لطفا پس از بارگذاری مجددا سعی نمایید');
+      return false;
     }
   }
 }

@@ -3409,9 +3409,10 @@ class ParvaneProcessCourse{
   double price;
   String begindate;
   String classtitle;
+  bool rsv;
   String token;
 
-  ParvaneProcessCourse({this.ppid = 0 ,this.ppstepid = 0 ,this.id = 0,this.peopid=0, this.peopfamily,this.courseid = 0 ,this.title ,this.classid = 0,this.hozori ,this.pinfo ,this.kind = 0 ,this.type = 0 ,this.mindegree = 0 ,this.maxdegree = 0 ,this.absent = 0 ,this.price, this.begindate, this.classtitle, this.token});
+  ParvaneProcessCourse({this.ppid = 0 ,this.ppstepid = 0 ,this.id = 0,this.peopid=0, this.peopfamily,this.courseid = 0 ,this.title ,this.classid = 0,this.hozori ,this.pinfo ,this.kind = 0 ,this.type = 0 ,this.mindegree = 0 ,this.maxdegree = 0 ,this.absent = 0 ,this.price, this.begindate, this.classtitle, this.rsv, this.token});
 
   ParvaneProcessCourse.fromJson(Map<String, dynamic> json):
       ppid = json['ppid'],
@@ -3423,6 +3424,7 @@ class ParvaneProcessCourse{
       peopid = json['peopid'],
       peopfamily = json['peopfamily'],
       hozori = json['hozori']==1,
+      rsv = json['rsv']==1,
       pinfo = json['pinfo'],
       kind = json['kind'],
       type = json['type'],

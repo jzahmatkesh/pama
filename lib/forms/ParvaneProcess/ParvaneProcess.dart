@@ -659,6 +659,7 @@ class CourseList extends StatelessWidget {
                   itemBuilder: (context, idx){
                     return MyRow(
                       color: snap.data.rows[idx].classid > 0 ? Colors.yellow.shade100 : null,
+                      endcolor: snap.data.rows[idx].rsv ? Colors.green : null,
                       children: [
                         snap.data.rows[idx].title.toLabel().expand(),
                         snap.data.rows[idx].kindName().toLabel().expand(),
@@ -669,7 +670,7 @@ class CourseList extends StatelessWidget {
                         '${snap.data.rows[idx].price}'.toLabel().expand(),
                         snap.data.rows[idx].classid == 0
                           ? MyIconButton(type: ButtonType.other, icon: Icon(Icons.view_agenda, color: accentcolor(context)), hint: 'انتخاب کلاس', onPressed: ()=>showFormAsDialog(context: context, form: ChooseClass(bloc: bloc, course: snap.data.rows[idx])))
-                          : MyIconButton(type: ButtonType.del, onPressed: (){}),
+                          : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delPPStepCourse(context, snap.data.rows[idx])),
                       ]
                     );
                   }
@@ -704,8 +705,7 @@ class ChooseClass extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Bloc<int> _state = Bloc<int>()..setValue(1);
-    int i = 0;
+    Bloc<int> _state = Bloc<int>()..setValue(-1);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Container(
@@ -715,7 +715,15 @@ class ChooseClass extends StatelessWidget {
           children: [
             FormHeader(
               title: 'لیست کلاسهای دوره ${this.course.title}',
-              btnRight: MyIconButton(type: ButtonType.other, icon: Icon(Icons.add_alert, color: accentcolor(context),), hint: 'اضافه شدن به لیست انتظار', onPressed: (){}),
+              btnRight: MyIconButton(type: ButtonType.other, icon: Icon(Icons.add_alert, color: accentcolor(context),), hint: 'اضافه شدن به لیست انتظار', onPressed: () async{
+                confirmMessage(context, 'رزرو دوره', 'آیا مایل به رزرو دوره ${course.title} می باشید؟', yesclick: () async{
+                  if (await this.bloc.reserveCourse(context, course)){
+                    bloc.showPPStepCourse(context, this.course.ppid, this.course.ppstepid);
+                    Navigator.pop(context);
+                  }
+                  Navigator.pop(context);
+                });
+              }),
             ),
             GridCaption(
               obj: [
@@ -838,7 +846,12 @@ class RegisterInClass extends StatelessWidget {
               SizedBox(height: 25),
               Row(
                 children: [
-                  MyOutlineButton(title: 'ذخیره', color: Colors.green, icon: Icons.save, onPressed: ()=>bloc.savePSCourse(context, this.course)),
+                  MyOutlineButton(title: 'ذخیره', color: Colors.green, icon: Icons.save, onPressed: () async{
+                    if (await bloc.savePSCourse(context, this.course)){
+                      bloc.showPPStepCourse(context, this.course.ppid, this.course.ppstepid);
+                      Navigator.of(context).pop();
+                    }
+                  }),
                   SizedBox(width: 10),
                   MyOutlineButton(title: 'انصراف', color: Colors.deepOrange, icon: Icons.cancel, onPressed: ()=>state.setValue(-1)),
                 ],

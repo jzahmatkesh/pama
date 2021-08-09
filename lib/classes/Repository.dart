@@ -1918,4 +1918,19 @@ class ParvaneProcessRepository{
   Future<Map<String, dynamic>> finishParavneProcessStep(PPStep step) async{
     return await putMethod(api: 'ParvaneProcess/FinishStep', body: jsonEncode(step.toJson()));
   }
+
+  Future<bool> delParvaneProcessCourse(ParvaneProcessCourse data) async{
+     Map<String, dynamic> _data = await delToServer(api: 'ParvaneProcess/StepCourseClasses', 
+      header: {
+       'Content-Type': 'application/json',
+       'token': data.token,
+       'ppid': data.ppid.toString(),
+       'ppstepid': data.ppstepid.toString(),
+       'id': data.id.toString()
+      }, 
+    );
+    if (_data['msg'] == "Success")
+      return true;
+    throw Exception(_data['msg']);
+  }
 }
