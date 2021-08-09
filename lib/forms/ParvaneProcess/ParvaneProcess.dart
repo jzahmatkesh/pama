@@ -203,7 +203,7 @@ class ParvaneProcessStepDetail extends StatelessWidget {
                         )
                       ).hMargin().expand()).toList(),
                     Spacer(),
-                    _activestep != null && _activestep.id > 0
+                    _activestep != null && _activestep.id > 0 && pprow.finish != 1
                       ? InkWell(
                           onTap: ()=>bloc.finishParvaneProcessStep(context, _activestep),
                           child: Container(
@@ -668,9 +668,11 @@ class CourseList extends StatelessWidget {
                         snap.data.rows[idx].classtitle.toLabel().expand(),
                         '${snap.data.rows[idx].absent}'.toLabel().expand(),
                         '${snap.data.rows[idx].price}'.toLabel().expand(),
-                        snap.data.rows[idx].classid == 0
-                          ? MyIconButton(type: ButtonType.other, icon: Icon(Icons.view_agenda, color: accentcolor(context)), hint: 'انتخاب کلاس', onPressed: ()=>showFormAsDialog(context: context, form: ChooseClass(bloc: bloc, course: snap.data.rows[idx])))
-                          : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delPPStepCourse(context, snap.data.rows[idx])),
+                        this.finish
+                          ? Container()
+                          : snap.data.rows[idx].classid == 0
+                            ? MyIconButton(type: ButtonType.other, icon: Icon(Icons.view_agenda, color: accentcolor(context)), hint: 'انتخاب کلاس', onPressed: ()=>showFormAsDialog(context: context, form: ChooseClass(bloc: bloc, course: snap.data.rows[idx])))
+                            : MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delPPStepCourse(context, snap.data.rows[idx])),
                       ]
                     );
                   }
