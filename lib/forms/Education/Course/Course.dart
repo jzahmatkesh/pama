@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pama/classes/Repository.dart';
 import '../../../classes/classes.dart';
 import '../../../module/theme-Manager.dart';
 import 'package:provider/provider.dart';
@@ -87,6 +90,7 @@ class CourseRow extends StatelessWidget {
         '${course.kindName()}',
         '${course.typeName()}',
         '${moneySeprator(course.price)} - ${moneySeprator(course.reprice)}',
+        MyIconButton(type: ButtonType.other, hint: 'لیست انتظار', icon: Icon(Icons.notifications, color: Colors.grey.shade600,), onPressed: ()=>showFormAsDialog(context: context, form: ReserveCourseList(courseid: this.course.id))),
         MyIconButton(type: ButtonType.other, hint: 'لیست کلاسها', icon: Icon(Icons.category, color: Colors.grey.shade600,), onPressed: ()=>bloc.showClass(context, this.course.id)),
         MyIconButton(type: ButtonType.del, onPressed: ()=>bloc.delCourse(context, course)),
       ]
@@ -517,5 +521,53 @@ class DClassRow extends StatelessWidget {
   }
 }
 
+class ReserveCourseList extends StatelessWidget {
+  final int courseid;
+  const ReserveCourseList({@required this.courseid, Key key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Container(
+        width: screenWidth(context) * 0.75,
+        height: screenHeight(context) * 0.75,
+        child: Column(
+          children: [
+            FormHeader(title: 'لیست در انتظار'),
+            GridCaption(
+              obj: [
+                'عنوان اتحادیه',
+                'عنوان فرد صنفی',
+                'عنوان فرآیند',
+                'تاریخ رزرو'
+              ]
+            ),
+            FutureBuilder<List<dynamic>>(
+              future: CourseRepository.reserveList(readToken(context), this.courseid),
+              builder: (context, snap){
+                if (snap.hasData)
+                  return ListView.builder(
+                    itemCount: snap.data.length,
+                    itemBuilder: (context, idx)=>MyRow(
+                      children: [
+                        '${jsonDecode(snap.data[idx])['cmpname']}',
+                        '${jsonDecode(snap.data[idx])['peopfamily']}',
+                        '${jsonDecode(snap.data[idx])['title']}',
+                        '${jsonDecode(snap.data[idx])['date']}',
+                      ]
+                    )
+                  );
+                if (snap.hasError)
+                  return ErrorInGrid('${snap.error}');
+                return Center(child: CupertinoActivityIndicator());
+              }
+            ).expand()
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 

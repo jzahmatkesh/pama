@@ -2494,6 +2494,7 @@ class Course{
     String token;
     bool edit;
     bool showclass;
+    bool showrsv;
  
     Course({this.id,this.active=true,this.title,this.kind=1,this.type=1,this.mindegree=1,this.maxdegree=1,this.absent=0,this.valid=0,this.price=0,this.reprice=0,this.noh1=10,this.noh2=10,this.nonh1=12,this.nonh2=10, this.token, this.edit=false, this.showclass = false});
  

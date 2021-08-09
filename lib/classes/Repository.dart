@@ -1674,6 +1674,13 @@ class CourseRepository{
       return true;
     throw Exception(_data['msg']);
   }
+
+  static Future<List<dynamic>> reserveList(String token, int course) async{
+    Map<String, dynamic> _data = await postToServer(api: 'Course/ReserveList', body: jsonEncode({"token": token, "id": course}));
+    if (_data['msg'] == "Success")
+      return _data["body"] as List;
+    throw Exception(_data['msg']);
+  }
 }
 
 class GUnitRepository{
