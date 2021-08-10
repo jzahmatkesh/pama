@@ -3179,7 +3179,7 @@ class ParvaneProcess{
         return data;
     }
 
-    bool get isFinished => this.finish>0;
+    bool get isFinished => this.finish > 0;
     String get failedNote => this.finish==10 ? 'رد شده با نظر هیت مدیره' : this.finish==11 ? 'رد شده با نظر بازرسی' : '';
 }
 

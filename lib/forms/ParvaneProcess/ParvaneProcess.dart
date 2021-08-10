@@ -63,52 +63,65 @@ class FmParvaneProcess extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final PPrcBloc _bloc = PPrcBloc()..loadParvaneProcess(context: context, parvaneID: this.parvane.id);
+    final Bloc<bool> _all = Bloc<bool>()..setValue(false);
     return Container(
       width: screenWidth(context) * 0.95,
       height: screenHeight(context) * 0.95,
       child: Directionality(
         textDirection: TextDirection.rtl,
-        child: Column(
-          children: [
-            FormHeader(title: 'لیست فرآیندهای ${parvane.peopname}'),
-            GridCaption(
-              obj: [
-                'عنوان فرآیند'.toLabel().expand(),
-                'تاریخ شروع'.toLabel().expand(),
-                'مدت مجاز'.toLabel().expand(),
-                'تاریخ اتمام'.toLabel().expand(),
-                'روزهای باقیمانده'.toLabel().expand(),
+        child: StreamBuilder<bool>(
+          stream: _all.stream$,
+          builder: (context, allsel) {
+            if (!allsel.hasData)
+              return Center(child: CupertinoActivityIndicator());
+            return Column(
+              children: [
+                FormHeader(
+                  title: 'لیست فرآیندهای ${parvane.peopname}',
+                  btnRight: RadioButton(val: allsel.data, hint: 'تمامی فرآیندها', onChange: (val)=>_all.setValue(val)),
+                ),
+                GridCaption(
+                  obj: [
+                    'عنوان فرآیند'.toLabel().expand(),
+                    'تاریخ شروع'.toLabel().expand(),
+                    'مدت مجاز'.toLabel().expand(),
+                    'تاریخ اتمام'.toLabel().expand(),
+                    'روزهای باقیمانده'.toLabel().expand(),
+                  ],
+                  endbuttons: 3,
+                ),
+                StreamBuilder<ParvaneProcessModel>(
+                  stream: _bloc.pprocessstream,
+                  builder: (context, snap){
+                    if (snap.hasData)
+                      if (snap.data.status == Status.error)
+                        return ErrorInGrid('${snap.data.msg}');
+                      else if (snap.data.status == Status.loaded)
+                        return ListView.builder(
+                          itemCount: snap.data.rows.length,
+                          itemBuilder: (context, idx){
+                            if (snap.data.rows[idx].isFinished && !allsel.data)
+                              return Container();
+                            if (snap.data.rows[idx].showSteps)
+                              return Container(
+                                height: screenHeight(context) * 0.70,
+                                child: Column(
+                                  children: [
+                                    ParvaneProcessRow(bloc: _bloc, data: snap.data.rows[idx]),
+                                    SizedBox(height: 10),
+                                    ParvaneProcessStepDetail(bloc: _bloc, parvane: this.parvane, pprow: snap.data.rows[idx])
+                                  ],
+                                ),
+                              ).card();
+                            return ParvaneProcessRow(bloc: _bloc, data: snap.data.rows[idx]);
+                          }
+                        );
+                    return Center(child: CupertinoActivityIndicator());
+                  }
+                ).expand()
               ],
-              endbuttons: 3,
-            ),
-            StreamBuilder<ParvaneProcessModel>(
-              stream: _bloc.pprocessstream,
-              builder: (context, snap){
-                if (snap.hasData)
-                  if (snap.data.status == Status.error)
-                    return ErrorInGrid('${snap.data.msg}');
-                  else if (snap.data.status == Status.loaded)
-                    return ListView.builder(
-                      itemCount: snap.data.rows.length,
-                      itemBuilder: (context, idx){
-                        if (snap.data.rows[idx].showSteps)
-                          return Container(
-                            height: screenHeight(context) * 0.70,
-                            child: Column(
-                              children: [
-                                ParvaneProcessRow(bloc: _bloc, data: snap.data.rows[idx]),
-                                SizedBox(height: 10),
-                                ParvaneProcessStepDetail(bloc: _bloc, parvane: this.parvane, pprow: snap.data.rows[idx])
-                              ],
-                            ),
-                          ).card();
-                        return ParvaneProcessRow(bloc: _bloc, data: snap.data.rows[idx]);
-                      }
-                    );
-                return Center(child: CupertinoActivityIndicator());
-              }
-            ).expand()
-          ],
+            );
+          }
         ),
       ),
     );
@@ -696,7 +709,9 @@ class FinishProcess extends StatelessWidget {
   Widget build(BuildContext context) {
     return this.pprow.kind == 0
       ? 'نوع فرآیند قایل تشخیص نمی باشد'.toLabel().center()
-      : FinishProcess1(bloc: this.bloc, parvane: this.parvane, pprow: this.pprow);
+      : this.pprow.kind == 1
+        ? FinishProcess1(bloc: this.bloc, parvane: this.parvane, pprow: this.pprow)
+        : Center(child: 'مرحله نامشخص ${this.pprow.kind}'.toLabel());
   }
 }
 
