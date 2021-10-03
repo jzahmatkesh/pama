@@ -47,8 +47,8 @@ class User{
       lastlogin = json['lastlogin'],
       sex = json['sex'],
       token = json['token'],
-      admin = json['admin'] == 1,
-      ejriat = json['ejriat'] == 1;
+      admin = (json['admin'] ?? 0) == 1,
+      ejriat = (json['ejriat'] ?? 0) == 1;
 }
 
 class Raste{

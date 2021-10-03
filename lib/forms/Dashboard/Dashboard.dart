@@ -101,7 +101,7 @@ class Dashboard extends StatelessWidget {
                   ),
                   SizedBox(height: 15.0,),
                   this.user.ejriat ? ListTile(title: Text('فاقدین پروانه شناسایی شده'), onTap: (){context.read<ThemeManager>().setMenuItem(8); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 8,) : Container(),
-                  this.user.admin ? ListTile(title: Text('اتاق اصناف و اتحادیه ها'), onTap: (){context.read<ThemeManager>().setMenuItem(0); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 0) : Container(),
+                  ListTile(title: Text('اتاق اصناف و اتحادیه ها'), onTap: (){context.read<ThemeManager>().setMenuItem(0); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 0),
                   this.user.admin ? ListTile(title: Text('فهرست درآمدها'), onTap: (){context.read<ThemeManager>().setMenuItem(9); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 9) : Container(),
                   this.user.admin ? ListTile(title: Text('رسته ها'), onTap: (){context.read<ThemeManager>().setMenuItem(1); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 1,) : Container(),
                   this.user.admin ? ListTile(title: Text('بانک ها'), onTap: (){context.read<ThemeManager>().setMenuItem(2); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 2,) : Container(),
@@ -112,7 +112,7 @@ class Dashboard extends StatelessWidget {
 
                   this.user.admin ? ListTile(title: Text('آموزش'), onTap: (){context.read<ThemeManager>().setMenuItem(10); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 10,) : Container(),
                   this.user.admin ? ListTile(title: Text('فرآیند ها'), onTap: (){context.read<ThemeManager>().setMenuItem(11); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 11,) : Container(),
-                  this.user.admin ? ListTile(title: Text('اعضاء / متقاضیان'), onTap: (){context.read<ThemeManager>().setMenuItem(12); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 12,) : Container(),
+                  ListTile(title: Text('اعضاء / متقاضیان'), onTap: (){context.read<ThemeManager>().setMenuItem(12); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 12,),
 
                   this.user.admin ? ListTile(title: Text('گروه های کاربری'), onTap: (){context.read<ThemeManager>().setMenuItem(7); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 7,) : Container(),
                   this.user.admin ? ListTile(title: Text('تنظیمات'), onTap: (){context.read<ThemeManager>().setMenuItem(16); Navigator.of(context).pop();}, selected: context.watch<ThemeManager>().menuitem == 16,) : Container(),

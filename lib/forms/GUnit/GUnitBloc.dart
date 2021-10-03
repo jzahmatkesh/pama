@@ -31,7 +31,7 @@ class GUnitBloc{
       if (gun == null)
       _gunitbloc.add(GUnitModel(gunit: gun, status: Status.loaded));
       if (justcheck)
-        Navigator.of(context).pop(_gunitbloc.value.gunit);
+        Navigator.of(context).pop(gun);
     }
     catch(e){
       myAlert(context: context, title: 'خطا', message: '$e');

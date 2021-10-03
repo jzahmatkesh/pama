@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:pama/module/persiandate.dart';
 import '../GUnit/GUnit.dart';
 import '../ParvaneProcess/ParvaneProcess.dart';
 import 'ParvaneBloc.dart';
@@ -33,7 +34,7 @@ class FmParvane extends StatelessWidget {
         children: [
           FormHeader(
             title: 'لیست اعضاء / متقاضیان اتحادیه ${this.user.cmpname}',
-            btnRight: MyIconButton(type: ButtonType.add, hint: 'متفاضی جدید', onPressed: ()=>showFormAsDialog(context: context, form: ParvaneInfo(bloc: _bloc, parvane: Parvane(id: 0)))),
+            btnRight: MyIconButton(type: ButtonType.add, hint: 'متفاضی جدید', onPressed: ()=>showFormAsDialog(context: context, form: ParvaneInfo(bloc: _bloc, parvane: Parvane(id: 0, reqdate:'${PersianDate.now()}')))),
             btnLeft: MyIconButton(type: ButtonType.none),
           ),
           StreamBuilder<int>(
@@ -206,6 +207,7 @@ class ParvaneInfo extends StatelessWidget {
     final _nosazicode = TextEditingController(text: this.parvane.nosazicode);
 
     Bloc<int> _tabidx = Bloc<int>()..setValue(0);
+    Bloc<int> _parvanekind = Bloc<int>()..setValue(0);
 
     bool prcSave(){
       this.parvane.reqdate = _edreqdate.text;
@@ -241,6 +243,9 @@ class ParvaneInfo extends StatelessWidget {
         } 
         else if (this.parvane.hisic == 0){
           myAlert(context: context, title: 'مقادیر اجباری', message: 'رسته انتخاب نشده است');
+        }
+        else if (this.parvane.hoghoghishenasemeli.trim().isNotEmpty && this.parvane.hoghoghishenasemeli.trim().length != 10){
+          myAlert(context: context, title: 'اخطار', message: 'شناسه ملی می بایسست ۱۰ رقم باشد');
         }
         else{
           if (!this.parvane.register)
@@ -285,7 +290,7 @@ class ParvaneInfo extends StatelessWidget {
           ),
           Row(
             children: [
-              DropDownItems(val: parvane.kind, items: [{'id': 1, 'title': 'حقیقی'},{'id': 2, 'title': 'مشارکت مدنی'},{'id': 3, 'title': 'مشارکت حقوقی'}], hint: 'نوع متقاضی', onChange: (val)=>parvane.kind=val).expand(),
+              ForeignKeyField(hint: 'کد آیسیک', initialValue: {'hisic': this.parvane.hisic, 'isic': this.parvane.isic, 'name': this.parvane.isicname}, f2key: 'Raste', onChange: (val){this.parvane.hisic = val['hisic'];this.parvane.isic = val['isic'];this.parvane.isicname = val['name'];},).expand(),
               DropDownItems(val: parvane.parvandekind, items: [{'id': 1, 'title': 'عادی'},{'id': 2, 'title': 'ایثارگران'}], hint: 'نوع پرونده', onChange: (val)=>parvane.parvandekind=val).expand(),
               GridTextField(hint: 'کد اقتصادی', notempty: true, controller: _ecoid, readonly: this.parvane.register).expand(),
             ]
@@ -297,29 +302,48 @@ class ParvaneInfo extends StatelessWidget {
               DropDownItems(val: parvane.hesabkind, items: [{'id': 1, 'title': 'جاری'},{'id': 2, 'title': 'سپرده'},{'id': 3, 'title': 'قرض الحسنه'}], hint: 'نوع حساب', onChange: (val)=>parvane.hesabkind=val).expand(),
             ]
           ),
-          Row(
-            children: [
-              ForeignKeyField(hint: 'کد آیسیک', initialValue: {'hisic': this.parvane.hisic, 'isic': this.parvane.isic, 'name': this.parvane.isicname}, f2key: 'Raste', onChange: (val){this.parvane.hisic = val['hisic'];this.parvane.isic = val['isic'];this.parvane.isicname = val['name'];},).expand(),
-              // GridTextField(hint: 'کد آیسیک', initialValue: '${this.parvane.hisic}', onChange: (val)=>parvane.hisic=int.tryParse(val)).expand(),
-              DropDownItems(val: parvane.hoghoghikind, items: [
-                {'id': 1, 'title': 'سهام خاص'},
-                {'id': 2, 'title': 'سهامی عام'},
-                {'id': 3, 'title': 'تضامنی'},
-                {'id': 4, 'title': 'تعاونی'},
-                {'id': 5, 'title': 'مسولیت محدود'},
-                {'id': 6, 'title': 'غیره'}
-              ], hint: 'نوع شخصیت حقوقی', onChange: (val)=>parvane.hoghoghikind=val).expand(),
-              GridTextField(hint: 'عنوان شخصیت حقوقی', notempty: true, controller: _hoghoghiname, readonly: this.parvane.register).expand(),
-            ]
-          ),
-          Row(
-            children: [
-              GridTextField(hint: 'شناسه ملی', notempty: true, controller: _hoghoghishenasemeli, readonly: this.parvane.register).expand(),
-              GridTextField(hint: 'شماره ثبت', notempty: true, controller: _hoghoghisabtno, readonly: this.parvane.register).expand(),
-              GridTextField(hint: 'تاریخ ثبت', notempty: true, controller: _edhoghoghisabtdate, datepicker: true, readonly: this.parvane.register).expand(),
-              DropDownItems(val: parvane.parvanekind, items: [{'id': 1, 'title': 'موقت'},{'id': 2, 'title': 'دایم'}], hint: 'نوع پروانه', onChange: (val)=>parvane.parvanekind=val).expand(),
-            ]
-          ),
+          StreamBuilder<int>(
+            stream: _parvanekind.stream$,
+            builder: (_, snap)=>Column(
+              children: [
+                Row(
+                  children: [
+                    DropDownItems(val: parvane.kind, items: [{'id': 1, 'title': 'حقیقی'},{'id': 2, 'title': 'مشارکت مدنی'},{'id': 3, 'title': 'مشارکت حقوقی'}], hint: 'نوع متقاضی', onChange: (val){_parvanekind.setValue(val); parvane.kind=val;}).expand(),
+                    // GridTextField(hint: 'کد آیسیک', initialValue: '${this.parvane.hisic}', onChange: (val)=>parvane.hisic=int.tryParse(val)).expand(),
+                    parvane.kind==3
+                      ? DropDownItems(val: parvane.hoghoghikind, items: [
+                          {'id': 1, 'title': 'سهام خاص'},
+                          {'id': 2, 'title': 'سهامی عام'},
+                          {'id': 3, 'title': 'تضامنی'},
+                          {'id': 4, 'title': 'تعاونی'},
+                          {'id': 5, 'title': 'مسولیت محدود'},
+                          {'id': 6, 'title': 'غیره'}
+                          ], hint: 'نوع شخصیت حقوقی', onChange: (val)=>parvane.hoghoghikind=val).expand()
+                      : DropDownItems(val: parvane.parvanekind, items: [{'id': 1, 'title': 'موقت'},{'id': 2, 'title': 'دایم'}], hint: 'نوع پروانه', onChange: (val)=>parvane.parvanekind=val).expand(),
+                    parvane.kind==3 
+                      ? GridTextField(hint: 'عنوان شخصیت حقوقی', notempty: true, controller: _hoghoghiname, readonly: this.parvane.register).expand()
+                      : Container(),
+                  ]
+                ),
+                Row(
+                  children: [
+                    parvane.kind==3 
+                      ? GridTextField(hint: 'شناسه ملی', notempty: true, controller: _hoghoghishenasemeli, readonly: this.parvane.register).expand()
+                      : Container(),
+                    parvane.kind==3 
+                      ? GridTextField(hint: 'شماره ثبت', notempty: true, controller: _hoghoghisabtno, readonly: this.parvane.register).expand()
+                      : Container(),
+                    parvane.kind==3 
+                      ? GridTextField(hint: 'تاریخ ثبت', notempty: true, controller: _edhoghoghisabtdate, datepicker: true, readonly: this.parvane.register).expand()
+                      : Container(),
+                    parvane.kind==3
+                      ? DropDownItems(val: parvane.parvanekind, items: [{'id': 1, 'title': 'موقت'},{'id': 2, 'title': 'دایم'}], hint: 'نوع پروانه', onChange: (val)=>parvane.parvanekind=val).expand()
+                      : Container()
+                  ]
+                ),
+              ],
+            )
+          )
         ],
       );
     }
@@ -349,7 +373,7 @@ class ParvaneInfo extends StatelessWidget {
                 ))
               ).expand(),        
               GridTextField(hint: 'نام واحد صنفی', notempty: true, controller: _guname, readonly: this.parvane.register).expand(),      
-              GridTextField(hint: 'تاریخ شروه فعالیت', notempty: true, datepicker: true, controller: _gubegindate, readonly: this.parvane.register).expand(),      
+              GridTextField(hint: 'تاریخ شروع فعالیت', notempty: true, datepicker: true, controller: _gubegindate, readonly: this.parvane.register).expand(),      
             ],
           ),
           Row(
@@ -375,7 +399,7 @@ class ParvaneInfo extends StatelessWidget {
               GridTextField(hint: 'کد رهگیری ثبت نام دارایی', notempty: true, controller: _gudaraeicode, readonly: this.parvane.register).expand(),      
               GridTextField(hint: 'واحد مالیاتی', controller: _guvahedmaliati, readonly: this.parvane.register).expand(),      
               GridTextField(hint: 'شماره پرونده مالیاتی', notempty: true, controller: _guparvandemaliat, readonly: this.parvane.register).expand(),      
-              MultiChooseItem(val: parvane.gustatus, items: [{'id': 1, 'title': 'مالکیت'},{'id': 2,  'title': 'سرقفلی'}], hint: 'وضعیت مالکیت', onChange: (val)=>parvane.gustatus=val['id']).expand(),
+              DropDownItems(val: parvane.gustatus, items: [{'id': 1, 'title': 'مالکیت'},{'id': 2, 'title': 'سرقفلی'}], hint: 'وضعیت مالکیت', onChange: (val)=>parvane.gustatus=val).expand(),
             ]
           ),
           Row(
